@@ -74,6 +74,7 @@ private:
 private slots:
   void exec_pushed();
   void output_directory_changed();
+  void open_output_directory_pushed();
   void output_directory_mode_changed();
   void file_list_clear_pushed();
   void ncolor_spinbox_changed();

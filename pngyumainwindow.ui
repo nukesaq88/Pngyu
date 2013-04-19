@@ -130,6 +130,29 @@ QFrame#frame_ie6
           <property name="margin">
            <number>6</number>
           </property>
+          <item row="0" column="2">
+           <widget class="QLineEdit" name="lineEdit_output_directory">
+            <property name="placeholderText">
+             <string>Input output directory or drop it here ...</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QRadioButton" name="radioButton_output_other_directory">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Other Directory</string>
+            </property>
+            <attribute name="buttonGroup">
+             <string notr="true">buttonGroup_output_directory_mode</string>
+            </attribute>
+           </widget>
+          </item>
           <item row="0" column="0">
            <widget class="QRadioButton" name="radioButton_output_same_directory">
             <property name="sizePolicy">
@@ -149,26 +172,10 @@ QFrame#frame_ie6
             </attribute>
            </widget>
           </item>
-          <item row="0" column="1">
-           <widget class="QRadioButton" name="radioButton_output_other_directory">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
+          <item row="0" column="3">
+           <widget class="QToolButton" name="toolButton_open_output_directory">
             <property name="text">
-             <string>Other Directory</string>
-            </property>
-            <attribute name="buttonGroup">
-             <string notr="true">buttonGroup_output_directory_mode</string>
-            </attribute>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QLineEdit" name="lineEdit_output_directory">
-            <property name="placeholderText">
-             <string>Input output directory or drop it here ...</string>
+             <string>...</string>
             </property>
            </widget>
           </item>
@@ -187,17 +194,17 @@ QFrame#frame_ie6
        <bool>false</bool>
       </property>
       <layout class="QGridLayout" name="gridLayout_8">
-       <item row="1" column="0">
-        <widget class="QTableWidget" name="tableWidget_filelist">
-         <property name="editTriggers">
-          <set>QAbstractItemView::NoEditTriggers</set>
-         </property>
-        </widget>
-       </item>
        <item row="0" column="0">
         <widget class="QPushButton" name="pushButton_filelist_clear">
          <property name="text">
           <string>Clear</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QTableWidget" name="tableWidget_filelist">
+         <property name="editTriggers">
+          <set>QAbstractItemView::NoEditTriggers</set>
          </property>
         </widget>
        </item>
@@ -223,7 +230,7 @@ QFrame#frame_ie6
        <property name="spacing">
         <number>4</number>
        </property>
-       <item row="0" column="1">
+       <item row="1" column="1">
         <widget class="QFrame" name="frame_colors">
          <property name="frameShape">
           <enum>QFrame::Panel</enum>
@@ -283,63 +290,7 @@ QFrame#frame_ie6
          </layout>
         </widget>
        </item>
-       <item row="0" column="0">
-        <widget class="QFrame" name="frame_ie6">
-         <property name="frameShape">
-          <enum>QFrame::Panel</enum>
-         </property>
-         <property name="frameShadow">
-          <enum>QFrame::Sunken</enum>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_7">
-          <property name="margin">
-           <number>4</number>
-          </property>
-          <property name="spacing">
-           <number>4</number>
-          </property>
-          <item row="0" column="0">
-           <widget class="QCheckBox" name="checkBox_ie6_support">
-            <property name="text">
-             <string>IE6 alpha support</string>
-            </property>
-            <property name="checked">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QFrame" name="frame_dithered">
-         <property name="frameShape">
-          <enum>QFrame::Panel</enum>
-         </property>
-         <property name="frameShadow">
-          <enum>QFrame::Sunken</enum>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_4">
-          <property name="margin">
-           <number>4</number>
-          </property>
-          <property name="spacing">
-           <number>4</number>
-          </property>
-          <item row="0" column="0">
-           <widget class="QCheckBox" name="checkBox_dithered">
-            <property name="text">
-             <string>Dithered</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="1" column="1">
+       <item row="1" column="2">
         <widget class="QFrame" name="frame_speed">
          <property name="frameShape">
           <enum>QFrame::Panel</enum>
@@ -397,6 +348,62 @@ QFrame#frame_ie6
             </property>
             <property name="text">
              <string>High Speed</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QFrame" name="frame_ie6">
+         <property name="frameShape">
+          <enum>QFrame::Panel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Sunken</enum>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_7">
+          <property name="margin">
+           <number>4</number>
+          </property>
+          <property name="spacing">
+           <number>4</number>
+          </property>
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="checkBox_ie6_support">
+            <property name="text">
+             <string>IE6 alpha support</string>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="2" column="2">
+        <widget class="QFrame" name="frame_dithered">
+         <property name="frameShape">
+          <enum>QFrame::Panel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Sunken</enum>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_4">
+          <property name="margin">
+           <number>4</number>
+          </property>
+          <property name="spacing">
+           <number>4</number>
+          </property>
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="checkBox_dithered">
+            <property name="text">
+             <string>Dithered</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>

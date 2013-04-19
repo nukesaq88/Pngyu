@@ -41,7 +41,6 @@ bool make_app_temporary_path()
 QString size_to_string( const qint64 size )
 {
   return QString( "%1kb" ).arg( static_cast<double>(size) / 1000, 0, 'f', 2 );
-//  return QString( "%1kb" ).arg( static_cast<double>(size) / 1000, );
 }
 
 bool has_png_extention( const QFileInfo &file )
@@ -76,6 +75,7 @@ void set_drop_enabled_palette(
   }
   widget->setPalette( palette );
 }
+
 
 }
 }

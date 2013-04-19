@@ -14,6 +14,7 @@
 #include <QMimeData>
 #include <QUrl>
 #include <QFileInfo>
+#include <QFileDialog>
 
 #include <QImageReader>
 
@@ -67,7 +68,10 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
 
 
   connect( ui->pushButton_exec, SIGNAL(clicked()), this, SLOT(exec_pushed()) );
+
   connect( ui->lineEdit_output_directory, SIGNAL(textChanged(QString)), this, SLOT(output_directory_changed()) );
+
+  connect( ui->toolButton_open_output_directory, SIGNAL(clicked()), this, SLOT(open_output_directory_pushed()) );
 
   connect( ui->radioButton_output_same_directory, SIGNAL(toggled(bool)),
            this, SLOT(output_directory_mode_changed()) );
@@ -273,12 +277,19 @@ void PngyuMainWindow::execute_compress()
 
     const QString command = option.make_pngquant_command( pngquant_path, temp_src_path );
 
-
-    QProcess process;
-    process.setProcessEnvironment( QProcessEnvironment::systemEnvironment() );
-    process.start( command );
+    bool compress_succeed = true;
     try
     {
+      const bool dst_path_exists = QFile::exists( dst_path );
+      if( dst_path_exists && ! overwrite_enable )
+      {
+        throw QString( "Error: \"" + dst_path + "\" is already exists" );
+      }
+
+      QProcess process;
+      process.setProcessEnvironment( QProcessEnvironment::systemEnvironment() );
+      process.start( command );
+
       if( ! process.waitForStarted() )
       {
         throw QString( "Error: Process cannot started" );
@@ -296,18 +307,11 @@ void PngyuMainWindow::execute_compress()
       }
 
 
-      if( QFile::exists( dst_path ) )
+      if( dst_path_exists )
       {
-        if( overwrite_enable )
+        if( ! QFile::remove( dst_path ) )
         {
-          if( ! QFile::remove( dst_path ) )
-          {
-            throw QString( "Error: Couldn't overwrite" );
-          }
-        }
-        else
-        {
-          throw QString( "Error: \"" + dst_path + "\" is already exists" );
+          throw QString( "Error: Couldn't overwrite" );
         }
       }
 
@@ -320,20 +324,24 @@ void PngyuMainWindow::execute_compress()
     catch( const QString &e )
     {
       resultItem->setText( e );
+      resultItem->setToolTip( e );
+      compress_succeed = false;
       //table_widget->setItem( row, COLUMN_RESULT, new QTableWidgetItem( e ) );
     }
 
+    if( compress_succeed )
+    {
+      const qint64 dst_size = QFileInfo( dst_path ).size();
 
-    const qint64 dst_size = QFileInfo( dst_path ).size();
+      table_widget->setItem( row, COLUMN_ORIGINAL_SIZE,
+                             new QTableWidgetItem( pngyu::util::size_to_string( src_size ) ) );
+      table_widget->setItem( row, COLUMN_OUTPUT_SIZE,
+                             new QTableWidgetItem( pngyu::util::size_to_string( dst_size ) ) );
+      const double saving_rate = static_cast<double>( src_size - dst_size ) / ( src_size );
 
-    table_widget->setItem( row, COLUMN_ORIGINAL_SIZE,
-                           new QTableWidgetItem( pngyu::util::size_to_string( src_size ) ) );
-    table_widget->setItem( row, COLUMN_OUTPUT_SIZE,
-                           new QTableWidgetItem( pngyu::util::size_to_string( dst_size ) ) );
-    const double saving_rate = static_cast<double>( src_size - dst_size ) / ( src_size );
-
-    table_widget->setItem( row, COLUMN_SAVING,
-                           new QTableWidgetItem( QString( "%1%" ).arg( static_cast<int>(saving_rate * 100) ) ) );
+      table_widget->setItem( row, COLUMN_SAVING,
+                             new QTableWidgetItem( QString( "%1%" ).arg( static_cast<int>(saving_rate * 100) ) ) );
+    }
 
     QApplication::processEvents();
   }
@@ -354,7 +362,7 @@ void PngyuMainWindow::dragEnterEvent( QDragEnterEvent *event )
 void PngyuMainWindow::dragLeaveEvent( QDragLeaveEvent *event )
 {
   Q_UNUSED(event)
-  pngyu::util::set_drop_enabled_palette( file_list_table_widget(), false );
+  pngyu::util::set_drop_enabled_palette( ui->centralWidget, false );
   pngyu::util::set_drop_enabled_palette( ui->lineEdit_output_directory, false );
 }
 
@@ -370,10 +378,10 @@ void PngyuMainWindow::dragMoveEvent( QDragMoveEvent * event )
           pngyu::util::is_under_mouse( output_line_edit ) );
   }
 
-  QTableWidget * const table_widget = file_list_table_widget();
+  QWidget * const central_widget = ui->centralWidget;
   pngyu::util::set_drop_enabled_palette(
-        table_widget,
-        pngyu::util::is_under_mouse( table_widget ) );
+        central_widget,
+        pngyu::util::is_under_mouse( central_widget ) );
 }
 
 void PngyuMainWindow::dropEvent( QDropEvent *event )
@@ -382,9 +390,9 @@ void PngyuMainWindow::dropEvent( QDropEvent *event )
   const bool mouse_is_on_output = pngyu::util::is_under_mouse( output_line_edit );
   pngyu::util::set_drop_enabled_palette( output_line_edit, false );
 
-  QTableWidget * const table_widget = file_list_table_widget();
-  const bool mouse_is_on_table = pngyu::util::is_under_mouse( table_widget );
-  pngyu::util::set_drop_enabled_palette( table_widget, false );
+  QWidget * const central_widget = ui->centralWidget;
+  const bool mouse_is_on_central = pngyu::util::is_under_mouse( central_widget );
+  pngyu::util::set_drop_enabled_palette( central_widget, false );
 
   const QMimeData * const mimedata = event->mimeData();
   if( ! mimedata->hasUrls() )
@@ -402,7 +410,7 @@ void PngyuMainWindow::dropEvent( QDropEvent *event )
       set_current_output_directory_mode( pngyu::OUTPUT_OTHER );
     }
   }
-  else if( mouse_is_on_table )
+  else if( mouse_is_on_central )
   {
     foreach( const QUrl &url, url_list )
     {
@@ -422,8 +430,12 @@ void PngyuMainWindow::update_file_table()
     int row_index = 0;
     foreach( const QFileInfo &file_info, m_file_list )
     {
-      table_widget->setItem( row_index, COLUMN_BASENAME, new QTableWidgetItem( file_info.baseName() ) );
-      table_widget->setItem( row_index, COLUMN_ABSOLUTE_PATH, new QTableWidgetItem( file_info.absoluteFilePath() ) );
+      QTableWidgetItem * const basename_item = new QTableWidgetItem( file_info.baseName() );
+      basename_item->setToolTip( file_info.baseName() );
+      table_widget->setItem( row_index, COLUMN_BASENAME, basename_item );
+      QTableWidgetItem * const abspath_item =new QTableWidgetItem( file_info.absoluteFilePath() );
+      abspath_item->setToolTip( file_info.absoluteFilePath() );
+      table_widget->setItem( row_index, COLUMN_ABSOLUTE_PATH, abspath_item );
       ++row_index;
     }
   }
@@ -485,11 +497,23 @@ void PngyuMainWindow::output_directory_changed()
   line_edit->setPalette( palette );
 }
 
+void PngyuMainWindow::open_output_directory_pushed()
+{
+  const QString path = QFileDialog::getExistingDirectory( this,
+                                                          QString(),
+                                                          QDir::homePath() );
+
+  if( ! path.isEmpty() )
+  {
+    set_output_directory( path );
+  }
+}
+
 void PngyuMainWindow::output_directory_mode_changed()
 {
   const pngyu::OuputDirectoryMode mode = current_output_directory_mode();
-  qDebug() << current_output_directory_mode();
 
+  ui->toolButton_open_output_directory->setEnabled( mode == pngyu::OUTPUT_OTHER );
   ui->lineEdit_output_directory->setEnabled( mode == pngyu::OUTPUT_OTHER );
   QPalette p = ui->lineEdit_output_directory->palette();
   p.setBrush( QPalette::Base, mode == pngyu::OUTPUT_OTHER ?
