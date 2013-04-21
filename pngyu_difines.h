@@ -6,9 +6,16 @@ namespace pngyu
 
 enum OuputDirectoryMode
 {
-  OUTPUT_UNKNOWN = -1,
-  OUTPUT_SAME = 0,
-  OUTPUT_OTHER
+  OUTPUT_DIR_UNKNOWN = -1,
+  OUTPUT_DIR_SAME = 0,
+  OUTPUT_DIR_OTHER
+};
+
+enum OutputFinenameMode
+{
+  OUTPUT_FILE_UNKNOWN = -1,
+  OUTPUT_FILE_SAME_AS_ORIGINAL = 0,
+  OUTPUT_FILE_CUSTOM
 };
 
 

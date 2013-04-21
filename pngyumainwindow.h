@@ -34,6 +34,9 @@ public:
   void set_current_output_directory_mode( const pngyu::OuputDirectoryMode mode );
   pngyu::OuputDirectoryMode current_output_directory_mode() const;
 
+  void set_current_outoput_filename_mode( const pngyu::OutputFinenameMode mode );
+  pngyu::OutputFinenameMode current_outoput_filename_mode() const;
+
   void set_output_directory( const QString &output_directory );
   QString output_directory() const;
 
@@ -76,9 +79,11 @@ private slots:
   void output_directory_changed();
   void open_output_directory_pushed();
   void output_directory_mode_changed();
+  void output_filename_mode_changed();
   void file_list_clear_pushed();
   void ncolor_spinbox_changed();
   void ncolor_slider_changed();
+  void table_widget_current_changed();
 };
 
 #endif // PNGYUMAINWINDOW_H

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>564</width>
-    <height>555</height>
+    <width>563</width>
+    <height>578</height>
    </rect>
   </property>
   <property name="acceptDrops">
@@ -51,43 +51,115 @@ QFrame#frame_ie6
           <property name="margin">
            <number>6</number>
           </property>
-          <item row="0" column="0">
-           <widget class="QFrame" name="frame_output_filename">
+          <item row="0" column="0" colspan="3">
+           <widget class="QComboBox" name="comboBox_output_filename_mode">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-            <property name="frameShape">
-             <enum>QFrame::Panel</enum>
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
             </property>
-            <property name="frameShadow">
-             <enum>QFrame::Sunken</enum>
+            <property name="toolTip">
+             <string>Output filename mode</string>
             </property>
-            <layout class="QGridLayout" name="gridLayout_3">
-             <property name="margin">
-              <number>2</number>
+            <item>
+             <property name="text">
+              <string>[Original].png</string>
              </property>
-             <item row="0" column="2">
-              <widget class="QLineEdit" name="lineEdit_output_file_prefix">
-               <property name="alignment">
-                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </item>
+            <item>
+             <property name="text">
+              <string>Custom Filename</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="1" column="0" colspan="3">
+           <widget class="QWidget" name="widget_custom_output_filename" native="true">
+            <layout class="QHBoxLayout" name="horizontalLayout_3">
+             <property name="margin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="label_custom_filename">
+               <property name="font">
+                <font>
+                 <pointsize>12</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>Filename :</string>
                </property>
               </widget>
              </item>
-             <item row="0" column="3">
-              <widget class="QLabel" name="label_outoput_original_name">
-               <property name="text">
-                <string>+ Original Name +</string>
+             <item>
+              <widget class="QFrame" name="frame_output_filename">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
                </property>
-              </widget>
-             </item>
-             <item row="0" column="4">
-              <widget class="QLineEdit" name="lineEdit_output_file_suffix">
-               <property name="text">
-                <string>.png</string>
+               <property name="frameShape">
+                <enum>QFrame::Panel</enum>
                </property>
+               <property name="frameShadow">
+                <enum>QFrame::Sunken</enum>
+               </property>
+               <layout class="QGridLayout" name="gridLayout_3">
+                <property name="margin">
+                 <number>2</number>
+                </property>
+                <item row="0" column="2">
+                 <widget class="QLineEdit" name="lineEdit_output_file_prefix">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                   </font>
+                  </property>
+                  <property name="toolTip">
+                   <string>Input cumtom filename prefix</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="3">
+                 <widget class="QLabel" name="label_outoput_original_name">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>+ [Original Name] +</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="4">
+                 <widget class="QLineEdit" name="lineEdit_output_file_suffix">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                   </font>
+                  </property>
+                  <property name="toolTip">
+                   <string>Input cumtom filename suffix</string>
+                  </property>
+                  <property name="text">
+                   <string>.png</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </widget>
              </item>
             </layout>
@@ -98,6 +170,12 @@ QFrame#frame_ie6
        </item>
        <item row="2" column="1">
         <widget class="QGroupBox" name="groupBox_output_option_other">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="title">
           <string>Other</string>
          </property>
@@ -127,30 +205,72 @@ QFrame#frame_ie6
           <bool>true</bool>
          </property>
          <layout class="QGridLayout" name="gridLayout_9">
+          <property name="horizontalSpacing">
+           <number>12</number>
+          </property>
           <property name="margin">
            <number>6</number>
           </property>
-          <item row="0" column="2">
-           <widget class="QLineEdit" name="lineEdit_output_directory">
-            <property name="placeholderText">
-             <string>Input output directory or drop it here ...</string>
-            </property>
-           </widget>
-          </item>
           <item row="0" column="1">
-           <widget class="QRadioButton" name="radioButton_output_other_directory">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Other Directory</string>
-            </property>
-            <attribute name="buttonGroup">
-             <string notr="true">buttonGroup_output_directory_mode</string>
-            </attribute>
+           <widget class="QWidget" name="widget_other_output_directory" native="true">
+            <layout class="QHBoxLayout" name="horizontalLayout_2">
+             <property name="spacing">
+              <number>4</number>
+             </property>
+             <property name="margin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QRadioButton" name="radioButton_output_other_directory">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>12</pointsize>
+                </font>
+               </property>
+               <property name="toolTip">
+                <string>Save to specified other directory</string>
+               </property>
+               <property name="text">
+                <string>Other Directory</string>
+               </property>
+               <attribute name="buttonGroup">
+                <string notr="true">buttonGroup_output_directory_mode</string>
+               </attribute>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="lineEdit_output_directory">
+               <property name="font">
+                <font>
+                 <pointsize>12</pointsize>
+                </font>
+               </property>
+               <property name="toolTip">
+                <string>Input output directory or drop it here ...</string>
+               </property>
+               <property name="placeholderText">
+                <string>Input output directory or drop it here ...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="toolButton_open_output_directory">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="icon">
+                <iconset resource="resource/resource.qrc">
+                 <normaloff>:/icons/folder.png</normaloff>:/icons/folder.png</iconset>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
           <item row="0" column="0">
@@ -160,6 +280,14 @@ QFrame#frame_ie6
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="toolTip">
+             <string>Save to same as directory that original file exists</string>
             </property>
             <property name="text">
              <string>Same Directory</string>
@@ -172,13 +300,6 @@ QFrame#frame_ie6
             </attribute>
            </widget>
           </item>
-          <item row="0" column="3">
-           <widget class="QToolButton" name="toolButton_open_output_directory">
-            <property name="text">
-             <string>...</string>
-            </property>
-           </widget>
-          </item>
          </layout>
         </widget>
        </item>
@@ -188,23 +309,73 @@ QFrame#frame_ie6
     <item row="4" column="0" colspan="3">
      <widget class="QGroupBox" name="groupBox_filelist">
       <property name="title">
-       <string>File List</string>
+       <string>Files</string>
       </property>
       <property name="flat">
        <bool>false</bool>
       </property>
       <layout class="QGridLayout" name="gridLayout_8">
-       <item row="0" column="0">
-        <widget class="QPushButton" name="pushButton_filelist_clear">
-         <property name="text">
-          <string>Clear</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
+       <property name="margin">
+        <number>6</number>
+       </property>
+       <item row="1" column="0" colspan="2">
         <widget class="QTableWidget" name="tableWidget_filelist">
          <property name="editTriggers">
           <set>QAbstractItemView::NoEditTriggers</set>
+         </property>
+         <property name="alternatingRowColors">
+          <bool>true</bool>
+         </property>
+         <property name="selectionMode">
+          <enum>QAbstractItemView::SingleSelection</enum>
+         </property>
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectRows</enum>
+         </property>
+         <property name="showGrid">
+          <bool>false</bool>
+         </property>
+         <property name="sortingEnabled">
+          <bool>true</bool>
+         </property>
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
+         <attribute name="verticalHeaderDefaultSectionSize">
+          <number>20</number>
+         </attribute>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="3" column="1">
+        <widget class="QPushButton" name="pushButton_filelist_clear">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="toolTip">
+          <string>Clear all files</string>
+         </property>
+         <property name="text">
+          <string>Clear</string>
+         </property>
+         <property name="icon">
+          <iconset resource="resource/resource.qrc">
+           <normaloff>:/icons/clear.png</normaloff>:/icons/clear.png</iconset>
          </property>
         </widget>
        </item>
@@ -230,130 +401,6 @@ QFrame#frame_ie6
        <property name="spacing">
         <number>4</number>
        </property>
-       <item row="1" column="1">
-        <widget class="QFrame" name="frame_colors">
-         <property name="frameShape">
-          <enum>QFrame::Panel</enum>
-         </property>
-         <property name="frameShadow">
-          <enum>QFrame::Sunken</enum>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_6">
-          <property name="margin">
-           <number>4</number>
-          </property>
-          <property name="spacing">
-           <number>4</number>
-          </property>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_colors">
-            <property name="text">
-             <string>Colors</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QSpinBox" name="spinBox_colors">
-            <property name="minimum">
-             <number>2</number>
-            </property>
-            <property name="maximum">
-             <number>256</number>
-            </property>
-            <property name="value">
-             <number>256</number>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QSlider" name="horizontalSlider_colors">
-            <property name="minimum">
-             <number>0</number>
-            </property>
-            <property name="maximum">
-             <number>7</number>
-            </property>
-            <property name="value">
-             <number>7</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="tickPosition">
-             <enum>QSlider::TicksAbove</enum>
-            </property>
-            <property name="tickInterval">
-             <number>1</number>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="1" column="2">
-        <widget class="QFrame" name="frame_speed">
-         <property name="frameShape">
-          <enum>QFrame::Panel</enum>
-         </property>
-         <property name="frameShadow">
-          <enum>QFrame::Sunken</enum>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_5">
-          <property name="margin">
-           <number>4</number>
-          </property>
-          <property name="spacing">
-           <number>3</number>
-          </property>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_compress_high_quality">
-            <property name="font">
-             <font>
-              <pointsize>12</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>High Quality</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QSlider" name="horizontalSlider_compress_speed">
-            <property name="minimum">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <number>10</number>
-            </property>
-            <property name="value">
-             <number>3</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="tickPosition">
-             <enum>QSlider::TicksAbove</enum>
-            </property>
-            <property name="tickInterval">
-             <number>1</number>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QLabel" name="label_compress_high_speed">
-            <property name="font">
-             <font>
-              <pointsize>12</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>High Speed</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
        <item row="2" column="1">
         <widget class="QFrame" name="frame_ie6">
          <property name="frameShape">
@@ -380,6 +427,25 @@ QFrame#frame_ie6
            </widget>
           </item>
          </layout>
+        </widget>
+       </item>
+       <item row="2" column="3">
+        <widget class="QPushButton" name="pushButton_preview">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Preview</string>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>20</width>
+           <height>20</height>
+          </size>
+         </property>
         </widget>
        </item>
        <item row="2" column="2">
@@ -410,6 +476,142 @@ QFrame#frame_ie6
          </layout>
         </widget>
        </item>
+       <item row="0" column="1" colspan="3">
+        <widget class="QWidget" name="widget_compress_option_row_1" native="true">
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <property name="spacing">
+           <number>4</number>
+          </property>
+          <property name="margin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QFrame" name="frame_colors">
+            <property name="frameShape">
+             <enum>QFrame::Panel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Sunken</enum>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_6">
+             <property name="margin">
+              <number>4</number>
+             </property>
+             <property name="spacing">
+              <number>4</number>
+             </property>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_colors">
+               <property name="text">
+                <string>Colors</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QSpinBox" name="spinBox_colors">
+               <property name="minimum">
+                <number>2</number>
+               </property>
+               <property name="maximum">
+                <number>256</number>
+               </property>
+               <property name="value">
+                <number>256</number>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QSlider" name="horizontalSlider_colors">
+               <property name="minimum">
+                <number>0</number>
+               </property>
+               <property name="maximum">
+                <number>7</number>
+               </property>
+               <property name="value">
+                <number>7</number>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="tickPosition">
+                <enum>QSlider::TicksAbove</enum>
+               </property>
+               <property name="tickInterval">
+                <number>1</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QFrame" name="frame_speed">
+            <property name="frameShape">
+             <enum>QFrame::Panel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Sunken</enum>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_5">
+             <property name="margin">
+              <number>4</number>
+             </property>
+             <property name="spacing">
+              <number>3</number>
+             </property>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_compress_high_quality">
+               <property name="font">
+                <font>
+                 <pointsize>12</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>High Quality</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QSlider" name="horizontalSlider_compress_speed">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>10</number>
+               </property>
+               <property name="value">
+                <number>3</number>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="tickPosition">
+                <enum>QSlider::TicksAbove</enum>
+               </property>
+               <property name="tickInterval">
+                <number>1</number>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QLabel" name="label_compress_high_speed">
+               <property name="font">
+                <font>
+                 <pointsize>12</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>High Speed</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
       </layout>
      </widget>
     </item>
@@ -420,7 +622,7 @@ QFrame#frame_ie6
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>564</width>
+     <width>563</width>
      <height>22</height>
     </rect>
    </property>
@@ -436,7 +638,28 @@ QFrame#frame_ie6
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <tabstops>
+  <tabstop>horizontalSlider_colors</tabstop>
+  <tabstop>spinBox_colors</tabstop>
+  <tabstop>horizontalSlider_compress_speed</tabstop>
+  <tabstop>checkBox_ie6_support</tabstop>
+  <tabstop>checkBox_dithered</tabstop>
+  <tabstop>pushButton_preview</tabstop>
+  <tabstop>tableWidget_filelist</tabstop>
+  <tabstop>pushButton_filelist_clear</tabstop>
+  <tabstop>radioButton_output_same_directory</tabstop>
+  <tabstop>radioButton_output_other_directory</tabstop>
+  <tabstop>lineEdit_output_directory</tabstop>
+  <tabstop>toolButton_open_output_directory</tabstop>
+  <tabstop>comboBox_output_filename_mode</tabstop>
+  <tabstop>lineEdit_output_file_prefix</tabstop>
+  <tabstop>lineEdit_output_file_suffix</tabstop>
+  <tabstop>checkBox_overwrite</tabstop>
+  <tabstop>pushButton_exec</tabstop>
+ </tabstops>
+ <resources>
+  <include location="resource/resource.qrc"/>
+ </resources>
  <connections/>
  <buttongroups>
   <buttongroup name="buttonGroup_output_directory_mode"/>

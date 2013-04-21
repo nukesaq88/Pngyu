@@ -1,6 +1,8 @@
 #include "pngyumainwindow.h"
 #include "ui_pngyumainwindow.h"
 
+#include <cmath>
+
 #include <QProcess>
 #include <QDebug>
 #include <QTime>
@@ -20,6 +22,8 @@
 
 #include "pngyu_util.h"
 
+
+
 namespace
 {
 
@@ -37,6 +41,30 @@ enum TableColumn
 const QString TEMP_SRC_FILENAME = "src.png";
 const QString TEMP_DST_FILENAME = "src_dst.png";
 const QString TEMP_DST_FILENAME_SUFFIX = "_dst.png";
+
+const QPixmap& success_icon_pixmap()
+{
+  static QPixmap p( ":/icons/check.png" );
+  return p;
+}
+
+const QPixmap& failure_icon_pixmap()
+{
+  static QPixmap p( ":/icons/stop.png" );
+  return p;
+}
+
+const QIcon& success_icon()
+{
+  static QIcon i( success_icon_pixmap() );
+  return i;
+}
+
+const QIcon& failure_icon()
+{
+  static QIcon i( failure_icon_pixmap() );
+  return i;
+}
 
 }
 
@@ -63,6 +91,7 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
                                            new QTableWidgetItem( tr("Saving") ) );
   }
 
+
   connect( ui->spinBox_colors, SIGNAL(valueChanged(int)), this, SLOT(ncolor_spinbox_changed()) );
   connect( ui->horizontalSlider_colors, SIGNAL(valueChanged(int)), this, SLOT(ncolor_slider_changed()) );
 
@@ -78,9 +107,16 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
   //  connect( ui->radioButton_output_other_directory, SIGNAL(toggled(bool)),
   //           this, SLOT(output_directory_mode_changed()) );
 
+  connect( ui->comboBox_output_filename_mode, SIGNAL(currentIndexChanged(int)),
+           this, SLOT(output_filename_mode_changed()) );
+
   connect( ui->pushButton_filelist_clear, SIGNAL(clicked()), this, SLOT(file_list_clear_pushed()) );
 
+  connect( ui->tableWidget_filelist, SIGNAL(currentCellChanged(int,int,int,int)), this, SLOT(table_widget_current_changed()) );
+
+
   output_directory_mode_changed();
+  output_filename_mode_changed();
 }
 
 PngyuMainWindow::~PngyuMainWindow()
@@ -108,11 +144,11 @@ QString PngyuMainWindow::make_output_file_path_string( const QString &input_file
   const pngyu::OuputDirectoryMode output_dir_mode = current_output_directory_mode();
 
   QString output_dir_path;
-  if( output_dir_mode == pngyu::OUTPUT_SAME )
+  if( output_dir_mode == pngyu::OUTPUT_DIR_SAME )
   {
     output_dir_path = input_file_info.absolutePath();
   }
-  else if( output_dir_mode == pngyu::OUTPUT_OTHER && is_output_directory_valid() )
+  else if( output_dir_mode == pngyu::OUTPUT_DIR_OTHER && is_output_directory_valid() )
   {
     output_dir_path = output_directory();
   }
@@ -144,11 +180,11 @@ QString PngyuMainWindow::executable_pngquant_path() const
 
 void PngyuMainWindow::set_current_output_directory_mode( const pngyu::OuputDirectoryMode mode )
 {
-  if( mode == pngyu::OUTPUT_SAME )
+  if( mode == pngyu::OUTPUT_DIR_SAME )
   {
     ui->radioButton_output_same_directory->setChecked( true );
   }
-  else if( mode == pngyu::OUTPUT_OTHER )
+  else if( mode == pngyu::OUTPUT_DIR_OTHER )
   {
     ui->radioButton_output_other_directory->setChecked( true );
   }
@@ -160,13 +196,39 @@ pngyu::OuputDirectoryMode PngyuMainWindow::current_output_directory_mode() const
   const bool other_checked = ui->radioButton_output_other_directory->isChecked();
   if( same_checked && ! other_checked  )
   {
-    return pngyu::OUTPUT_SAME;
+    return pngyu::OUTPUT_DIR_SAME;
   }
   else if( ! same_checked && other_checked  )
   {
-    return pngyu::OUTPUT_OTHER;
+    return pngyu::OUTPUT_DIR_OTHER;
   }
-  return pngyu::OUTPUT_UNKNOWN;
+  return pngyu::OUTPUT_DIR_UNKNOWN;
+}
+
+void PngyuMainWindow::set_current_outoput_filename_mode( const pngyu::OutputFinenameMode mode )
+{
+  if( mode == pngyu::OUTPUT_FILE_SAME_AS_ORIGINAL )
+  {
+    ui->comboBox_output_filename_mode->setCurrentIndex( 0 );
+  }
+  else if( mode == pngyu::OUTPUT_FILE_CUSTOM )
+  {
+    ui->comboBox_output_filename_mode->setCurrentIndex( 0 );
+  }
+}
+
+pngyu::OutputFinenameMode PngyuMainWindow::current_outoput_filename_mode() const
+{
+  const int index = ui->comboBox_output_filename_mode->currentIndex();
+  if( index == 0 )
+  {
+    return pngyu::OUTPUT_FILE_SAME_AS_ORIGINAL;
+  }
+  else if( index == 1 )
+  {
+    return pngyu::OUTPUT_FILE_CUSTOM;
+  }
+  return pngyu::OUTPUT_FILE_UNKNOWN;
 }
 
 void PngyuMainWindow::set_output_directory( const QString &output_directory )
@@ -325,12 +387,15 @@ void PngyuMainWindow::execute_compress()
     {
       resultItem->setText( e );
       resultItem->setToolTip( e );
+      resultItem->setIcon( failure_icon() );
       compress_succeed = false;
       //table_widget->setItem( row, COLUMN_RESULT, new QTableWidgetItem( e ) );
     }
 
     if( compress_succeed )
     {
+      resultItem->setIcon( success_icon() );
+
       const qint64 dst_size = QFileInfo( dst_path ).size();
 
       table_widget->setItem( row, COLUMN_ORIGINAL_SIZE,
@@ -407,7 +472,7 @@ void PngyuMainWindow::dropEvent( QDropEvent *event )
     if( url_list.size() == 1 )
     {
       set_output_directory( url_list.first().toLocalFile() );
-      set_current_output_directory_mode( pngyu::OUTPUT_OTHER );
+      set_current_output_directory_mode( pngyu::OUTPUT_DIR_OTHER );
     }
   }
   else if( mouse_is_on_central )
@@ -513,13 +578,23 @@ void PngyuMainWindow::output_directory_mode_changed()
 {
   const pngyu::OuputDirectoryMode mode = current_output_directory_mode();
 
-  ui->toolButton_open_output_directory->setEnabled( mode == pngyu::OUTPUT_OTHER );
-  ui->lineEdit_output_directory->setEnabled( mode == pngyu::OUTPUT_OTHER );
+  ui->toolButton_open_output_directory->setEnabled( mode == pngyu::OUTPUT_DIR_OTHER );
+  ui->lineEdit_output_directory->setEnabled( mode == pngyu::OUTPUT_DIR_OTHER );
   QPalette p = ui->lineEdit_output_directory->palette();
-  p.setBrush( QPalette::Base, mode == pngyu::OUTPUT_OTHER ?
+  p.setBrush( QPalette::Base, mode == pngyu::OUTPUT_DIR_OTHER ?
                 QPalette().brush( QPalette::Base ) : //QBrush(Qt::lightGray) );
                 QPalette().brush( QPalette::Window )  );
   ui->lineEdit_output_directory->setPalette( p );
+}
+
+void PngyuMainWindow::output_filename_mode_changed()
+{
+  const pngyu::OutputFinenameMode mode = current_outoput_filename_mode();
+  ui->widget_custom_output_filename->setVisible( mode == pngyu::OUTPUT_FILE_CUSTOM );
+
+  if( mode == pngyu::OUTPUT_FILE_SAME_AS_ORIGINAL &&
+      current_outoput_filename_mode() == pngyu::OUTPUT_DIR_SAME )
+    set_file_overwrite_enabled( true );
 }
 
 void PngyuMainWindow::file_list_clear_pushed()
@@ -566,5 +641,25 @@ void PngyuMainWindow::ncolor_slider_changed()
   case 7: ncolor = 256; break;
   }
   set_ncolor( ncolor );
+}
+
+void PngyuMainWindow::table_widget_current_changed()
+{
+  QTableWidget * const table_widget = file_list_table_widget();
+  const int current_row = table_widget->currentRow();
+  const QTableWidgetItem *path_item = table_widget->item( current_row, COLUMN_ABSOLUTE_PATH );
+  if( ! path_item )
+  {
+    return;
+  }
+  const QString current_path = path_item->text();
+
+  const QSize &icon_size = ui->pushButton_preview->iconSize();
+  const QImage &icon_image =
+      pngyu::util::read_thumbnail_image( current_path,
+                                         icon_size.width() );
+
+  ui->pushButton_preview->setIcon( QPixmap::fromImage( icon_image ) );
+  qDebug() << current_path;
 }
 

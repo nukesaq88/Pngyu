@@ -1,6 +1,8 @@
 #ifndef PNGYU_UTIL_H
 #define PNGYU_UTIL_H
 
+#include <cmath>
+
 #include <QWidget>
 #include <QApplication>
 #include <QCursor>
@@ -52,6 +54,16 @@ bool can_read_png_file( const QFileInfo &file )
 {
   QImageReader image_reader( file.absoluteFilePath(), "png" );
   return image_reader.canRead();
+}
+
+QImage read_thumbnail_image( const QString &filename, const int size )
+{
+  QImageReader image_reader( filename );
+  const QSize &origin_size = image_reader.size();
+  const double scale =  static_cast<double>( size ) / std::max( origin_size.width(), origin_size.height() );
+  const QSize dst_size( scale * origin_size.width(), scale * origin_size.height() );
+  image_reader.setScaledSize( dst_size );
+  return image_reader.read();
 }
 
 bool is_under_mouse( const QWidget * const widget )
