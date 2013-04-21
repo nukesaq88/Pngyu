@@ -13,17 +13,19 @@ TEMPLATE = app
 
 
 SOURCES += \
-  main.cpp\
-  pngyumainwindow.cpp
+    main.cpp\
+    pngyumainwindow.cpp \
+    pngyu_execute_compress.cpp
 
 HEADERS  += \
     pngyumainwindow.h \
     pngyu_util.h \
     pngyu_option.h \
-    pngyu_difines.h
+    pngyu_difines.h \
+    pngyu_execute_compress.h
 
 FORMS += \
-  pngyumainwindow.ui
+    pngyumainwindow.ui
 
 RESOURCES += \
     resource/resource.qrc

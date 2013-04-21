@@ -21,6 +21,7 @@
 #include <QImageReader>
 
 #include "pngyu_util.h"
+#include "pngyu_execute_compress.h"
 
 
 
@@ -293,7 +294,7 @@ int PngyuMainWindow::compress_speed() const
 
 
 void PngyuMainWindow::execute_compress()
-{
+{ 
   const QString &temporary_path = pngyu::util::app_temporay_path();
   pngyu::util::make_app_temporary_path();
 
@@ -348,26 +349,14 @@ void PngyuMainWindow::execute_compress()
         throw QString( "Error: \"" + dst_path + "\" is already exists" );
       }
 
-      QProcess process;
-      process.setProcessEnvironment( QProcessEnvironment::systemEnvironment() );
-      process.start( command );
-
-      if( ! process.waitForStarted() )
-      {
-        throw QString( "Error: Process cannot started" );
+      { // exetute pngquant command
+        const QPair<bool,QString> &compress_func_res =
+            pngyu::execute_compress( command );
+        if( ! compress_func_res.first )
+        {
+          throw compress_func_res.second;
+        }
       }
-      if( ! process.waitForFinished() )
-      {
-        throw QString( "Error: Process timeout" );
-      }
-      const int exit_code = process.exitCode();
-      if( process.exitCode() != 0 )
-      {
-        throw QString( "Error code : %1\nCause : %2" )
-            .arg( exit_code )
-            .arg( QString(process.readAllStandardError()) );
-      }
-
 
       if( dst_path_exists )
       {
@@ -377,7 +366,7 @@ void PngyuMainWindow::execute_compress()
         }
       }
 
-
+      // copy result file to dst_path
       if( ! QFile::copy( temp_dst_path,  dst_path  ) )
       {
          throw QString( "Couldn't save output file" );
@@ -389,7 +378,6 @@ void PngyuMainWindow::execute_compress()
       resultItem->setToolTip( e );
       resultItem->setIcon( failure_icon() );
       compress_succeed = false;
-      //table_widget->setItem( row, COLUMN_RESULT, new QTableWidgetItem( e ) );
     }
 
     if( compress_succeed )
