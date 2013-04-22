@@ -9,6 +9,8 @@
 #include "pngyu_difines.h"
 #include "pngyu_option.h"
 
+class PngyuPreviewWindow;
+
 namespace Ui {
 class PngyuMainWindow;
 }
@@ -27,7 +29,7 @@ public:
 
   QString make_output_file_path_string( const QString &input_file_path ) const;
 
-  pngyu::PngquantOption make_pngquant_option() const;
+  pngyu::PngquantOption make_pngquant_option( const QString &output_file_suffix ) const;
 
   QString executable_pngquant_path() const;
 
@@ -35,7 +37,7 @@ public:
   pngyu::OuputDirectoryMode current_output_directory_mode() const;
 
   void set_current_outoput_filename_mode( const pngyu::OutputFinenameMode mode );
-  pngyu::OutputFinenameMode current_outoput_filename_mode() const;
+  pngyu::OutputFinenameMode current_output_filename_mode() const;
 
   void set_output_directory( const QString &output_directory );
   QString output_directory() const;
@@ -55,7 +57,11 @@ public:
   void set_compress_speed( const int speed );
   int compress_speed() const;
 
-  void execute_compress();
+  void execute_compress_all();
+
+  bool is_preview_window_visible() const;
+
+  QString current_selected_filename() const;
 
 protected:
   virtual void dragEnterEvent( QDragEnterEvent *event );
@@ -72,10 +78,12 @@ protected:
   
 private:
   Ui::PngyuMainWindow *ui;
+  PngyuPreviewWindow *m_preview_window;
   QFileInfoList m_file_list;
 
 private slots:
   void exec_pushed();
+  void compress_option_changed();
   void output_directory_changed();
   void open_output_directory_pushed();
   void output_directory_mode_changed();
@@ -84,6 +92,8 @@ private slots:
   void ncolor_spinbox_changed();
   void ncolor_slider_changed();
   void table_widget_current_changed();
+  void preview_button_toggled( bool );
+  void preview_window_closed();
 };
 
 #endif // PNGYUMAINWINDOW_H

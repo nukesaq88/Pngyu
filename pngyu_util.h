@@ -10,6 +10,8 @@
 #include <QImageReader>
 #include <QRegExp>
 #include <QDir>
+#include <QFile>
+#include <QByteArray>
 
 namespace pngyu
 {
@@ -17,46 +19,75 @@ namespace util
 {
 namespace detail
 {
-  const QColor ENABLE_COLOR = QColor("lightskyblue");
+  const QColor DEFAULT_ENABLE_COLOR = QColor("lightskyblue");
 }
 
-QString app_home_path()
+inline QString app_home_path()
 {
   return QDir::homePath() + "/.pngyu";
 }
 
-QString app_temporay_path()
+inline QString app_temporay_path()
 {
   return app_home_path() + "/temp";
 }
 
-bool ma_app_home_path()
+inline bool ma_app_home_path()
 {
   return QDir().mkpath( app_home_path() );
 }
 
-bool make_app_temporary_path()
+inline bool make_app_temporary_path()
 {
   return QDir().mkpath( app_temporay_path() );
 }
 
-QString size_to_string( const qint64 size )
+inline QByteArray png_file_to_bytearray( const QString &filename )
 {
-  return QString( "%1kb" ).arg( static_cast<double>(size) / 1000, 0, 'f', 2 );
+  QFile f( filename );
+  f.open( QIODevice::ReadOnly );
+  return f.readAll();
 }
 
-bool has_png_extention( const QFileInfo &file )
+inline bool write_png_data( const QString &filename, const QByteArray png_data )
+{
+  QFile f( filename );
+  if( ! f.open( QIODevice::WriteOnly | QIODevice::Truncate ) )
+  {
+    return false;
+  }
+
+  if( f.write( png_data ) != png_data.size() )
+  {
+    return false;
+  }
+  return true;
+}
+
+inline QString size_to_string_kb( const qint64 size )
+{
+  return QString( "%1KB" )
+      .arg( static_cast<double>(size) / 1024, 0, 'f', 2 );
+}
+
+inline QString size_to_string_mb( const qint64 size )
+{
+  return QString( "%1MB" )
+      .arg( static_cast<double>(size) / ( 1024 * 1024 ), 0, 'f', 2 );
+}
+
+inline bool has_png_extention( const QFileInfo &file )
 {
   return QRegExp( "png", Qt::CaseInsensitive ).exactMatch( file.suffix() );
 }
 
-bool can_read_png_file( const QFileInfo &file )
+inline bool can_read_png_file( const QFileInfo &file )
 {
   QImageReader image_reader( file.absoluteFilePath(), "png" );
   return image_reader.canRead();
 }
 
-QImage read_thumbnail_image( const QString &filename, const int size )
+inline QImage read_thumbnail_image( const QString &filename, const int size )
 {
   QImageReader image_reader( filename );
   const QSize &origin_size = image_reader.size();
@@ -66,15 +97,15 @@ QImage read_thumbnail_image( const QString &filename, const int size )
   return image_reader.read();
 }
 
-bool is_under_mouse( const QWidget * const widget )
+inline bool is_under_mouse( const QWidget * const widget )
 {
   return QRect( QPoint(), widget->size() ).contains( widget->mapFromGlobal( QCursor::pos() ) );
 }
 
-void set_drop_enabled_palette(
+inline void set_drop_enabled_palette(
     QWidget * const widget,
     bool enabled,
-    const QColor &enable_color = detail::ENABLE_COLOR )
+    const QColor &enable_color = detail::DEFAULT_ENABLE_COLOR )
 {
   QPalette palette = widget->palette();
   if( enabled )
@@ -88,8 +119,32 @@ void set_drop_enabled_palette(
   widget->setPalette( palette );
 }
 
+inline const QPixmap& success_icon_pixmap()
+{
+  static QPixmap p( ":/icons/check.png" );
+  return p;
+}
+
+inline const QPixmap& failure_icon_pixmap()
+{
+  static QPixmap p( ":/icons/stop.png" );
+  return p;
+}
+
+inline const QIcon& success_icon()
+{
+  static QIcon i( success_icon_pixmap() );
+  return i;
+}
+
+inline const QIcon& failure_icon()
+{
+  static QIcon i( failure_icon_pixmap() );
+  return i;
+}
 
 }
 }
+
 
 #endif // PNGYU_UTIL_H

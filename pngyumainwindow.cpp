@@ -20,8 +20,11 @@
 
 #include <QImageReader>
 
+#include "pngyupreviewwindow.h"
+
 #include "pngyu_util.h"
 #include "pngyu_execute_compress.h"
+
 
 
 
@@ -39,39 +42,12 @@ enum TableColumn
   TABLE_COLUMN_COUNT
 };
 
-const QString TEMP_SRC_FILENAME = "src.png";
-const QString TEMP_DST_FILENAME = "src_dst.png";
-const QString TEMP_DST_FILENAME_SUFFIX = "_dst.png";
-
-const QPixmap& success_icon_pixmap()
-{
-  static QPixmap p( ":/icons/check.png" );
-  return p;
-}
-
-const QPixmap& failure_icon_pixmap()
-{
-  static QPixmap p( ":/icons/stop.png" );
-  return p;
-}
-
-const QIcon& success_icon()
-{
-  static QIcon i( success_icon_pixmap() );
-  return i;
-}
-
-const QIcon& failure_icon()
-{
-  static QIcon i( failure_icon_pixmap() );
-  return i;
-}
-
-}
+} // namespace
 
 PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
-  QMainWindow(parent),
-  ui(new Ui::PngyuMainWindow)
+  QMainWindow( parent ),
+  ui( new Ui::PngyuMainWindow ),
+  m_preview_window( new PngyuPreviewWindow(this) )
 {
   ui->setupUi(this);
 
@@ -115,9 +91,30 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
 
   connect( ui->tableWidget_filelist, SIGNAL(currentCellChanged(int,int,int,int)), this, SLOT(table_widget_current_changed()) );
 
+  connect( ui->pushButton_preview, SIGNAL(toggled(bool)),
+           this, SLOT(preview_button_toggled(bool)) );
+
+  connect( m_preview_window, SIGNAL(closed()),
+           this, SLOT(preview_window_closed()) );
+
+  // connect compress option changed slot
+  connect( ui->spinBox_colors, SIGNAL(valueChanged(int)),
+           this, SLOT(compress_option_changed()) );
+  connect( ui->horizontalSlider_compress_speed, SIGNAL(valueChanged(int)),
+           this, SLOT(compress_option_changed()) );
+  connect( ui->checkBox_ie6_support, SIGNAL(stateChanged(int)),
+           this, SLOT(compress_option_changed()) );
+  connect( ui->checkBox_dithered, SIGNAL(stateChanged(int)),
+           this, SLOT(compress_option_changed()) );
+  ///
 
   output_directory_mode_changed();
   output_filename_mode_changed();
+  table_widget_current_changed();
+  compress_option_changed();
+
+  m_preview_window->set_executable_pngquant_path(
+        executable_pngquant_path() );
 }
 
 PngyuMainWindow::~PngyuMainWindow()
@@ -162,11 +159,15 @@ QString PngyuMainWindow::make_output_file_path_string( const QString &input_file
       prefix + input_file_info.baseName() + suffix;
 }
 
-pngyu::PngquantOption PngyuMainWindow::make_pngquant_option() const
+pngyu::PngquantOption PngyuMainWindow::make_pngquant_option( const QString &output_file_suffix ) const
 {
   pngyu::PngquantOption option;
   option.set_ncolors( ncolor() );
-  option.set_out_suffix( TEMP_DST_FILENAME_SUFFIX );
+
+  if( ! output_file_suffix.isEmpty() )
+  {
+    option.set_out_suffix( output_file_suffix );
+  }
   //option.set_force_overwrite( true );
   option.set_speed( compress_speed() );
   option.set_floyd_steinberg_dithering_disabled( ! dither_enabled() );
@@ -218,7 +219,7 @@ void PngyuMainWindow::set_current_outoput_filename_mode( const pngyu::OutputFine
   }
 }
 
-pngyu::OutputFinenameMode PngyuMainWindow::current_outoput_filename_mode() const
+pngyu::OutputFinenameMode PngyuMainWindow::current_output_filename_mode() const
 {
   const int index = ui->comboBox_output_filename_mode->currentIndex();
   if( index == 0 )
@@ -293,14 +294,11 @@ int PngyuMainWindow::compress_speed() const
 }
 
 
-void PngyuMainWindow::execute_compress()
+void PngyuMainWindow::execute_compress_all()
 { 
-  const QString &temporary_path = pngyu::util::app_temporay_path();
-  pngyu::util::make_app_temporary_path();
-
   const bool overwrite_enable = file_overwrite_enabled();
 
-  const pngyu::PngquantOption &option = make_pngquant_option();
+  const pngyu::PngquantOption &option = make_pngquant_option( QString() );
   const QString &pngquant_path = executable_pngquant_path();
 
   QTableWidget *table_widget = file_list_table_widget();
@@ -310,7 +308,7 @@ void PngyuMainWindow::execute_compress()
     const QTableWidgetItem * const absolute_path_item = table_widget->item( row, COLUMN_ABSOLUTE_PATH );
     if( ! absolute_path_item )
     {
-      qDebug() << "Item is null. row:" << row;
+      qWarning() << "Item is null. row:" << row;
       continue;
     }
 
@@ -319,28 +317,20 @@ void PngyuMainWindow::execute_compress()
 
     table_widget->scrollToItem( resultItem );
 
-
     const QString &src_path = absolute_path_item->text();
     const QString &dst_path = make_output_file_path_string( src_path );
 
     if( dst_path.isEmpty() )
     {
-      qDebug() << "dst path is empty";
+      qWarning() << "dst path is empty";
       continue;
     }
 
-    const qint64 src_size = QFileInfo( src_path ).size();
+    const QByteArray &src_png_data = pngyu::util::png_file_to_bytearray( src_path );
+    QByteArray dst_png_data;
 
+    const QString command = option.make_pngquant_command_stdio_mode( pngquant_path );
 
-    const QString temp_src_path = temporary_path + "/" + TEMP_SRC_FILENAME;
-    const QString temp_dst_path = temporary_path + "/" + TEMP_DST_FILENAME;
-    QFile::remove( temp_src_path );
-    QFile::remove( temp_dst_path );
-    QFile::copy( src_path,  temp_src_path );
-
-    const QString command = option.make_pngquant_command( pngquant_path, temp_src_path );
-
-    bool compress_succeed = true;
     try
     {
       const bool dst_path_exists = QFile::exists( dst_path );
@@ -349,10 +339,13 @@ void PngyuMainWindow::execute_compress()
         throw QString( "Error: \"" + dst_path + "\" is already exists" );
       }
 
+      const QByteArray &src_png_data = pngyu::util::png_file_to_bytearray( src_path );
+
       { // exetute pngquant command
-        const QPair<bool,QString> &compress_func_res =
-            pngyu::execute_compress( command );
-        if( ! compress_func_res.first )
+        const QPair<QByteArray,QString> &compress_func_res =
+            pngyu::execute_compress_stdio_mode( command, src_png_data );
+        dst_png_data = compress_func_res.first;
+        if( dst_png_data.isEmpty() )
         {
           throw compress_func_res.second;
         }
@@ -367,7 +360,7 @@ void PngyuMainWindow::execute_compress()
       }
 
       // copy result file to dst_path
-      if( ! QFile::copy( temp_dst_path,  dst_path  ) )
+      if( ! pngyu::util::write_png_data( dst_path, dst_png_data ) )
       {
          throw QString( "Couldn't save output file" );
       }
@@ -376,20 +369,21 @@ void PngyuMainWindow::execute_compress()
     {
       resultItem->setText( e );
       resultItem->setToolTip( e );
-      resultItem->setIcon( failure_icon() );
-      compress_succeed = false;
+      resultItem->setIcon( pngyu::util::failure_icon() );
+      dst_png_data.clear();
     }
 
-    if( compress_succeed )
+    if( ! dst_png_data.isEmpty() )
     {
-      resultItem->setIcon( success_icon() );
+      resultItem->setIcon( pngyu::util::success_icon() );
 
-      const qint64 dst_size = QFileInfo( dst_path ).size();
+      const qint64 src_size = src_png_data.size();
+      const qint64 dst_size = dst_png_data.size();
 
       table_widget->setItem( row, COLUMN_ORIGINAL_SIZE,
-                             new QTableWidgetItem( pngyu::util::size_to_string( src_size ) ) );
+                             new QTableWidgetItem( pngyu::util::size_to_string_kb( src_size ) ) );
       table_widget->setItem( row, COLUMN_OUTPUT_SIZE,
-                             new QTableWidgetItem( pngyu::util::size_to_string( dst_size ) ) );
+                             new QTableWidgetItem( pngyu::util::size_to_string_kb( dst_size ) ) );
       const double saving_rate = static_cast<double>( src_size - dst_size ) / ( src_size );
 
       table_widget->setItem( row, COLUMN_SAVING,
@@ -398,6 +392,19 @@ void PngyuMainWindow::execute_compress()
 
     QApplication::processEvents();
   }
+}
+
+bool PngyuMainWindow::is_preview_window_visible() const
+{
+  return m_preview_window->isVisible();
+}
+
+QString PngyuMainWindow::current_selected_filename() const
+{
+  QTableWidget * const table_widget = ui->tableWidget_filelist;
+  const int current_row = table_widget->currentRow();
+  const QTableWidgetItem * const path_item = table_widget->item( current_row, COLUMN_ABSOLUTE_PATH );
+  return path_item ? path_item->text() : QString();
 }
 
 //////////////////////
@@ -477,6 +484,9 @@ void PngyuMainWindow::dropEvent( QDropEvent *event )
 void PngyuMainWindow::update_file_table()
 {
   QTableWidget * const table_widget = file_list_table_widget();
+  //temporary disconnect
+  disconnect( table_widget, SIGNAL(currentCellChanged(int,int,int,int)), this, SLOT(table_widget_current_changed()) );
+  const QString &last_selected_filename = current_selected_filename();
   table_widget->setRowCount( 0 ); // reset file list table
   table_widget->setRowCount( m_file_list.size() );
   {
@@ -486,12 +496,20 @@ void PngyuMainWindow::update_file_table()
       QTableWidgetItem * const basename_item = new QTableWidgetItem( file_info.baseName() );
       basename_item->setToolTip( file_info.baseName() );
       table_widget->setItem( row_index, COLUMN_BASENAME, basename_item );
+      const QString &absolute_path = file_info.absoluteFilePath();
       QTableWidgetItem * const abspath_item =new QTableWidgetItem( file_info.absoluteFilePath() );
-      abspath_item->setToolTip( file_info.absoluteFilePath() );
+      abspath_item->setToolTip( absolute_path );
       table_widget->setItem( row_index, COLUMN_ABSOLUTE_PATH, abspath_item );
+      if( last_selected_filename == absolute_path )
+      {
+        table_widget->setCurrentItem( abspath_item );
+      }
       ++row_index;
     }
   }
+  // reconnect
+  connect( table_widget, SIGNAL(currentCellChanged(int,int,int,int)), this, SLOT(table_widget_current_changed()) );
+  table_widget_current_changed();
 }
 
 void PngyuMainWindow::append_file_info_recursive( const QFileInfo &file_info,
@@ -531,8 +549,14 @@ void PngyuMainWindow::exec_pushed()
 {
   QTime t;
   t.start();
-  execute_compress();
+  execute_compress_all();
   qDebug() << "execute" << t.elapsed() << "ms elapsed";
+}
+
+void PngyuMainWindow::compress_option_changed()
+{
+  m_preview_window->set_current_pngquant_option(
+        make_pngquant_option( QString() ) );
 }
 
 void PngyuMainWindow::output_directory_changed()
@@ -577,11 +601,11 @@ void PngyuMainWindow::output_directory_mode_changed()
 
 void PngyuMainWindow::output_filename_mode_changed()
 {
-  const pngyu::OutputFinenameMode mode = current_outoput_filename_mode();
+  const pngyu::OutputFinenameMode mode = current_output_filename_mode();
   ui->widget_custom_output_filename->setVisible( mode == pngyu::OUTPUT_FILE_CUSTOM );
 
   if( mode == pngyu::OUTPUT_FILE_SAME_AS_ORIGINAL &&
-      current_outoput_filename_mode() == pngyu::OUTPUT_DIR_SAME )
+      current_output_directory_mode() == pngyu::OUTPUT_DIR_SAME )
     set_file_overwrite_enabled( true );
 }
 
@@ -633,21 +657,34 @@ void PngyuMainWindow::ncolor_slider_changed()
 
 void PngyuMainWindow::table_widget_current_changed()
 {
-  QTableWidget * const table_widget = file_list_table_widget();
-  const int current_row = table_widget->currentRow();
-  const QTableWidgetItem *path_item = table_widget->item( current_row, COLUMN_ABSOLUTE_PATH );
-  if( ! path_item )
+  const QString current_path = current_selected_filename();
+
+  m_preview_window->set_png_file( current_path );
+
+  if( ! current_path.isEmpty() )
   {
-    return;
+    ui->pushButton_preview->setEnabled( true );
+    const QSize &icon_size = ui->pushButton_preview->iconSize();
+    const QImage &icon_image =
+        pngyu::util::read_thumbnail_image( current_path,
+                                           icon_size.width() );
+
+    ui->pushButton_preview->setIcon( QPixmap::fromImage( icon_image ) );
   }
-  const QString current_path = path_item->text();
+  else
+  {
+    ui->pushButton_preview->setEnabled( false );
+    ui->pushButton_preview->setIcon( QIcon() );
+  }
+}
 
-  const QSize &icon_size = ui->pushButton_preview->iconSize();
-  const QImage &icon_image =
-      pngyu::util::read_thumbnail_image( current_path,
-                                         icon_size.width() );
+void PngyuMainWindow::preview_button_toggled( bool b )
+{
+  m_preview_window->setVisible( b );
+}
 
-  ui->pushButton_preview->setIcon( QPixmap::fromImage( icon_image ) );
-  qDebug() << current_path;
+void PngyuMainWindow::preview_window_closed()
+{
+  ui->pushButton_preview->setChecked( false );
 }
 

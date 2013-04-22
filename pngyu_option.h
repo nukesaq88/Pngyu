@@ -13,7 +13,7 @@ public:
 
   PngquantOption() :
     m_out_suffix(),
-    m_ncolors(256),
+    m_ncolors(-1),
     m_speed(-1),
     m_force_overwrite(false),
     m_ie6_alpha_support(false),
@@ -34,7 +34,7 @@ public:
 
   void set_ncolors( const int n )
   {
-    m_ncolors = std::max( 0, std::min( 256, n ) );
+    m_ncolors = n;
   }
 
   int get_ncolors() const
@@ -108,7 +108,10 @@ public:
     }
 
     // ncolor
-    command += QString( "%1 " ).arg( m_ncolors );
+    if( m_ncolors > 0 )
+    {
+      command += QString( "%1 " ).arg( m_ncolors );
+    }
     return command;
   }
 
@@ -116,6 +119,14 @@ public:
   {
     return pngquant_path + to_pngquant_command_option() + src_file_path;
   }
+
+  QString make_pngquant_command_stdio_mode( const QString &pngquant_path) const
+  {
+    return pngquant_path + to_pngquant_command_option() + " -";
+  }
+
+  friend inline bool operator==( const pngyu::PngquantOption &o1, const pngyu::PngquantOption &o2 );
+  friend inline bool operator!=( const pngyu::PngquantOption &o1, const pngyu::PngquantOption &o2 );
 
 private:
   QString m_out_suffix;
@@ -125,6 +136,22 @@ private:
   bool m_ie6_alpha_support;
   bool m_disable_floyd_steinberg_dithering;
 };
+
+inline bool operator!=( const pngyu::PngquantOption &o1, const pngyu::PngquantOption &o2 )
+{
+  return
+      o1.m_out_suffix != o2.m_out_suffix ||
+      o1.m_ncolors != o2.m_ncolors ||
+      o1.m_speed != o2.m_speed ||
+      o1.m_force_overwrite != o2.m_force_overwrite ||
+      o1.m_ie6_alpha_support != o2.m_ie6_alpha_support ||
+      o1.m_disable_floyd_steinberg_dithering != o2.m_disable_floyd_steinberg_dithering;
+}
+
+inline bool operator==( const pngyu::PngquantOption &o1, const pngyu::PngquantOption &o2 )
+{
+  return !( o1 != o2 );
+}
 
 
 

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>563</width>
+    <width>565</width>
     <height>578</height>
    </rect>
   </property>
@@ -177,7 +177,7 @@ QFrame#frame_ie6
           </sizepolicy>
          </property>
          <property name="title">
-          <string>Other</string>
+          <string/>
          </property>
          <property name="flat">
           <bool>true</bool>
@@ -446,6 +446,9 @@ QFrame#frame_ie6
            <height>20</height>
           </size>
          </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
         </widget>
        </item>
        <item row="2" column="2">
@@ -622,7 +625,7 @@ QFrame#frame_ie6
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>563</width>
+     <width>565</width>
      <height>22</height>
     </rect>
    </property>

@@ -12,4 +12,9 @@
         <file>search.png</file>
         <file>stop.png</file>
     </qresource>
+    <qresource prefix="/background">
+        <file>checkerboard.png</file>
+        <file>black.png</file>
+        <file>white.png</file>
+    </qresource>
 </RCC>
