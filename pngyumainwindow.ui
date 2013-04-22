@@ -391,6 +391,12 @@ QFrame#frame_ie6
     </item>
     <item row="0" column="0" colspan="3">
      <widget class="QGroupBox" name="groupBox_compress_option">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="title">
        <string>Compress Option</string>
       </property>

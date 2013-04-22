@@ -11,6 +11,8 @@
         <file>resource.qrc</file>
         <file>search.png</file>
         <file>stop.png</file>
+        <file>zoomin.png</file>
+        <file>zoomout.png</file>
     </qresource>
     <qresource prefix="/background">
         <file>checkerboard.png</file>

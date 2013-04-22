@@ -38,7 +38,7 @@ enum TableColumn
   COLUMN_RESULT,
   COLUMN_ORIGINAL_SIZE,
   COLUMN_OUTPUT_SIZE,
-  COLUMN_SAVING,
+  COLUMN_SAVED_SIZE,
   TABLE_COLUMN_COUNT
 };
 
@@ -64,8 +64,8 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
                                            new QTableWidgetItem( tr("Size") ) );
     table_widget->setHorizontalHeaderItem( COLUMN_OUTPUT_SIZE,
                                            new QTableWidgetItem( tr("Compressed Size") ) );
-    table_widget->setHorizontalHeaderItem( COLUMN_SAVING,
-                                           new QTableWidgetItem( tr("Saving") ) );
+    table_widget->setHorizontalHeaderItem( COLUMN_SAVED_SIZE,
+                                           new QTableWidgetItem( tr("Saved Size") ) );
   }
 
 
@@ -386,7 +386,7 @@ void PngyuMainWindow::execute_compress_all()
                              new QTableWidgetItem( pngyu::util::size_to_string_kb( dst_size ) ) );
       const double saving_rate = static_cast<double>( src_size - dst_size ) / ( src_size );
 
-      table_widget->setItem( row, COLUMN_SAVING,
+      table_widget->setItem( row, COLUMN_SAVED_SIZE,
                              new QTableWidgetItem( QString( "%1%" ).arg( static_cast<int>(saving_rate * 100) ) ) );
     }
 

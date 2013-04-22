@@ -35,12 +35,18 @@ PngyuPreviewWindow::PngyuPreviewWindow(QWidget *parent) :
   connect( ui->checkBox_show_original, SIGNAL(toggled(bool)),
            this, SLOT(show_original_toggled(bool)) );
 
+  // connecst background select buttons
   connect( ui->toolButton_background_checkerboard, SIGNAL(toggled(bool)),
            this, SLOT(background_select_button_pressed()) );
   connect( ui->toolButton_background_black, SIGNAL(toggled(bool)),
            this, SLOT(background_select_button_pressed()) );
   connect( ui->toolButton_background_white, SIGNAL(toggled(bool)),
            this, SLOT(background_select_button_pressed()) );
+
+  connect( ui->toolButton_zoomin, SIGNAL(clicked()),
+           this, SLOT(zoomin_pushed()) );
+  connect( ui->toolButton_zoomout, SIGNAL(clicked()),
+           this, SLOT(zoomout_pushed()) );
 
   connect( ui->pushButton_original_size, SIGNAL(clicked()),
            this, SLOT(reset_view_scaling()) );
@@ -215,9 +221,6 @@ void PngyuPreviewWindow::show_original_toggled( bool )
 
 void PngyuPreviewWindow::compress_finished()
 {
-//  qDebug() << "finish" << m_execute_compress_thread.is_compress_succeeded() <<
-//              m_execute_compress_thread.error_string();
-
   if( m_execute_compress_thread.is_compress_succeeded() )
   {
     const QByteArray &src_data = m_execute_compress_thread.original_png_data();
@@ -225,12 +228,12 @@ void PngyuPreviewWindow::compress_finished()
     const qint64 src_size = src_data.size();
     const qint64 dst_size = dst_data.size();
 
-    const double saving_rate = static_cast<double>( src_size - dst_size ) / ( src_size );
+    const double saved_rate = static_cast<double>( src_size - dst_size ) / ( src_size );
 
     QString result_test =
         tr("Original Size : ") + pngyu::util::size_to_string_kb( src_size ) + " " +
         tr("Output Size : ") + pngyu::util::size_to_string_kb( dst_size ).rightJustified( 8, ' ' ) + " " +
-        tr("Saving : ") + QString::number( static_cast<int>(saving_rate * 100) ).rightJustified( 3, ' ' ) + "% " +
+        tr("Saved : ") + QString::number( static_cast<int>(saved_rate * 100) ).rightJustified( 3, ' ' ) + "% " +
         QString("");
 
     ui->statusbar->showMessage( result_test );
@@ -270,6 +273,16 @@ void PngyuPreviewWindow::background_select_button_pressed()
 void PngyuPreviewWindow::reset_view_scaling()
 {
   ui->imageview->resetMatrix();
+}
+
+void PngyuPreviewWindow::zoomin_pushed()
+{
+  ui->imageview->scale( 1.2, 1.2 );
+}
+
+void PngyuPreviewWindow::zoomout_pushed()
+{
+  ui->imageview->scale( 1.0 / 1.2, 1.0 / 1.2 );
 }
 
 

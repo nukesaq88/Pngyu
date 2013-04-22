@@ -62,6 +62,8 @@ private slots:
   void compress_finished();
   void background_select_button_pressed();
   void reset_view_scaling();
+  void zoomin_pushed();
+  void zoomout_pushed();
 
 signals:
   void closed();
