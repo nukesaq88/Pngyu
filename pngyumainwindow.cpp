@@ -74,7 +74,7 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
           table_widget->viewport(), false );
   }
 
-  ui->spinner_exec->setVisible( false );
+  ui->widget_executing->setVisible( false );
   ui->widget_file_appending->setVisible( false );
   ui->pushButton_stop_exec->setVisible( false );
 
@@ -416,7 +416,7 @@ void PngyuMainWindow::execute_compress_all()
   // disable ui operation temporary
   set_busy_mode( true );
 
-  ui->spinner_exec->setVisible( true );
+  ui->widget_executing->setVisible( true );
   ui->pushButton_exec->setVisible( false );
   ui->pushButton_stop_exec->setVisible( true );
 
@@ -527,7 +527,7 @@ void PngyuMainWindow::execute_compress_all()
   // ui operation
   set_busy_mode( false );
 
-  ui->spinner_exec->setVisible( false );
+  ui->widget_executing->setVisible( false );
   ui->pushButton_stop_exec->setVisible( false );
   ui->pushButton_exec->setVisible( true );
 
