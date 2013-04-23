@@ -80,7 +80,7 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
 
   connect( ui->pushButton_exec, SIGNAL(clicked()), this, SLOT(exec_pushed()) );
 
-  connect( ui->lineEdit_output_directory, SIGNAL(textChanged(QString)), this, SLOT(output_directory_changed()) );
+  connect( ui->lineEdit_output_directory, SIGNAL(textChanged(QString)), this, SLOT(other_output_directory_changed()) );
 
   connect( ui->toolButton_open_output_directory, SIGNAL(clicked()), this, SLOT(open_output_directory_pushed()) );
 
@@ -91,6 +91,9 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
 
   connect( ui->toolButton_compress_option_default, SIGNAL(toggled(bool)),
            this, SLOT(compress_option_mode_changed()) );
+
+  connect( ui->toolButton_output_option_overwrite_original, SIGNAL(toggled(bool)),
+           this, SLOT(output_option_mode_changed()) );
 
   connect( ui->comboBox_output_filename_mode, SIGNAL(currentIndexChanged(int)),
            this, SLOT(output_filename_mode_changed()) );
@@ -122,6 +125,7 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
   output_filename_mode_changed();
   table_widget_current_changed();
   compress_option_mode_changed();
+  output_option_mode_changed();
   compress_option_changed();
 
   m_preview_window->set_executable_pngquant_path(
@@ -147,27 +151,50 @@ void PngyuMainWindow::file_list_clear()
 QString PngyuMainWindow::make_output_file_path_string( const QString &input_file_path ) const
 {
   const QFileInfo input_file_info( input_file_path );
-  const QString &prefix = ui->lineEdit_output_file_prefix->text();
-  const QString &suffix = ui->lineEdit_output_file_suffix->text();
 
-  const pngyu::OuputDirectoryMode output_dir_mode = current_output_directory_mode();
+  const pngyu::OutputOptionMode output_option_mode = current_output_option_mode();
 
-  QString output_dir_path;
-  if( output_dir_mode == pngyu::OUTPUT_DIR_SAME )
+  if( output_option_mode == pngyu::OUTPUT_OPTION_OVERWITE_ORIGIANL )
   {
-    output_dir_path = input_file_info.absolutePath();
+    return input_file_info.absoluteFilePath();
   }
-  else if( output_dir_mode == pngyu::OUTPUT_DIR_OTHER && is_output_directory_valid() )
+  else if( output_option_mode == pngyu::OUTPUT_OPTION_CUSTOM )
   {
-    output_dir_path = output_directory();
-  }
-  else
-  {
-    return QString();
+    const pngyu::OuputDirectoryMode output_dir_mode = current_output_directory_mode();
+    QString output_dir_path;
+    if( output_dir_mode == pngyu::OUTPUT_DIR_SAME )
+    {
+      output_dir_path = input_file_info.absolutePath();
+    }
+    else if( output_dir_mode == pngyu::OUTPUT_DIR_OTHER && is_other_output_directory_valid() )
+    {
+      output_dir_path = other_output_directory();
+    }
+    else
+    {
+      return QString();
+    }
+
+    QString output_file_name;
+    const pngyu::OutputFinenameMode output_filename_mode = current_output_filename_mode();
+    if( output_filename_mode == pngyu::OUTPUT_FILE_SAME_AS_ORIGINAL )
+    {
+      output_file_name = input_file_info.fileName();
+    }
+    else if( output_filename_mode == pngyu::OUTPUT_FILE_CUSTOM )
+    {
+      const QString &prefix = ui->lineEdit_output_file_prefix->text();
+      const QString &suffix = ui->lineEdit_output_file_suffix->text();
+      output_file_name = prefix + input_file_info.baseName() + suffix;
+    }
+    else
+    {
+      return QString();
+    }
+    return output_dir_path + "/" + output_file_name;
   }
 
-  return output_dir_path + "/" +
-      prefix + input_file_info.baseName() + suffix;
+  return QString();
 }
 
 pngyu::PngquantOption PngyuMainWindow::make_pngquant_option( const QString &output_file_suffix ) const
@@ -218,6 +245,33 @@ pngyu::CompressOptionMode PngyuMainWindow::current_compress_option_mode() const
     return pngyu::COMPRESS_OPTION_CUSTOM;
   }
   return pngyu::COMPRESS_OPTION_UNKNOWN;
+}
+
+void PngyuMainWindow::set_current_output_option_mode( const pngyu::OutputOptionMode mode )
+{
+  if( mode == pngyu::OUTPUT_OPTION_OVERWITE_ORIGIANL )
+  {
+    ui->toolButton_output_option_overwrite_original->setChecked( true );
+  }
+  else if( mode == pngyu::OUTPUT_OPTION_CUSTOM )
+  {
+    ui->toolButton_output_option_custom->setChecked( true );
+  }
+}
+
+pngyu::OutputOptionMode PngyuMainWindow::current_output_option_mode() const
+{
+  const bool overwrite_origin_checked = ui->toolButton_output_option_overwrite_original->isChecked();
+  const bool custom_checked = ui->toolButton_output_option_custom->isChecked();
+  if( overwrite_origin_checked && ! custom_checked  )
+  {
+    return pngyu::OUTPUT_OPTION_OVERWITE_ORIGIANL;
+  }
+  else if( ! overwrite_origin_checked && custom_checked  )
+  {
+    return pngyu::OUTPUT_OPTION_CUSTOM;
+  }
+  return pngyu::OUTPUT_OPTION_UNKNOWN;
 }
 
 
@@ -274,12 +328,12 @@ pngyu::OutputFinenameMode PngyuMainWindow::current_output_filename_mode() const
   return pngyu::OUTPUT_FILE_UNKNOWN;
 }
 
-void PngyuMainWindow::set_output_directory( const QString &output_directory )
+void PngyuMainWindow::set_other_output_directory( const QString &output_directory )
 {
   ui->lineEdit_output_directory->setText( output_directory );
 }
 
-QString PngyuMainWindow::output_directory() const
+QString PngyuMainWindow::other_output_directory() const
 {
   return QDir( ui->lineEdit_output_directory->text() ).absolutePath();
 }
@@ -437,6 +491,10 @@ void PngyuMainWindow::execute_compress_all()
     }
 
     QApplication::processEvents();
+    if( m_stop_request )
+    {
+      break;
+    }
   }
 
   // ui operation
@@ -539,7 +597,7 @@ void PngyuMainWindow::dropEvent( QDropEvent *event )
   {
     if( url_list.size() == 1 )
     {
-      set_output_directory( url_list.first().toLocalFile() );
+      set_other_output_directory( url_list.first().toLocalFile() );
       set_current_output_directory_mode( pngyu::OUTPUT_DIR_OTHER );
     }
   }
@@ -616,7 +674,7 @@ void PngyuMainWindow::append_file_info_recursive( const QFileInfo &file_info,
   }
 }
 
-bool PngyuMainWindow::is_output_directory_valid() const
+bool PngyuMainWindow::is_other_output_directory_valid() const
 {
   QLineEdit * const line_edit = ui->lineEdit_output_directory;
   const QFileInfo output_directory( line_edit->text() );
@@ -642,11 +700,11 @@ void PngyuMainWindow::compress_option_changed()
         make_pngquant_option( QString() ) );
 }
 
-void PngyuMainWindow::output_directory_changed()
+void PngyuMainWindow::other_output_directory_changed()
 {
   QLineEdit * const line_edit = ui->lineEdit_output_directory;
   QPalette palette = line_edit->palette();
-  if( is_output_directory_valid() || output_directory().isEmpty() )
+  if( is_other_output_directory_valid() || other_output_directory().isEmpty() )
   {
     palette.setBrush( QPalette::Text, QBrush() );
   }
@@ -665,7 +723,7 @@ void PngyuMainWindow::open_output_directory_pushed()
 
   if( ! path.isEmpty() )
   {
-    set_output_directory( path );
+    set_other_output_directory( path );
   }
 }
 
@@ -673,6 +731,12 @@ void PngyuMainWindow::compress_option_mode_changed()
 {
   const pngyu::CompressOptionMode mode = current_compress_option_mode();
   ui->widget_compress_option_custom_options->setVisible( mode == pngyu::COMPRESS_OPTION_CUSTOM );
+}
+
+void PngyuMainWindow::output_option_mode_changed()
+{
+  const pngyu::OutputOptionMode mode = current_output_option_mode();
+  ui->widget_output_option_custom->setVisible( mode == pngyu::OUTPUT_OPTION_CUSTOM );
 }
 
 void PngyuMainWindow::output_directory_mode_changed()

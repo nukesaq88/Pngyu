@@ -36,14 +36,17 @@ public:
   void set_current_compress_option_mode( const pngyu::CompressOptionMode mode );
   pngyu::CompressOptionMode current_compress_option_mode() const;
 
+  void set_current_output_option_mode( const pngyu::OutputOptionMode mode );
+  pngyu::OutputOptionMode current_output_option_mode() const;
+
   void set_current_output_directory_mode( const pngyu::OuputDirectoryMode mode );
   pngyu::OuputDirectoryMode current_output_directory_mode() const;
 
   void set_current_outoput_filename_mode( const pngyu::OutputFinenameMode mode );
   pngyu::OutputFinenameMode current_output_filename_mode() const;
 
-  void set_output_directory( const QString &output_directory );
-  QString output_directory() const;
+  void set_other_output_directory( const QString &other_output_directory );
+  QString other_output_directory() const;
 
   void set_ncolor( const int n );
   int ncolor() const;
@@ -84,7 +87,7 @@ protected:
   void append_file_info_recursive( const QFileInfo &file_info,
                                    const int recursive_directory_depth );
 
-  bool is_output_directory_valid() const;
+  bool is_other_output_directory_valid() const;
   
 private:
   Ui::PngyuMainWindow *ui;
@@ -95,9 +98,10 @@ private:
 private slots:
   void exec_pushed();
   void compress_option_changed();
-  void output_directory_changed();
+  void other_output_directory_changed();
   void open_output_directory_pushed();
   void compress_option_mode_changed();
+  void output_option_mode_changed();
   void output_directory_mode_changed();
   void output_filename_mode_changed();
   void file_list_clear_pushed();

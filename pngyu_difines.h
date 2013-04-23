@@ -11,6 +11,12 @@ enum CompressOptionMode
   COMPRESS_OPTION_CUSTOM
 };
 
+enum OutputOptionMode
+{
+  OUTPUT_OPTION_UNKNOWN = -1,
+  OUTPUT_OPTION_OVERWITE_ORIGIANL = 0,
+  OUTPUT_OPTION_CUSTOM
+};
 
 enum OuputDirectoryMode
 {

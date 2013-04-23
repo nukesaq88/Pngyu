@@ -127,7 +127,7 @@ inline void set_drop_here_stylesheet(
 //  widget->setStyleSheet();
   QString stylesheet =
       "QWidget{"
-      "background-image : url(:/icons/spinner.png);"
+      //"background-image : url(:/icons/spinner.png);"
       "background-position: center ;"
       "background-repeat : repeat-none;";
   if( drag_hoverring )

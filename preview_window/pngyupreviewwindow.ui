@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Preview</string>
   </property>
   <property name="styleSheet">
    <string notr="true">/*left*/
@@ -310,6 +310,16 @@ QToolButton#toolButton_zoomout::pressed
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>checkBox_show_original</tabstop>
+  <tabstop>toolButton_zoomout</tabstop>
+  <tabstop>toolButton_zoomin</tabstop>
+  <tabstop>toolButton_background_checkerboard</tabstop>
+  <tabstop>toolButton_background_black</tabstop>
+  <tabstop>toolButton_background_white</tabstop>
+  <tabstop>imageview</tabstop>
+  <tabstop>pushButton_original_size</tabstop>
+ </tabstops>
  <resources>
   <include location="../resource/resource.qrc"/>
  </resources>
