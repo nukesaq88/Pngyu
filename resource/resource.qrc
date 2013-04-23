@@ -6,14 +6,13 @@
         <file>folder.png</file>
         <file>gear.png</file>
         <file>minus.png</file>
-        <file>plus.png</file>
-        <file>resource.qrc</file>
         <file>search.png</file>
         <file>zoomin.png</file>
         <file>zoomout.png</file>
         <file>spinner.png</file>
         <file>check.png</file>
         <file>stop.png</file>
+        <file>plus.png</file>
     </qresource>
     <qresource prefix="/background">
         <file>checkerboard.png</file>

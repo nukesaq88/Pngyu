@@ -48,7 +48,8 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
   QMainWindow( parent ),
   ui( new Ui::PngyuMainWindow ),
   m_preview_window( new PngyuPreviewWindow(this) ),
-  m_stop_request( false )
+  m_stop_request( false ),
+  m_is_busy( false )
 {
   ui->setupUi(this);
 
@@ -73,6 +74,9 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
           table_widget->viewport(), false );
   }
 
+  ui->spinner_exec->setVisible( false );
+  ui->widget_file_appending->setVisible( false );
+  ui->pushButton_stop_exec->setVisible( false );
 
   connect( ui->spinBox_colors, SIGNAL(valueChanged(int)), this, SLOT(ncolor_spinbox_changed()) );
   connect( ui->horizontalSlider_colors, SIGNAL(valueChanged(int)), this, SLOT(ncolor_slider_changed()) );
@@ -121,6 +125,15 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
            this, SLOT(compress_option_changed()) );
   ///
 
+  connect( ui->pushButton_stop_exec, SIGNAL(clicked()),
+           this, SLOT(stop_request()) );
+
+  connect( ui->pushButton_stop_file_appending, SIGNAL(clicked()),
+           this, SLOT(stop_request()) );
+
+  connect( ui->toolButton_add_file, SIGNAL(clicked()),
+           this, SLOT(add_file_button_pushed()) );
+
   output_directory_mode_changed();
   output_filename_mode_changed();
   table_widget_current_changed();
@@ -128,8 +141,12 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
   output_option_mode_changed();
   compress_option_changed();
 
+  update_file_table();
+
   m_preview_window->set_executable_pngquant_path(
         executable_pngquant_path() );
+
+  setGeometry( QRect( geometry().topLeft(), QSize( sizeHint().width(), 400 ) ) );
 }
 
 PngyuMainWindow::~PngyuMainWindow()
@@ -390,9 +407,19 @@ int PngyuMainWindow::compress_speed() const
 
 
 void PngyuMainWindow::execute_compress_all()
-{ 
+{
+  if( is_busy() )
+  {
+    return;
+  }
+
   // disable ui operation temporary
-  set_operation_enabled( false );
+  set_busy_mode( true );
+
+  ui->spinner_exec->setVisible( true );
+  ui->pushButton_exec->setVisible( false );
+  ui->pushButton_stop_exec->setVisible( true );
+
 
   clear_compress_result();
 
@@ -498,7 +525,12 @@ void PngyuMainWindow::execute_compress_all()
   }
 
   // ui operation
-  set_operation_enabled( true );
+  set_busy_mode( false );
+
+  ui->spinner_exec->setVisible( false );
+  ui->pushButton_stop_exec->setVisible( false );
+  ui->pushButton_exec->setVisible( true );
+
 }
 
 bool PngyuMainWindow::is_preview_window_visible() const
@@ -514,13 +546,20 @@ QString PngyuMainWindow::current_selected_filename() const
   return path_item ? path_item->text() : QString();
 }
 
-void PngyuMainWindow::set_operation_enabled( const bool b)
+void PngyuMainWindow::set_busy_mode( const bool b )
 {
-  ui->pushButton_exec->setEnabled( b );
-  ui->groupBox_compress_option->setEnabled( b );
-  ui->groupBox_output_option->setEnabled( b );
-  ui->pushButton_filelist_clear->setEnabled( b );
+  ui->pushButton_exec->setEnabled( ! b );
+  ui->groupBox_compress_option->setEnabled( ! b );
+  ui->groupBox_output_option->setEnabled( ! b );
+  ui->pushButton_filelist_clear->setEnabled( ! b );
+  ui->toolButton_add_file->setEnabled( !! b );
   m_stop_request = false;
+  m_is_busy = b;
+}
+
+bool PngyuMainWindow::is_busy() const
+{
+  return m_is_busy;
 }
 
 void PngyuMainWindow::clear_compress_result()
@@ -541,6 +580,11 @@ void PngyuMainWindow::clear_compress_result()
 
 void PngyuMainWindow::dragEnterEvent( QDragEnterEvent *event )
 {
+  if( is_busy() )
+  {
+    return;
+  }
+
   if( event->mimeData()->hasUrls() )
   {
     event->accept();
@@ -550,6 +594,11 @@ void PngyuMainWindow::dragEnterEvent( QDragEnterEvent *event )
 void PngyuMainWindow::dragLeaveEvent( QDragLeaveEvent *event )
 {
   Q_UNUSED(event)
+  if( is_busy() )
+  {
+    return;
+  }
+
   pngyu::util::set_drop_enabled_palette( ui->tableWidget_filelist->viewport(), false );
   pngyu::util::set_drop_here_stylesheet(
         ui->tableWidget_filelist->viewport(),
@@ -559,6 +608,10 @@ void PngyuMainWindow::dragLeaveEvent( QDragLeaveEvent *event )
 void PngyuMainWindow::dragMoveEvent( QDragMoveEvent * event )
 {
   Q_UNUSED(event)
+  if( is_busy() )
+  {
+    return;
+  }
 
   { // linedit
     QLineEdit * const output_line_edit = ui->lineEdit_output_directory;
@@ -638,6 +691,7 @@ void PngyuMainWindow::update_file_table()
       }
       ++row_index;
     }
+    ui->pushButton_exec->setEnabled( row_index > 0 );
   }
   // reconnect
   connect( table_widget, SIGNAL(currentCellChanged(int,int,int,int)), this, SLOT(table_widget_current_changed()) );
@@ -646,16 +700,32 @@ void PngyuMainWindow::update_file_table()
 
 void PngyuMainWindow::append_file_info_list( const QList<QFileInfo> &info_list )
 {
+  if( is_busy() )
+  {
+    return;
+  }
+
+  m_stop_request = false;
+  set_busy_mode( true );
+
+  ui->widget_file_appending->setVisible( true );
   foreach( const QFileInfo &info, info_list )
   {
     append_file_info_recursive( info, 0 );
   }
   update_file_table();
+  set_busy_mode( false );
+  ui->widget_file_appending->setVisible( false );
 }
 
 void PngyuMainWindow::append_file_info_recursive( const QFileInfo &file_info,
                                                   const int recursive_directory_depth )
 {
+  QApplication::processEvents();
+  if( m_stop_request )
+  {
+    return;
+  }
   if( file_info.isFile() )
   { // if file_info is file, png check and add to file_list
     const bool is_png = pngyu::util::has_png_extention( file_info );
@@ -840,5 +910,29 @@ void PngyuMainWindow::preview_button_toggled( bool b )
 void PngyuMainWindow::preview_window_closed()
 {
   ui->pushButton_preview->setChecked( false );
+}
+
+void PngyuMainWindow::add_file_button_pushed()
+{
+  const QStringList filepath_list = QFileDialog::getOpenFileNames(
+        this, QString(), QDir::homePath(), "PNG file (*.png);;" );
+
+  if( filepath_list.empty() )
+  {
+    return;
+  }
+
+  QList<QFileInfo> fileinfo_list;
+  foreach( const QString &path, filepath_list )
+  {
+    fileinfo_list.push_back( QFileInfo( path ) );
+  }
+
+  append_file_info_list( fileinfo_list );
+}
+
+void PngyuMainWindow::stop_request()
+{
+  m_stop_request = true;
 }
 

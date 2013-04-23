@@ -69,7 +69,8 @@ public:
 
   QString current_selected_filename() const;
 
-  void set_operation_enabled( const bool b);
+  void set_busy_mode( const bool b);
+  bool is_busy() const;
 
   void clear_compress_result();
 
@@ -94,6 +95,7 @@ private:
   PngyuPreviewWindow *m_preview_window;
   QFileInfoList m_file_list;
   bool m_stop_request;
+  bool m_is_busy;
 
 private slots:
   void exec_pushed();
@@ -110,6 +112,8 @@ private slots:
   void table_widget_current_changed();
   void preview_button_toggled( bool );
   void preview_window_closed();
+  void add_file_button_pushed();
+  void stop_request();
 };
 
 #endif // PNGYUMAINWINDOW_H
