@@ -104,7 +104,7 @@ inline bool is_under_mouse( const QWidget * const widget )
 
 inline void set_drop_enabled_palette(
     QWidget * const widget,
-    bool enabled,
+    const bool enabled,
     const QColor &enable_color = detail::DEFAULT_ENABLE_COLOR )
 {
   QPalette palette = widget->palette();
@@ -117,6 +117,30 @@ inline void set_drop_enabled_palette(
     palette.setBrush( QPalette::Base, QPalette().brush( QPalette::Base ) );
   }
   widget->setPalette( palette );
+}
+
+inline void set_drop_here_stylesheet(
+    QWidget * const widget,
+    const bool drag_hoverring,
+    const QColor &hoverring_color = detail::DEFAULT_ENABLE_COLOR )
+{
+//  widget->setStyleSheet();
+  QString stylesheet =
+      "QWidget{"
+      "background-image : url(:/icons/spinner.png);"
+      "background-position: center ;"
+      "background-repeat : repeat-none;";
+  if( drag_hoverring )
+  {
+    stylesheet += "background-color : " + hoverring_color.name() + ";\n";
+  }
+  else
+  {
+    stylesheet += "background-color : " + QColor(Qt::white).name() + ";\n";
+  }
+  stylesheet += "}";
+
+  widget->setStyleSheet( stylesheet );
 }
 
 inline const QPixmap& success_icon_pixmap()

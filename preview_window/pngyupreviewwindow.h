@@ -35,7 +35,11 @@ protected:
   void set_current_preview_image( const QImage &image );
 
   void load_png_file();
+
   void execute_compress_start();
+
+  void set_compress_result_failed( const QString &error_message );
+
   bool is_execute_compress_working();
 
 

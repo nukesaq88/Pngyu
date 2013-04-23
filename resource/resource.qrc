@@ -13,6 +13,7 @@
         <file>stop.png</file>
         <file>zoomin.png</file>
         <file>zoomout.png</file>
+        <file>spinner.png</file>
     </qresource>
     <qresource prefix="/background">
         <file>checkerboard.png</file>

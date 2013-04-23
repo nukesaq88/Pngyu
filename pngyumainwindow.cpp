@@ -47,7 +47,8 @@ enum TableColumn
 PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
   QMainWindow( parent ),
   ui( new Ui::PngyuMainWindow ),
-  m_preview_window( new PngyuPreviewWindow(this) )
+  m_preview_window( new PngyuPreviewWindow(this) ),
+  m_stop_request( false )
 {
   ui->setupUi(this);
 
@@ -66,6 +67,10 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
                                            new QTableWidgetItem( tr("Compressed Size") ) );
     table_widget->setHorizontalHeaderItem( COLUMN_SAVED_SIZE,
                                            new QTableWidgetItem( tr("Saved Size") ) );
+
+
+    pngyu::util::set_drop_here_stylesheet(
+          table_widget->viewport(), false );
   }
 
 
@@ -83,6 +88,9 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
            this, SLOT(output_directory_mode_changed()) );
   //  connect( ui->radioButton_output_other_directory, SIGNAL(toggled(bool)),
   //           this, SLOT(output_directory_mode_changed()) );
+
+  connect( ui->toolButton_compress_option_default, SIGNAL(toggled(bool)),
+           this, SLOT(compress_option_mode_changed()) );
 
   connect( ui->comboBox_output_filename_mode, SIGNAL(currentIndexChanged(int)),
            this, SLOT(output_filename_mode_changed()) );
@@ -106,11 +114,14 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
            this, SLOT(compress_option_changed()) );
   connect( ui->checkBox_dithered, SIGNAL(stateChanged(int)),
            this, SLOT(compress_option_changed()) );
+  connect( ui->toolButton_compress_option_default, SIGNAL(toggled(bool)),
+           this, SLOT(compress_option_changed()) );
   ///
 
   output_directory_mode_changed();
   output_filename_mode_changed();
   table_widget_current_changed();
+  compress_option_mode_changed();
   compress_option_changed();
 
   m_preview_window->set_executable_pngquant_path(
@@ -162,16 +173,18 @@ QString PngyuMainWindow::make_output_file_path_string( const QString &input_file
 pngyu::PngquantOption PngyuMainWindow::make_pngquant_option( const QString &output_file_suffix ) const
 {
   pngyu::PngquantOption option;
-  option.set_ncolors( ncolor() );
-
-  if( ! output_file_suffix.isEmpty() )
+  if( current_compress_option_mode() == pngyu::COMPRESS_OPTION_CUSTOM )
   {
-    option.set_out_suffix( output_file_suffix );
+    option.set_ncolors( ncolor() );
+    if( ! output_file_suffix.isEmpty() )
+    {
+      option.set_out_suffix( output_file_suffix );
+    }
+    //option.set_force_overwrite( true );
+    option.set_speed( compress_speed() );
+    option.set_floyd_steinberg_dithering_disabled( ! dither_enabled() );
+    option.set_ie6_alpha_support( ie6_alpha_support_enabled() );
   }
-  //option.set_force_overwrite( true );
-  option.set_speed( compress_speed() );
-  option.set_floyd_steinberg_dithering_disabled( ! dither_enabled() );
-  option.set_ie6_alpha_support( ie6_alpha_support_enabled() );
   return option;
 }
 
@@ -179,6 +192,34 @@ QString PngyuMainWindow::executable_pngquant_path() const
 {
   return "/usr/local/bin/pngquant";
 }
+
+void PngyuMainWindow::set_current_compress_option_mode( const pngyu::CompressOptionMode mode )
+{
+  if( mode == pngyu::COMPRESS_OPTION_DEFAULT )
+  {
+    ui->toolButton_compress_option_default->setChecked( true );
+  }
+  else if( mode == pngyu::COMPRESS_OPTION_CUSTOM )
+  {
+    ui->toolButton_compress_option_custom->setChecked( true );
+  }
+}
+
+pngyu::CompressOptionMode PngyuMainWindow::current_compress_option_mode() const
+{
+  const bool default_checked = ui->toolButton_compress_option_default->isChecked();
+  const bool custom_checked = ui->toolButton_compress_option_custom->isChecked();
+  if( default_checked && ! custom_checked  )
+  {
+    return pngyu::COMPRESS_OPTION_DEFAULT;
+  }
+  else if( ! default_checked && custom_checked  )
+  {
+    return pngyu::COMPRESS_OPTION_CUSTOM;
+  }
+  return pngyu::COMPRESS_OPTION_UNKNOWN;
+}
+
 
 void PngyuMainWindow::set_current_output_directory_mode( const pngyu::OuputDirectoryMode mode )
 {
@@ -296,6 +337,11 @@ int PngyuMainWindow::compress_speed() const
 
 void PngyuMainWindow::execute_compress_all()
 { 
+  // disable ui operation temporary
+  set_operation_enabled( false );
+
+  clear_compress_result();
+
   const bool overwrite_enable = file_overwrite_enabled();
 
   const pngyu::PngquantOption &option = make_pngquant_option( QString() );
@@ -392,6 +438,9 @@ void PngyuMainWindow::execute_compress_all()
 
     QApplication::processEvents();
   }
+
+  // ui operation
+  set_operation_enabled( true );
 }
 
 bool PngyuMainWindow::is_preview_window_visible() const
@@ -405,6 +454,27 @@ QString PngyuMainWindow::current_selected_filename() const
   const int current_row = table_widget->currentRow();
   const QTableWidgetItem * const path_item = table_widget->item( current_row, COLUMN_ABSOLUTE_PATH );
   return path_item ? path_item->text() : QString();
+}
+
+void PngyuMainWindow::set_operation_enabled( const bool b)
+{
+  ui->pushButton_exec->setEnabled( b );
+  ui->groupBox_compress_option->setEnabled( b );
+  ui->groupBox_output_option->setEnabled( b );
+  ui->pushButton_filelist_clear->setEnabled( b );
+  m_stop_request = false;
+}
+
+void PngyuMainWindow::clear_compress_result()
+{
+  QTableWidget *table_widget = file_list_table_widget();
+  const int row_count = table_widget->rowCount();
+  for( int row = 0; row < row_count; ++row )
+  {
+    ui->tableWidget_filelist->setItem( row, COLUMN_RESULT, 0 );
+    ui->tableWidget_filelist->setItem( row, COLUMN_OUTPUT_SIZE, 0 );
+    ui->tableWidget_filelist->setItem( row, COLUMN_SAVED_SIZE, 0 );
+  }
 }
 
 //////////////////////
@@ -422,9 +492,10 @@ void PngyuMainWindow::dragEnterEvent( QDragEnterEvent *event )
 void PngyuMainWindow::dragLeaveEvent( QDragLeaveEvent *event )
 {
   Q_UNUSED(event)
-  pngyu::util::set_drop_enabled_palette( ui->centralWidget, false );
-  pngyu::util::set_drop_enabled_palette( ui->lineEdit_output_directory, false );
-}
+  pngyu::util::set_drop_enabled_palette( ui->tableWidget_filelist->viewport(), false );
+  pngyu::util::set_drop_here_stylesheet(
+        ui->tableWidget_filelist->viewport(),
+        false );}
 
 
 void PngyuMainWindow::dragMoveEvent( QDragMoveEvent * event )
@@ -438,10 +509,10 @@ void PngyuMainWindow::dragMoveEvent( QDragMoveEvent * event )
           pngyu::util::is_under_mouse( output_line_edit ) );
   }
 
-  QWidget * const central_widget = ui->centralWidget;
-  pngyu::util::set_drop_enabled_palette(
-        central_widget,
-        pngyu::util::is_under_mouse( central_widget ) );
+  QWidget * const file_list_widget = ui->groupBox_filelist;
+  pngyu::util::set_drop_here_stylesheet(
+        ui->tableWidget_filelist->viewport(),
+        pngyu::util::is_under_mouse( file_list_widget ) );
 }
 
 void PngyuMainWindow::dropEvent( QDropEvent *event )
@@ -450,9 +521,11 @@ void PngyuMainWindow::dropEvent( QDropEvent *event )
   const bool mouse_is_on_output = pngyu::util::is_under_mouse( output_line_edit );
   pngyu::util::set_drop_enabled_palette( output_line_edit, false );
 
-  QWidget * const central_widget = ui->centralWidget;
-  const bool mouse_is_on_central = pngyu::util::is_under_mouse( central_widget );
-  pngyu::util::set_drop_enabled_palette( central_widget, false );
+  QWidget * const file_list_widget = ui->groupBox_filelist;
+  const bool mouse_is_on_file_list = pngyu::util::is_under_mouse( file_list_widget );
+  pngyu::util::set_drop_here_stylesheet(
+        ui->tableWidget_filelist->viewport(),
+        false );
 
   const QMimeData * const mimedata = event->mimeData();
   if( ! mimedata->hasUrls() )
@@ -470,13 +543,14 @@ void PngyuMainWindow::dropEvent( QDropEvent *event )
       set_current_output_directory_mode( pngyu::OUTPUT_DIR_OTHER );
     }
   }
-  else if( mouse_is_on_central )
+  else if( mouse_is_on_file_list )
   {
+    QList<QFileInfo> file_list;
     foreach( const QUrl &url, url_list )
     {
-      append_file_info_recursive( QFileInfo( url.toLocalFile() ) );
+      file_list.push_back( QFileInfo( url.toLocalFile() ) );
     }
-    update_file_table();
+    append_file_info_list( file_list );
   }
 
 }
@@ -510,6 +584,15 @@ void PngyuMainWindow::update_file_table()
   // reconnect
   connect( table_widget, SIGNAL(currentCellChanged(int,int,int,int)), this, SLOT(table_widget_current_changed()) );
   table_widget_current_changed();
+}
+
+void PngyuMainWindow::append_file_info_list( const QList<QFileInfo> &info_list )
+{
+  foreach( const QFileInfo &info, info_list )
+  {
+    append_file_info_recursive( info, 0 );
+  }
+  update_file_table();
 }
 
 void PngyuMainWindow::append_file_info_recursive( const QFileInfo &file_info,
@@ -586,6 +669,12 @@ void PngyuMainWindow::open_output_directory_pushed()
   }
 }
 
+void PngyuMainWindow::compress_option_mode_changed()
+{
+  const pngyu::CompressOptionMode mode = current_compress_option_mode();
+  ui->widget_compress_option_custom_options->setVisible( mode == pngyu::COMPRESS_OPTION_CUSTOM );
+}
+
 void PngyuMainWindow::output_directory_mode_changed()
 {
   const pngyu::OuputDirectoryMode mode = current_output_directory_mode();
@@ -657,6 +746,7 @@ void PngyuMainWindow::ncolor_slider_changed()
 
 void PngyuMainWindow::table_widget_current_changed()
 {
+
   const QString current_path = current_selected_filename();
 
   m_preview_window->set_png_file( current_path );

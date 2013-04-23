@@ -80,28 +80,7 @@ QToolButton#toolButton_zoomout::pressed
     <property name="margin">
      <number>6</number>
     </property>
-    <item row="2" column="5">
-     <widget class="QPushButton" name="pushButton_original_size">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>10</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Original Size (100%)</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0" colspan="6">
-     <widget class="BasicImageView" name="imageview"/>
-    </item>
-    <item row="0" column="5">
+    <item row="0" column="6">
      <widget class="QWidget" name="widget_background_select" native="true">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -200,7 +179,53 @@ QToolButton#toolButton_zoomout::pressed
       </layout>
      </widget>
     </item>
+    <item row="0" column="0">
+     <widget class="QCheckBox" name="checkBox_show_original">
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Show Original</string>
+      </property>
+     </widget>
+    </item>
     <item row="0" column="2">
+     <spacer name="horizontalSpacer">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="1" column="0" colspan="7">
+     <widget class="BasicImageView" name="imageview"/>
+    </item>
+    <item row="2" column="6">
+     <widget class="QPushButton" name="pushButton_original_size">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Original Size (100%)</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="3">
      <widget class="QWidget" name="widget_zoom" native="true">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -252,15 +277,19 @@ QToolButton#toolButton_zoomout::pressed
       </layout>
      </widget>
     </item>
-    <item row="0" column="0">
-     <widget class="QCheckBox" name="checkBox_show_original">
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
+    <item row="0" column="1">
+     <widget class="SpinnerWidget" name="spinner" native="true">
+      <property name="minimumSize">
+       <size>
+        <width>25</width>
+        <height>25</height>
+       </size>
       </property>
-      <property name="text">
-       <string>Show Original</string>
+      <property name="maximumSize">
+       <size>
+        <width>25</width>
+        <height>25</height>
+       </size>
       </property>
      </widget>
     </item>
@@ -273,6 +302,12 @@ QToolButton#toolButton_zoomout::pressed
    <class>BasicImageView</class>
    <extends>QGraphicsView</extends>
    <header>basicimageview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>SpinnerWidget</class>
+   <extends>QWidget</extends>
+   <header>spinnerwidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>

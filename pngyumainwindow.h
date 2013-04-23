@@ -33,6 +33,9 @@ public:
 
   QString executable_pngquant_path() const;
 
+  void set_current_compress_option_mode( const pngyu::CompressOptionMode mode );
+  pngyu::CompressOptionMode current_compress_option_mode() const;
+
   void set_current_output_directory_mode( const pngyu::OuputDirectoryMode mode );
   pngyu::OuputDirectoryMode current_output_directory_mode() const;
 
@@ -63,6 +66,13 @@ public:
 
   QString current_selected_filename() const;
 
+  void set_operation_enabled( const bool b);
+
+  void clear_compress_result();
+
+  void append_file_info_list( const QList<QFileInfo> &info_list );
+
+
 protected:
   virtual void dragEnterEvent( QDragEnterEvent *event );
   virtual void dragLeaveEvent( QDragLeaveEvent *event );
@@ -72,7 +82,7 @@ protected:
   void update_file_table();
 
   void append_file_info_recursive( const QFileInfo &file_info,
-                                   const int recursive_directory_depth = 0 );
+                                   const int recursive_directory_depth );
 
   bool is_output_directory_valid() const;
   
@@ -80,12 +90,14 @@ private:
   Ui::PngyuMainWindow *ui;
   PngyuPreviewWindow *m_preview_window;
   QFileInfoList m_file_list;
+  bool m_stop_request;
 
 private slots:
   void exec_pushed();
   void compress_option_changed();
   void output_directory_changed();
   void open_output_directory_pushed();
+  void compress_option_mode_changed();
   void output_directory_mode_changed();
   void output_filename_mode_changed();
   void file_list_clear_pushed();

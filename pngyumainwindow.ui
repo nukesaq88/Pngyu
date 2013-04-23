@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>565</width>
-    <height>578</height>
+    <width>575</width>
+    <height>601</height>
    </rect>
   </property>
   <property name="acceptDrops">
@@ -26,7 +26,69 @@ QFrame#frame_ie6
     border: 1px solid rgb(127,127,127,63);
     border-radius: 4px;
     padding: 2px;
-}</string>
+}
+
+/*left*/
+QToolButton#toolButton_compress_option_default,
+QToolButton#toolButton_zoomout
+{
+  border-style: outset;
+  border : 1px solid rgb(127,127,127,127);
+  border-top-left-radius : 6px;
+  border-bottom-left-radius: 6px;
+  padding: 3px;
+}
+
+/*middle*/
+QToolButton#toolButton_background_black
+{
+  border-style: outset;
+  border : 1px solid rgb(127,127,127,127);
+  border-radius : 0px;
+  padding: 3px;
+}
+
+/*right*/
+QToolButton#toolButton_compress_option_custom,
+QToolButton#toolButton_zoomin
+{
+  border-style: outset;
+  border : 1px solid rgb(127,127,127,127);
+  border-top-right-radius : 6px;
+  border-bottom-right-radius: 6px;
+  padding: 3px;
+}
+
+QToolButton#toolButton_compress_option_default::checked,
+QToolButton#toolButton_compress_option_custom::checked,
+QToolButton#toolButton_background_white::checked,
+QToolButton#toolButton_zoomin::checked,
+QToolButton#toolButton_zoomout::checked
+{
+  border : 1px solid rgb(100,100,100,127);
+  border-style: inset;
+  background : rgb( 127, 127, 127, 127 );
+  padding-top : 4px;
+  padding-left : 4px;
+  padding-bottom : 2px;
+  padding-right : 2px;
+}
+
+QToolButton#toolButton_compress_option_default::pressed,
+QToolButton#toolButton_compress_option_custom::pressed,
+QToolButton#toolButton_background_white::pressed,
+QToolButton#toolButton_zoomin::pressed,
+QToolButton#toolButton_zoomout::pressed
+{ 
+  border : 1px solid rgb(80,80,80,127);
+  border-style: inset;
+  background : rgb( 100, 100, 100, 127 );
+  padding-top : 4px;
+  padding-left : 4px;
+  padding-bottom : 2px;
+  padding-right : 2px;
+}
+</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -318,34 +380,6 @@ QFrame#frame_ie6
        <property name="margin">
         <number>6</number>
        </property>
-       <item row="1" column="0" colspan="2">
-        <widget class="QTableWidget" name="tableWidget_filelist">
-         <property name="editTriggers">
-          <set>QAbstractItemView::NoEditTriggers</set>
-         </property>
-         <property name="alternatingRowColors">
-          <bool>true</bool>
-         </property>
-         <property name="selectionMode">
-          <enum>QAbstractItemView::SingleSelection</enum>
-         </property>
-         <property name="selectionBehavior">
-          <enum>QAbstractItemView::SelectRows</enum>
-         </property>
-         <property name="showGrid">
-          <bool>false</bool>
-         </property>
-         <property name="sortingEnabled">
-          <bool>true</bool>
-         </property>
-         <attribute name="verticalHeaderVisible">
-          <bool>false</bool>
-         </attribute>
-         <attribute name="verticalHeaderDefaultSectionSize">
-          <number>20</number>
-         </attribute>
-        </widget>
-       </item>
        <item row="3" column="0">
         <spacer name="horizontalSpacer">
          <property name="orientation">
@@ -379,13 +413,44 @@ QFrame#frame_ie6
          </property>
         </widget>
        </item>
+       <item row="1" column="0" colspan="2">
+        <widget class="QTableWidget" name="tableWidget_filelist">
+         <property name="editTriggers">
+          <set>QAbstractItemView::NoEditTriggers</set>
+         </property>
+         <property name="selectionMode">
+          <enum>QAbstractItemView::SingleSelection</enum>
+         </property>
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectRows</enum>
+         </property>
+         <property name="showGrid">
+          <bool>false</bool>
+         </property>
+         <property name="sortingEnabled">
+          <bool>true</bool>
+         </property>
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
+         <attribute name="verticalHeaderDefaultSectionSize">
+          <number>20</number>
+         </attribute>
+        </widget>
+       </item>
       </layout>
      </widget>
     </item>
     <item row="6" column="2">
      <widget class="QPushButton" name="pushButton_exec">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>40</height>
+       </size>
+      </property>
       <property name="text">
-       <string>exec</string>
+       <string>Compress Start</string>
       </property>
      </widget>
     </item>
@@ -407,85 +472,72 @@ QFrame#frame_ie6
        <property name="spacing">
         <number>4</number>
        </property>
-       <item row="2" column="1">
-        <widget class="QFrame" name="frame_ie6">
-         <property name="frameShape">
-          <enum>QFrame::Panel</enum>
-         </property>
-         <property name="frameShadow">
-          <enum>QFrame::Sunken</enum>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_7">
-          <property name="margin">
-           <number>4</number>
-          </property>
-          <property name="spacing">
-           <number>4</number>
-          </property>
-          <item row="0" column="0">
-           <widget class="QCheckBox" name="checkBox_ie6_support">
-            <property name="text">
-             <string>IE6 alpha support</string>
-            </property>
-            <property name="checked">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="2" column="3">
-        <widget class="QPushButton" name="pushButton_preview">
+       <item row="1" column="0" rowspan="2">
+        <widget class="QWidget" name="widget_compress_option_mode" native="true">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+          <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="text">
-          <string>Preview</string>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>20</width>
-           <height>20</height>
-          </size>
-         </property>
-         <property name="checkable">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="2">
-        <widget class="QFrame" name="frame_dithered">
-         <property name="frameShape">
-          <enum>QFrame::Panel</enum>
-         </property>
-         <property name="frameShadow">
-          <enum>QFrame::Sunken</enum>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_4">
-          <property name="margin">
-           <number>4</number>
+         <layout class="QGridLayout" name="gridLayout_18">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
           </property>
           <property name="spacing">
-           <number>4</number>
+           <number>0</number>
           </property>
           <item row="0" column="0">
-           <widget class="QCheckBox" name="checkBox_dithered">
+           <widget class="QToolButton" name="toolButton_compress_option_default">
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>0</height>
+             </size>
+            </property>
             <property name="text">
-             <string>Dithered</string>
+             <string>Default</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
             </property>
             <property name="checked">
              <bool>true</bool>
             </property>
+            <attribute name="buttonGroup">
+             <string notr="true">buttonGroup_compres_option_mode</string>
+            </attribute>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QToolButton" name="toolButton_compress_option_custom">
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Custom</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+            <attribute name="buttonGroup">
+             <string notr="true">buttonGroup_compres_option_mode</string>
+            </attribute>
            </widget>
           </item>
          </layout>
         </widget>
        </item>
-       <item row="0" column="1" colspan="3">
+       <item row="0" column="0" colspan="4">
         <widget class="QWidget" name="widget_compress_option_row_1" native="true">
          <layout class="QHBoxLayout" name="horizontalLayout">
           <property name="spacing">
@@ -494,7 +546,19 @@ QFrame#frame_ie6
           <property name="margin">
            <number>0</number>
           </property>
-          <item>
+         </layout>
+        </widget>
+       </item>
+       <item row="3" column="0" rowspan="2" colspan="4">
+        <widget class="QWidget" name="widget_compress_option_custom_options" native="true">
+         <layout class="QGridLayout" name="gridLayout_19">
+          <property name="margin">
+           <number>0</number>
+          </property>
+          <property name="spacing">
+           <number>4</number>
+          </property>
+          <item row="0" column="0">
            <widget class="QFrame" name="frame_colors">
             <property name="frameShape">
              <enum>QFrame::Panel</enum>
@@ -509,14 +573,7 @@ QFrame#frame_ie6
              <property name="spacing">
               <number>4</number>
              </property>
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_colors">
-               <property name="text">
-                <string>Colors</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="2">
+             <item row="1" column="2">
               <widget class="QSpinBox" name="spinBox_colors">
                <property name="minimum">
                 <number>2</number>
@@ -529,7 +586,14 @@ QFrame#frame_ie6
                </property>
               </widget>
              </item>
-             <item row="0" column="1">
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_colors">
+               <property name="text">
+                <string>Colors</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
               <widget class="QSlider" name="horizontalSlider_colors">
                <property name="minimum">
                 <number>0</number>
@@ -554,7 +618,7 @@ QFrame#frame_ie6
             </layout>
            </widget>
           </item>
-          <item>
+          <item row="0" column="1">
            <widget class="QFrame" name="frame_speed">
             <property name="frameShape">
              <enum>QFrame::Panel</enum>
@@ -618,7 +682,91 @@ QFrame#frame_ie6
             </layout>
            </widget>
           </item>
+          <item row="1" column="0">
+           <widget class="QFrame" name="frame_ie6">
+            <property name="frameShape">
+             <enum>QFrame::Panel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Sunken</enum>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_7">
+             <property name="margin">
+              <number>4</number>
+             </property>
+             <property name="spacing">
+              <number>4</number>
+             </property>
+             <item row="0" column="0">
+              <widget class="QCheckBox" name="checkBox_ie6_support">
+               <property name="text">
+                <string>IE6 alpha support</string>
+               </property>
+               <property name="checked">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QFrame" name="frame_dithered">
+            <property name="frameShape">
+             <enum>QFrame::Panel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Sunken</enum>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_4">
+             <property name="margin">
+              <number>4</number>
+             </property>
+             <property name="spacing">
+              <number>4</number>
+             </property>
+             <item row="0" column="0">
+              <widget class="QCheckBox" name="checkBox_dithered">
+               <property name="text">
+                <string>Dithered</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
          </layout>
+        </widget>
+       </item>
+       <item row="1" column="2" colspan="2">
+        <widget class="QPushButton" name="pushButton_preview">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>40</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Preview</string>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>20</width>
+           <height>20</height>
+          </size>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
         </widget>
        </item>
       </layout>
@@ -631,7 +779,7 @@ QFrame#frame_ie6
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>565</width>
+     <width>575</width>
      <height>22</height>
     </rect>
    </property>
@@ -653,7 +801,6 @@ QFrame#frame_ie6
   <tabstop>horizontalSlider_compress_speed</tabstop>
   <tabstop>checkBox_ie6_support</tabstop>
   <tabstop>checkBox_dithered</tabstop>
-  <tabstop>pushButton_preview</tabstop>
   <tabstop>tableWidget_filelist</tabstop>
   <tabstop>pushButton_filelist_clear</tabstop>
   <tabstop>radioButton_output_same_directory</tabstop>
@@ -671,6 +818,7 @@ QFrame#frame_ie6
  </resources>
  <connections/>
  <buttongroups>
+  <buttongroup name="buttonGroup_compres_option_mode"/>
   <buttongroup name="buttonGroup_output_directory_mode"/>
  </buttongroups>
 </ui>

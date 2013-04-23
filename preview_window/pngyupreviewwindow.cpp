@@ -74,7 +74,6 @@ void PngyuPreviewWindow::set_png_file( const QString &filename )
 
   clear();
 
-
   m_png_filename = filename;
 
   if( filename.isEmpty() )
@@ -113,6 +112,7 @@ bool PngyuPreviewWindow::is_original_show_mode() const
 
 void PngyuPreviewWindow::clear()
 {
+  ui->spinner->setVisible( false );
   m_png_filename = QString();
   m_is_image_loaded = false;
   m_src_image = QImage();
@@ -154,9 +154,7 @@ void PngyuPreviewWindow::execute_compress_start()
 
   if( ! QFile::exists( m_png_filename ) )
   {
-    m_is_compress_finished = true;
-    m_dst_image = m_src_image;
-    ui->statusbar->showMessage( "Error : Original doesn't exists." );
+    set_compress_result_failed( tr("Error : Original file doesn't exists.") );
     return;
   }
 
@@ -164,11 +162,21 @@ void PngyuPreviewWindow::execute_compress_start()
   m_execute_compress_thread.set_original_png_data(
         pngyu::util::png_file_to_bytearray( m_png_filename ) );
   m_execute_compress_thread.start();
+
+  ui->spinner->setVisible( true );
+}
+
+void PngyuPreviewWindow::set_compress_result_failed( const QString &error_message )
+{
+  ui->spinner->setVisible( false );
+  m_is_compress_finished = true;
+  m_dst_image = m_src_image;
+  ui->statusbar->showMessage( error_message );
 }
 
 bool PngyuPreviewWindow::is_execute_compress_working()
 {
-  return false;
+  return m_execute_compress_thread.isRunning();
 }
 
 void PngyuPreviewWindow::update_preview()
@@ -242,10 +250,10 @@ void PngyuPreviewWindow::compress_finished()
   }
   else
   {
-    ui->statusbar->showMessage( m_execute_compress_thread.error_string() );
-    m_is_compress_finished = true;
-    m_dst_image = m_src_image;
+    set_compress_result_failed( m_execute_compress_thread.error_string() );
   }
+
+  ui->spinner->setVisible( false );
 
   m_execute_compress_thread.clear_all();
   update_preview();

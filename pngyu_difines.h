@@ -4,6 +4,14 @@
 namespace pngyu
 {
 
+enum CompressOptionMode
+{
+  COMPRESS_OPTION_UNKNOWN = -1,
+  COMPRESS_OPTION_DEFAULT = 0,
+  COMPRESS_OPTION_CUSTOM
+};
+
+
 enum OuputDirectoryMode
 {
   OUTPUT_DIR_UNKNOWN = -1,

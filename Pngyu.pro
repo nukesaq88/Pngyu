@@ -30,7 +30,8 @@ HEADERS  += \
     pngyu_execute_compress.h \
     preview_window/basicimageview.h \
     preview_window/pngyupreviewwindow.h \
-    preview_window/executecompressthread.h
+    preview_window/executecompressthread.h \
+    spinnerwidget.h
 
 FORMS += \
     pngyumainwindow.ui \
