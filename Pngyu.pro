@@ -17,7 +17,7 @@ INCLUDEPATH += \
 SOURCES += \
     main.cpp\
     pngyumainwindow.cpp \
-    pngyu_execute_compress.cpp \
+    pngyu_execute_pngquant_command.cpp \
     preview_window/basicimageview.cpp \
     preview_window/pngyupreviewwindow.cpp \
     preview_window/executecompressthread.cpp
@@ -27,7 +27,7 @@ HEADERS  += \
     pngyu_util.h \
     pngyu_option.h \
     pngyu_difines.h \
-    pngyu_execute_compress.h \
+    pngyu_execute_pngquant_command.h \
     preview_window/basicimageview.h \
     preview_window/pngyupreviewwindow.h \
     preview_window/executecompressthread.h \

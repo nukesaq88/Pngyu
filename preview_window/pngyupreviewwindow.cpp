@@ -19,7 +19,6 @@ PngyuPreviewWindow::PngyuPreviewWindow(QWidget *parent) :
 {
   ui->setupUi(this);
 
-
   { // init image view
     QPalette p = ui->imageview->palette();
     p.setBrush( QPalette::Base, QBrush(QColor("gray")) );
@@ -152,6 +151,12 @@ void PngyuPreviewWindow::execute_compress_start()
     }
   }
 
+  if( m_pngquant_path.isEmpty() )
+  {
+    set_compress_result_failed( tr("Error : Pngquant was not found.") );
+    return;
+  }
+
   if( ! QFile::exists( m_png_filename ) )
   {
     set_compress_result_failed( tr("Error : Original file doesn't exists.") );
@@ -199,6 +204,7 @@ void PngyuPreviewWindow::update_preview()
     }
     else
     {
+
       set_current_preview_image( m_src_image );
       if( ! is_execute_compress_working() )
       {

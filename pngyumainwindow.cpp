@@ -23,7 +23,7 @@
 #include "pngyupreviewwindow.h"
 
 #include "pngyu_util.h"
-#include "pngyu_execute_compress.h"
+#include "pngyu_execute_pngquant_command.h"
 
 
 
@@ -69,9 +69,16 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
     table_widget->setHorizontalHeaderItem( COLUMN_SAVED_SIZE,
                                            new QTableWidgetItem( tr("Saved Size") ) );
 
-
     pngyu::util::set_drop_here_stylesheet(
           table_widget->viewport(), false );
+  }
+
+  {
+    QWidget *const spacer = new QWidget(this);
+    spacer->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
+
+    ui->statusBar->addWidget( spacer, 5 );
+    ui->statusBar->addWidget( ui->label_homepage );
   }
 
   ui->widget_executing->setVisible( false );
@@ -143,10 +150,20 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
 
   update_file_table();
 
-  m_preview_window->set_executable_pngquant_path(
-        executable_pngquant_path() );
-
   setGeometry( QRect( geometry().topLeft(), QSize( sizeHint().width(), 400 ) ) );
+
+  {
+    const QStringList &executable_pngquant_list =  pngyu::find_executable_pngquant();
+    if( executable_pngquant_list.empty() )
+    {
+      set_busy_mode( true );
+      ui->statusBar->showMessage( tr( "Executable pngquant not found" ) );
+    }
+    else
+    {
+      set_executable_pngquant_path( executable_pngquant_list.first() );
+    }
+  }
 }
 
 PngyuMainWindow::~PngyuMainWindow()
@@ -232,9 +249,15 @@ pngyu::PngquantOption PngyuMainWindow::make_pngquant_option( const QString &outp
   return option;
 }
 
+void PngyuMainWindow::set_executable_pngquant_path( const QString &path )
+{
+  m_current_pngquant_path = path;
+  m_preview_window->set_executable_pngquant_path( path );
+}
+
 QString PngyuMainWindow::executable_pngquant_path() const
 {
-  return "/usr/local/bin/pngquant";
+  return m_current_pngquant_path;
 }
 
 void PngyuMainWindow::set_current_compress_option_mode( const pngyu::CompressOptionMode mode )

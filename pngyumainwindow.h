@@ -31,6 +31,7 @@ public:
 
   pngyu::PngquantOption make_pngquant_option( const QString &output_file_suffix ) const;
 
+  void set_executable_pngquant_path( const QString &path );
   QString executable_pngquant_path() const;
 
   void set_current_compress_option_mode( const pngyu::CompressOptionMode mode );
@@ -93,6 +94,7 @@ protected:
 private:
   Ui::PngyuMainWindow *ui;
   PngyuPreviewWindow *m_preview_window;
+  QString m_current_pngquant_path;
   QFileInfoList m_file_list;
   bool m_stop_request;
   bool m_is_busy;

@@ -1,9 +1,76 @@
-#include "pngyu_execute_compress.h"
+#include "pngyu_execute_pngquant_command.h"
 
 #include <QProcess>
+#include <QDir>
+#include <QApplication>
+#include <QDebug>
 
 namespace pngyu
 {
+
+QStringList find_executable_pngquant_from_dir( const QDir &dir )
+{
+  QStringList found_paths;
+  if( ! dir.exists() )
+  {
+    return found_paths;
+  }
+  foreach( const QFileInfo &child_file_info, dir.entryInfoList() )
+  {
+    if( ! child_file_info.baseName().contains( QRegExp( "pngquant", Qt::CaseInsensitive ) ) ||
+        ! child_file_info.isExecutable() )
+    {
+      continue;
+    }
+    if( pngyu::is_executable_pnqguant( child_file_info ) )
+    {
+      found_paths.push_back( child_file_info.absoluteFilePath() );
+    }
+  }
+  return found_paths;
+}
+
+QString pngquant_version( const QString &pnqquant_path )
+{
+  QProcess process;
+  process.setProcessEnvironment( QProcessEnvironment::systemEnvironment() );
+  process.start( pnqquant_path + " --version" );
+  process.waitForFinished();
+  const QString &version = process.readAllStandardOutput();
+  return version.trimmed();
+}
+
+bool is_executable_pnqguant( const QFileInfo pngquant_path )
+{
+  if( ! pngquant_path.baseName().contains( QRegExp( "pngquant", Qt::CaseInsensitive ) ) ||
+      ! pngquant_path.isExecutable() )
+  {
+    return false;
+  }
+  const QString &version = pngquant_version( pngquant_path.absoluteFilePath() );
+  return ! version.isEmpty();
+}
+
+QStringList find_executable_pngquant()
+{
+  QStringList search_dirs;
+
+#ifdef Q_OS_MACX
+  search_dirs << ( QApplication::applicationDirPath() + "/../Resources/" );
+#endif
+#ifdef Q_OS_UNIX
+  search_dirs << "/usr/bin" << "/usr/local/bin" << "/usr/sbin";
+#endif
+#ifdef Q_OS_WIN
+
+#endif
+  QStringList found_paths;
+  foreach( const QString &dir, search_dirs )
+  {
+    found_paths.append( find_executable_pngquant_from_dir( QDir(dir) ) );
+  }
+  return found_paths;
+}
 
 QPair<bool,QString> execute_compress(
     const QString &pngquant_command )

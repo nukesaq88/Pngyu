@@ -4,11 +4,18 @@
 #include <QString>
 #include <QByteArray>
 #include <QPair>
+#include <QFileInfo>
 
 #include "pngyu_option.h"
 
 namespace pngyu
 {
+
+QString pngquant_version( const QString &pnqquant_path );
+
+bool is_executable_pnqguant( const QFileInfo pngquant_path );
+
+QStringList find_executable_pngquant();
 
 // execute pnngquant command
 // returns <succeed,error_string>
