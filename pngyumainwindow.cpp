@@ -575,7 +575,7 @@ void PngyuMainWindow::set_busy_mode( const bool b )
   ui->groupBox_compress_option->setEnabled( ! b );
   ui->groupBox_output_option->setEnabled( ! b );
   ui->pushButton_filelist_clear->setEnabled( ! b );
-  ui->toolButton_add_file->setEnabled( !! b );
+  ui->toolButton_add_file->setEnabled( ! b );
   m_stop_request = false;
   m_is_busy = b;
 }

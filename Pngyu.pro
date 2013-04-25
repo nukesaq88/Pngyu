@@ -40,3 +40,4 @@ FORMS += \
 RESOURCES += \
     resource/resource.qrc
 
+macx: ICON = resource/icon.icns

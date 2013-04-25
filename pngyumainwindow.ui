@@ -14,7 +14,7 @@
    <bool>true</bool>
   </property>
   <property name="windowTitle">
-   <string>Pngyu</string>
+   <string>Pngyu 0.9.0</string>
   </property>
   <property name="styleSheet">
    <string notr="true">QFrame#frame_speed,
@@ -175,9 +175,6 @@ QToolButton#toolButton_output_option_overwrite_original::pressed,
          </property>
          <property name="showGrid">
           <bool>false</bool>
-         </property>
-         <property name="sortingEnabled">
-          <bool>true</bool>
          </property>
          <attribute name="verticalHeaderVisible">
           <bool>false</bool>
@@ -1063,9 +1060,6 @@ QToolButton#toolButton_output_option_overwrite_original::pressed,
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">text-color : red;</string>
       </property>
       <property name="text">
        <string>&lt;a href=&quot;http://nukesaq88.github.io/Pngyu/&quot; style=&quot;color: darkgray;&quot;&gt;Home Page&lt;/a&gt;</string>

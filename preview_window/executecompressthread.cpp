@@ -108,6 +108,8 @@ void ExecuteCompressThread::run()
     }
 
     process.write( m_src_png_data );
+    process.closeWriteChannel();
+
 
     { // waiting process finished
       QTime t;

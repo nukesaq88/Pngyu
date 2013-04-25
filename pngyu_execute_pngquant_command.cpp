@@ -69,6 +69,8 @@ QStringList find_executable_pngquant()
   {
     found_paths.append( find_executable_pngquant_from_dir( QDir(dir) ) );
   }
+
+
   return found_paths;
 }
 
@@ -135,6 +137,7 @@ QPair<QByteArray,QString> execute_compress_stdio_mode(
       throw QString( "Error: Process cannot started" );
     }
     process.write( src_png_data );
+    process.closeWriteChannel();
     if( ! process.waitForFinished() )
     {
       throw QString( "Error: Process timeout" );
