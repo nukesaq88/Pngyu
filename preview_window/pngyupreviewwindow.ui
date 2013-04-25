@@ -14,7 +14,8 @@
    <string>Preview</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">/*left*/
+   <string notr="true">
+/*left*/
 QToolButton#toolButton_background_checkerboard,
 QToolButton#toolButton_zoomout
 {
@@ -23,6 +24,8 @@ QToolButton#toolButton_zoomout
   border-top-left-radius : 6px;
   border-bottom-left-radius: 6px;
   padding: 3px;
+  background : qlineargradient(spread:reflect, x1:0, y1:1, x2:0, y2:0,
+    stop:0 rgba(127, 127, 127, 64), stop:1 rgba(255, 255, 255, 100));
 }
 
 /*middle*/
@@ -32,6 +35,8 @@ QToolButton#toolButton_background_black
   border : 1px solid rgb(127,127,127,127);
   border-radius : 0px;
   padding: 3px;
+  background : qlineargradient(spread:reflect, x1:0, y1:1, x2:0, y2:0,
+    stop:0 rgba(127, 127, 127, 64), stop:1 rgba(255, 255, 255, 100));
 }
 
 /*right*/
@@ -43,6 +48,8 @@ QToolButton#toolButton_zoomin
   border-top-right-radius : 6px;
   border-bottom-right-radius: 6px;
   padding: 3px;
+  background : qlineargradient(spread:reflect, x1:0, y1:1, x2:0, y2:0,
+    stop:0 rgba(127, 127, 127, 64), stop:1 rgba(255, 255, 255, 100));
 }
 
 QToolButton#toolButton_background_checkerboard::checked,
@@ -51,12 +58,14 @@ QToolButton#toolButton_background_white::checked,
 QToolButton#toolButton_zoomin::checked,
 QToolButton#toolButton_zoomout::checked
 {
+  border : 1px solid rgb(100,100,100,127);
   border-style: inset;
-  background : rgb( 60, 60, 60, 127 );
   padding-top : 4px;
   padding-left : 4px;
   padding-bottom : 2px;
   padding-right : 2px;
+  background : qlineargradient(spread:reflect, x1:0, y1:1, x2:0, y2:0,
+    stop:1 rgba(40, 40, 40, 64), stop:0 rgba(127, 127, 127, 64));
 }
 
 QToolButton#toolButton_background_checkerboard::pressed,
@@ -64,15 +73,16 @@ QToolButton#toolButton_background_black::pressed,
 QToolButton#toolButton_background_white::pressed,
 QToolButton#toolButton_zoomin::pressed,
 QToolButton#toolButton_zoomout::pressed
-{
+{ 
+  border : 1px solid rgb(80,80,80,127);
   border-style: inset;
-  background : rgb( 30, 30, 30, 127 );
   padding-top : 4px;
   padding-left : 4px;
   padding-bottom : 2px;
   padding-right : 2px;
+  background : qlineargradient(spread:reflect, x1:0, y1:1, x2:0, y2:0,
+    stop:1 rgba(30, 30, 30, 64), stop:0 rgba(100, 100, 100, 64));
 }
-
 </string>
   </property>
   <widget class="QWidget" name="centralwidget">

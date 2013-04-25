@@ -98,6 +98,7 @@ private:
   QFileInfoList m_file_list;
   bool m_stop_request;
   bool m_is_busy;
+  bool m_temporary_custom_output_custom_on;
 
 private slots:
   void exec_pushed();

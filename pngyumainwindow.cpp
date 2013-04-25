@@ -49,7 +49,8 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
   ui( new Ui::PngyuMainWindow ),
   m_preview_window( new PngyuPreviewWindow(this) ),
   m_stop_request( false ),
-  m_is_busy( false )
+  m_is_busy( false ),
+  m_temporary_custom_output_custom_on( false )
 {
   ui->setupUi(this);
 
@@ -188,7 +189,7 @@ QString PngyuMainWindow::make_output_file_path_string( const QString &input_file
 
   const pngyu::OutputOptionMode output_option_mode = current_output_option_mode();
 
-  if( output_option_mode == pngyu::OUTPUT_OPTION_OVERWITE_ORIGIANL )
+  if( output_option_mode == pngyu::OUTPUT_OPTION_OVERWITE_ORIGINAL )
   {
     return input_file_info.absoluteFilePath();
   }
@@ -289,7 +290,7 @@ pngyu::CompressOptionMode PngyuMainWindow::current_compress_option_mode() const
 
 void PngyuMainWindow::set_current_output_option_mode( const pngyu::OutputOptionMode mode )
 {
-  if( mode == pngyu::OUTPUT_OPTION_OVERWITE_ORIGIANL )
+  if( mode == pngyu::OUTPUT_OPTION_OVERWITE_ORIGINAL )
   {
     ui->toolButton_output_option_overwrite_original->setChecked( true );
   }
@@ -305,7 +306,7 @@ pngyu::OutputOptionMode PngyuMainWindow::current_output_option_mode() const
   const bool custom_checked = ui->toolButton_output_option_custom->isChecked();
   if( overwrite_origin_checked && ! custom_checked  )
   {
-    return pngyu::OUTPUT_OPTION_OVERWITE_ORIGIANL;
+    return pngyu::OUTPUT_OPTION_OVERWITE_ORIGINAL;
   }
   else if( ! overwrite_origin_checked && custom_checked  )
   {
@@ -451,6 +452,12 @@ void PngyuMainWindow::execute_compress_all()
   const pngyu::PngquantOption &option = make_pngquant_option( QString() );
   const QString &pngquant_path = executable_pngquant_path();
 
+  ExecuteCompressThread compress_thread;
+  compress_thread.set_executable_pngquant_path( pngquant_path );
+  compress_thread.set_pngquant_option( option );
+
+  qint64 total_saved_size = 0;
+
   QTableWidget *table_widget = file_list_table_widget();
   const int row_count = table_widget->rowCount();
   for( int row = 0; row < row_count; ++row )
@@ -476,7 +483,7 @@ void PngyuMainWindow::execute_compress_all()
       continue;
     }
 
-    const QByteArray &src_png_data = pngyu::util::png_file_to_bytearray( src_path );
+    QByteArray src_png_data;
     QByteArray dst_png_data;
 
     const QString command = option.make_pngquant_command_stdio_mode( pngquant_path );
@@ -489,16 +496,24 @@ void PngyuMainWindow::execute_compress_all()
         throw QString( "Error: \"" + dst_path + "\" is already exists" );
       }
 
-      const QByteArray &src_png_data = pngyu::util::png_file_to_bytearray( src_path );
+      src_png_data = pngyu::util::png_file_to_bytearray( src_path );
+
 
       { // exetute pngquant command
-        const QPair<QByteArray,QString> &compress_func_res =
-            pngyu::execute_compress_stdio_mode( command, src_png_data );
-        dst_png_data = compress_func_res.first;
-        if( dst_png_data.isEmpty() )
+        compress_thread.clear_result();
+        compress_thread.set_original_png_data( src_png_data );
+        compress_thread.start();
+        while( ! compress_thread.wait(50) )
         {
-          throw compress_func_res.second;
+          QApplication::processEvents();
         }
+
+        if( ! compress_thread.is_compress_succeeded() )
+        {
+          throw compress_thread.error_string();
+        }
+
+        dst_png_data = compress_thread.output_png_data();
       }
 
       if( dst_path_exists )
@@ -530,6 +545,8 @@ void PngyuMainWindow::execute_compress_all()
       const qint64 src_size = src_png_data.size();
       const qint64 dst_size = dst_png_data.size();
 
+      total_saved_size += src_size - dst_size;
+
       table_widget->setItem( row, COLUMN_ORIGINAL_SIZE,
                              new QTableWidgetItem( pngyu::util::size_to_string_kb( src_size ) ) );
       table_widget->setItem( row, COLUMN_OUTPUT_SIZE,
@@ -545,6 +562,13 @@ void PngyuMainWindow::execute_compress_all()
     {
       break;
     }
+  }
+
+  { // show result status bar
+    const QString size_string = total_saved_size > 500 * 1024 ?
+          pngyu::util::size_to_string_mb( total_saved_size ) :
+          pngyu::util::size_to_string_kb( total_saved_size );
+    ui->statusBar->showMessage( tr("Total %1 saved").arg(size_string) );
   }
 
   // ui operation
@@ -595,6 +619,7 @@ void PngyuMainWindow::clear_compress_result()
     ui->tableWidget_filelist->setItem( row, COLUMN_OUTPUT_SIZE, 0 );
     ui->tableWidget_filelist->setItem( row, COLUMN_SAVED_SIZE, 0 );
   }
+  ui->statusBar->showMessage( QString() );
 }
 
 //////////////////////
@@ -625,7 +650,15 @@ void PngyuMainWindow::dragLeaveEvent( QDragLeaveEvent *event )
   pngyu::util::set_drop_enabled_palette( ui->tableWidget_filelist->viewport(), false );
   pngyu::util::set_drop_here_stylesheet(
         ui->tableWidget_filelist->viewport(),
-        false );}
+        false );
+
+  if( m_temporary_custom_output_custom_on &&
+      ! pngyu::util::is_under_mouse(this) )
+  {
+    m_temporary_custom_output_custom_on = false;
+    set_current_output_option_mode( pngyu::OUTPUT_OPTION_OVERWITE_ORIGINAL );
+  }
+}
 
 
 void PngyuMainWindow::dragMoveEvent( QDragMoveEvent * event )
@@ -647,6 +680,20 @@ void PngyuMainWindow::dragMoveEvent( QDragMoveEvent * event )
   pngyu::util::set_drop_here_stylesheet(
         ui->tableWidget_filelist->viewport(),
         pngyu::util::is_under_mouse( file_list_widget ) );
+
+  // if dragg mouse is on output custom button open custom menu
+  if( current_output_option_mode() != pngyu::OUTPUT_OPTION_CUSTOM &&
+      pngyu::util::is_under_mouse( ui->toolButton_output_option_custom ) )
+  {
+    m_temporary_custom_output_custom_on = true;
+    set_current_output_option_mode( pngyu::OUTPUT_OPTION_CUSTOM );
+  }
+  else if( m_temporary_custom_output_custom_on &&
+           ! pngyu::util::is_under_mouse( ui->groupBox_output_option ) )
+  {
+    m_temporary_custom_output_custom_on = false;
+    set_current_output_option_mode( pngyu::OUTPUT_OPTION_OVERWITE_ORIGINAL );
+  }
 }
 
 void PngyuMainWindow::dropEvent( QDropEvent *event )
@@ -685,6 +732,13 @@ void PngyuMainWindow::dropEvent( QDropEvent *event )
       file_list.push_back( QFileInfo( url.toLocalFile() ) );
     }
     append_file_info_list( file_list );
+  }
+
+  if( ! mouse_is_on_output &&
+      m_temporary_custom_output_custom_on )
+  {
+    m_temporary_custom_output_custom_on = false;
+    set_current_output_option_mode( pngyu::OUTPUT_OPTION_OVERWITE_ORIGINAL );
   }
 
 }
