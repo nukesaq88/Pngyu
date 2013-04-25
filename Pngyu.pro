@@ -20,7 +20,7 @@ SOURCES += \
     pngyu_execute_pngquant_command.cpp \
     preview_window/basicimageview.cpp \
     preview_window/pngyupreviewwindow.cpp \
-    preview_window/executecompressthread.cpp
+   executecompressthread.cpp
 
 HEADERS  += \
     pngyumainwindow.h \
@@ -30,7 +30,7 @@ HEADERS  += \
     pngyu_execute_pngquant_command.h \
     preview_window/basicimageview.h \
     preview_window/pngyupreviewwindow.h \
-    preview_window/executecompressthread.h \
+    executecompressthread.h \
     spinnerwidget.h
 
 FORMS += \
