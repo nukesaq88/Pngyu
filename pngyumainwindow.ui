@@ -14,7 +14,7 @@
    <bool>true</bool>
   </property>
   <property name="windowTitle">
-   <string>Pngyu 0.9.1</string>
+   <string>Pngyu 0.9.2</string>
   </property>
   <property name="styleSheet">
    <string notr="true">QFrame#frame_speed,

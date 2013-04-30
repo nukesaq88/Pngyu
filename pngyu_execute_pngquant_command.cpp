@@ -30,13 +30,14 @@ QStringList find_executable_pngquant_from_dir( const QDir &dir )
   return found_paths;
 }
 
-QString pngquant_version( const QString &pnqquant_path )
+QString pngquant_version( const QString &pngquant_path )
 {
   QProcess process;
   process.setProcessEnvironment( QProcessEnvironment::systemEnvironment() );
-  process.start( pnqquant_path + " --version" );
+  process.start( pngquant_path + " --version" );
   process.waitForFinished();
   const QString &version = process.readAllStandardOutput();
+  qDebug() << pngquant_path << process.exitCode() << version << process.readAllStandardError();
   return version.trimmed();
 }
 

@@ -12,6 +12,8 @@
 #include <QDragMoveEvent>
 #include <QDropEvent>
 
+#include <QMoveEvent>
+
 #include <QDir>
 #include <QMimeData>
 #include <QUrl>
@@ -741,6 +743,12 @@ void PngyuMainWindow::dropEvent( QDropEvent *event )
     set_current_output_option_mode( pngyu::OUTPUT_OPTION_OVERWITE_ORIGINAL );
   }
 
+}
+
+
+void PngyuMainWindow::moveEvent( QMoveEvent *event )
+{
+  Q_UNUSED(event)
 }
 
 void PngyuMainWindow::update_file_table()

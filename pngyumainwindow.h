@@ -84,6 +84,8 @@ protected:
   virtual void dragMoveEvent( QDragMoveEvent *event );
   virtual void dropEvent( QDropEvent *event );
 
+  virtual void moveEvent( QMoveEvent *event );
+
   void update_file_table();
 
   void append_file_info_recursive( const QFileInfo &file_info,
