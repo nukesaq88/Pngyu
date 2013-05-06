@@ -1,5 +1,5 @@
-#ifndef PNGYU_EXECUTE_COMPRESS_H
-#define PNGYU_EXECUTE_COMPRESS_H
+#ifndef PNGYU_EXECUTE_PNGQUANT_COMMAND_H
+#define PNGYU_EXECUTE_PNGQUANT_COMMAND_H
 
 #include <QString>
 #include <QByteArray>
@@ -33,4 +33,4 @@ QPair<QByteArray,QString> execute_compress_stdio_mode(
 
 }
 
-#endif // PNGYU_EXECUTE_COMPRESS_H
+#endif // PNGYU_EXECUTE_PNGQUANT_COMMAND_H

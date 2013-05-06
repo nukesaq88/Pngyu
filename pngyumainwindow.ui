@@ -260,11 +260,6 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
         <height>16777215</height>
        </size>
       </property>
-      <property name="font">
-       <font>
-        <pointsize>15</pointsize>
-       </font>
-      </property>
       <property name="text">
        <string>Compress Stop</string>
       </property>
@@ -443,13 +438,6 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
-               <property name="font">
-                <font>
-                 <pointsize>12</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
                <property name="toolTip">
                 <string>Output filename mode</string>
                </property>
@@ -473,11 +461,6 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
                 </property>
                 <item>
                  <widget class="QLabel" name="label_custom_filename">
-                  <property name="font">
-                   <font>
-                    <pointsize>12</pointsize>
-                   </font>
-                  </property>
                   <property name="text">
                    <string>Filename :</string>
                   </property>
@@ -503,11 +486,6 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
                    </property>
                    <item row="0" column="2">
                     <widget class="QLineEdit" name="lineEdit_output_file_prefix">
-                     <property name="font">
-                      <font>
-                       <pointsize>12</pointsize>
-                      </font>
-                     </property>
                      <property name="toolTip">
                       <string>Input cumtom filename prefix</string>
                      </property>
@@ -518,11 +496,6 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
                    </item>
                    <item row="0" column="3">
                     <widget class="QLabel" name="label_outoput_original_name">
-                     <property name="font">
-                      <font>
-                       <pointsize>12</pointsize>
-                      </font>
-                     </property>
                      <property name="text">
                       <string>+ [Original Name] +</string>
                      </property>
@@ -530,11 +503,6 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
                    </item>
                    <item row="0" column="4">
                     <widget class="QLineEdit" name="lineEdit_output_file_suffix">
-                     <property name="font">
-                      <font>
-                       <pointsize>12</pointsize>
-                      </font>
-                     </property>
                      <property name="toolTip">
                       <string>Input cumtom filename suffix</string>
                      </property>
@@ -609,11 +577,6 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
                     <verstretch>0</verstretch>
                    </sizepolicy>
                   </property>
-                  <property name="font">
-                   <font>
-                    <pointsize>12</pointsize>
-                   </font>
-                  </property>
                   <property name="toolTip">
                    <string>Save to specified other directory</string>
                   </property>
@@ -627,11 +590,6 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
                 </item>
                 <item>
                  <widget class="QLineEdit" name="lineEdit_output_directory">
-                  <property name="font">
-                   <font>
-                    <pointsize>12</pointsize>
-                   </font>
-                  </property>
                   <property name="toolTip">
                    <string>Input output directory or drop it here ...</string>
                   </property>
@@ -661,11 +619,6 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <pointsize>12</pointsize>
-                </font>
                </property>
                <property name="toolTip">
                 <string>Save to same as directory that original file exists</string>
@@ -703,11 +656,6 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
         <width>180</width>
         <height>16777215</height>
        </size>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>15</pointsize>
-       </font>
       </property>
       <property name="text">
        <string>Compress Start</string>
@@ -942,11 +890,6 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
              </property>
              <item row="0" column="0">
               <widget class="QLabel" name="label_compress_high_quality">
-               <property name="font">
-                <font>
-                 <pointsize>12</pointsize>
-                </font>
-               </property>
                <property name="text">
                 <string>High Quality</string>
                </property>
@@ -976,11 +919,6 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
              </item>
              <item row="0" column="2">
               <widget class="QLabel" name="label_compress_high_speed">
-               <property name="font">
-                <font>
-                 <pointsize>12</pointsize>
-                </font>
-               </property>
                <property name="text">
                 <string>High Speed</string>
                </property>

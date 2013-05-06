@@ -76,7 +76,7 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
           table_widget->viewport(), false );
   }
 
-  {
+  { // init homepage label layout
     QWidget *const spacer = new QWidget(this);
     spacer->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
 
@@ -155,7 +155,7 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
 
   setGeometry( QRect( geometry().topLeft(), QSize( sizeHint().width(), 400 ) ) );
 
-  {
+  { // find executable pngquant
     const QStringList &executable_pngquant_list =  pngyu::find_executable_pngquant();
     if( executable_pngquant_list.empty() )
     {
@@ -187,6 +187,9 @@ void PngyuMainWindow::file_list_clear()
 
 QString PngyuMainWindow::make_output_file_path_string( const QString &input_file_path ) const
 {
+  // if current option is invalid option
+  // this function returns empty string
+
   const QFileInfo input_file_info( input_file_path );
 
   const pngyu::OutputOptionMode output_option_mode = current_output_option_mode();
@@ -236,6 +239,8 @@ QString PngyuMainWindow::make_output_file_path_string( const QString &input_file
 
 pngyu::PngquantOption PngyuMainWindow::make_pngquant_option( const QString &output_file_suffix ) const
 {
+  // make pngquant option from current compress option
+
   pngyu::PngquantOption option;
   if( current_compress_option_mode() == pngyu::COMPRESS_OPTION_CUSTOM )
   {
@@ -454,16 +459,20 @@ void PngyuMainWindow::execute_compress_all()
   const pngyu::PngquantOption &option = make_pngquant_option( QString() );
   const QString &pngquant_path = executable_pngquant_path();
 
+  // init compress thred instance,
+  // compress process will execute in other thread via this instance.
   ExecuteCompressThread compress_thread;
   compress_thread.set_executable_pngquant_path( pngquant_path );
   compress_thread.set_pngquant_option( option );
 
   qint64 total_saved_size = 0;
+  QStringList succeed_files;
 
   QTableWidget *table_widget = file_list_table_widget();
   const int row_count = table_widget->rowCount();
   for( int row = 0; row < row_count; ++row )
-  {
+  { // file list loop
+
     const QTableWidgetItem * const absolute_path_item = table_widget->item( row, COLUMN_ABSOLUTE_PATH );
     if( ! absolute_path_item )
     {
@@ -476,95 +485,98 @@ void PngyuMainWindow::execute_compress_all()
 
     table_widget->scrollToItem( resultItem );
 
-    const QString &src_path = absolute_path_item->text();
-    const QString &dst_path = make_output_file_path_string( src_path );
-
-    if( dst_path.isEmpty() )
-    {
-      qWarning() << "dst path is empty";
-      continue;
-    }
-
-    QByteArray src_png_data;
-    QByteArray dst_png_data;
-
-    const QString command = option.make_pngquant_command_stdio_mode( pngquant_path );
-
     try
     {
+      const QString &src_path = absolute_path_item->text();
+      const QString &dst_path = make_output_file_path_string( src_path );
+
+      if( dst_path.isEmpty() )
+      {
+        throw tr( "Error: Output option is invalid" );
+      }
+
       const bool dst_path_exists = QFile::exists( dst_path );
       if( dst_path_exists && ! overwrite_enable )
       {
-        throw QString( "Error: \"" + dst_path + "\" is already exists" );
+        throw tr( "Error: \"%1\" is already exists" ).arg( dst_path );
       }
 
-      src_png_data = pngyu::util::png_file_to_bytearray( src_path );
+      const QByteArray &src_png_data = pngyu::util::png_file_to_bytearray( src_path );
 
 
       { // exetute pngquant command
         compress_thread.clear_result();
         compress_thread.set_original_png_data( src_png_data );
         compress_thread.start();
+        // waiting for compress finished
         while( ! compress_thread.wait(50) )
         {
+          // avoid "aplication no response"
           QApplication::processEvents();
         }
 
+        // compres result check
         if( ! compress_thread.is_compress_succeeded() )
         {
           throw compress_thread.error_string();
         }
 
-        dst_png_data = compress_thread.output_png_data();
       }
+
+      const QByteArray &dst_png_data = compress_thread.output_png_data();
 
       if( dst_path_exists )
       {
+        // remove old file
         if( ! QFile::remove( dst_path ) )
         {
-          throw QString( "Error: Couldn't overwrite" );
+          throw tr( "Error: Couldn't overwrite" );
         }
       }
 
       // copy result file to dst_path
       if( ! pngyu::util::write_png_data( dst_path, dst_png_data ) )
       {
-         throw QString( "Couldn't save output file" );
+         throw tr( "Couldn't save output file" );
       }
+
+      if( ! dst_png_data.isEmpty() )
+      { // Succeed
+
+        succeed_files.push_back( src_path );
+
+        resultItem->setIcon( pngyu::util::success_icon() );
+
+        const qint64 src_size = src_png_data.size();
+        const qint64 dst_size = dst_png_data.size();
+
+        total_saved_size += src_size - dst_size;
+
+        table_widget->setItem( row, COLUMN_ORIGINAL_SIZE,
+                               new QTableWidgetItem( pngyu::util::size_to_string_kb( src_size ) ) );
+        table_widget->setItem( row, COLUMN_OUTPUT_SIZE,
+                               new QTableWidgetItem( pngyu::util::size_to_string_kb( dst_size ) ) );
+        const double saving_rate = static_cast<double>( src_size - dst_size ) / ( src_size );
+
+        table_widget->setItem( row, COLUMN_SAVED_SIZE,
+                               new QTableWidgetItem( QString( "%1%" ).arg( static_cast<int>(saving_rate * 100) ) ) );
+      }
+
     }
     catch( const QString &e )
     {
       resultItem->setText( e );
       resultItem->setToolTip( e );
       resultItem->setIcon( pngyu::util::failure_icon() );
-      dst_png_data.clear();
-    }
-
-    if( ! dst_png_data.isEmpty() )
-    {
-      resultItem->setIcon( pngyu::util::success_icon() );
-
-      const qint64 src_size = src_png_data.size();
-      const qint64 dst_size = dst_png_data.size();
-
-      total_saved_size += src_size - dst_size;
-
-      table_widget->setItem( row, COLUMN_ORIGINAL_SIZE,
-                             new QTableWidgetItem( pngyu::util::size_to_string_kb( src_size ) ) );
-      table_widget->setItem( row, COLUMN_OUTPUT_SIZE,
-                             new QTableWidgetItem( pngyu::util::size_to_string_kb( dst_size ) ) );
-      const double saving_rate = static_cast<double>( src_size - dst_size ) / ( src_size );
-
-      table_widget->setItem( row, COLUMN_SAVED_SIZE,
-                             new QTableWidgetItem( QString( "%1%" ).arg( static_cast<int>(saving_rate * 100) ) ) );
     }
 
     QApplication::processEvents();
+
     if( m_stop_request )
     {
       break;
     }
-  }
+  } // end of file list loop
 
   { // show result status bar
     const QString size_string = total_saved_size > 500 * 1024 ?
@@ -573,12 +585,12 @@ void PngyuMainWindow::execute_compress_all()
     ui->statusBar->showMessage( tr("Total %1 saved").arg(size_string) );
   }
 
-  // ui operation
   set_busy_mode( false );
 
   ui->widget_executing->setVisible( false );
   ui->pushButton_stop_exec->setVisible( false );
   ui->pushButton_exec->setVisible( true );
+
 
 }
 
@@ -649,16 +661,18 @@ void PngyuMainWindow::dragLeaveEvent( QDragLeaveEvent *event )
     return;
   }
 
-  pngyu::util::set_drop_enabled_palette( ui->tableWidget_filelist->viewport(), false );
-  pngyu::util::set_drop_here_stylesheet(
-        ui->tableWidget_filelist->viewport(),
-        false );
+  { // disable file drogging ui effects
+    pngyu::util::set_drop_enabled_palette( ui->tableWidget_filelist->viewport(), false );
+    pngyu::util::set_drop_here_stylesheet(
+          ui->tableWidget_filelist->viewport(),
+          false );
 
-  if( m_temporary_custom_output_custom_on &&
-      ! pngyu::util::is_under_mouse(this) )
-  {
-    m_temporary_custom_output_custom_on = false;
-    set_current_output_option_mode( pngyu::OUTPUT_OPTION_OVERWITE_ORIGINAL );
+    if( m_temporary_custom_output_custom_on &&
+        ! pngyu::util::is_under_mouse(this) )
+    {
+      m_temporary_custom_output_custom_on = false;
+      set_current_output_option_mode( pngyu::OUTPUT_OPTION_OVERWITE_ORIGINAL );
+    }
   }
 }
 
@@ -671,35 +685,45 @@ void PngyuMainWindow::dragMoveEvent( QDragMoveEvent * event )
     return;
   }
 
-  { // linedit
-    QLineEdit * const output_line_edit = ui->lineEdit_output_directory;
-    pngyu::util::set_drop_enabled_palette(
-          output_line_edit,
-          pngyu::util::is_under_mouse( output_line_edit ) );
-  }
+  { // enable file drogging ui effects
 
-  QWidget * const file_list_widget = ui->groupBox_filelist;
-  pngyu::util::set_drop_here_stylesheet(
-        ui->tableWidget_filelist->viewport(),
-        pngyu::util::is_under_mouse( file_list_widget ) );
+    { // linedit
+      QLineEdit * const output_line_edit = ui->lineEdit_output_directory;
+      pngyu::util::set_drop_enabled_palette(
+            output_line_edit,
+            pngyu::util::is_under_mouse( output_line_edit ) );
+    }
 
-  // if dragg mouse is on output custom button open custom menu
-  if( current_output_option_mode() != pngyu::OUTPUT_OPTION_CUSTOM &&
-      pngyu::util::is_under_mouse( ui->toolButton_output_option_custom ) )
-  {
-    m_temporary_custom_output_custom_on = true;
-    set_current_output_option_mode( pngyu::OUTPUT_OPTION_CUSTOM );
-  }
-  else if( m_temporary_custom_output_custom_on &&
-           ! pngyu::util::is_under_mouse( ui->groupBox_output_option ) )
-  {
-    m_temporary_custom_output_custom_on = false;
-    set_current_output_option_mode( pngyu::OUTPUT_OPTION_OVERWITE_ORIGINAL );
+    QWidget * const file_list_widget = ui->groupBox_filelist;
+    pngyu::util::set_drop_here_stylesheet(
+          ui->tableWidget_filelist->viewport(),
+          pngyu::util::is_under_mouse( file_list_widget ) );
+
+    // if dragg mouse is on output custom button open custom menu
+    if( current_output_option_mode() != pngyu::OUTPUT_OPTION_CUSTOM &&
+        pngyu::util::is_under_mouse( ui->toolButton_output_option_custom ) )
+    {
+      m_temporary_custom_output_custom_on = true;
+      set_current_output_option_mode( pngyu::OUTPUT_OPTION_CUSTOM );
+    }
+    else if( m_temporary_custom_output_custom_on &&
+             ! pngyu::util::is_under_mouse( ui->groupBox_output_option ) )
+    {
+      m_temporary_custom_output_custom_on = false;
+      set_current_output_option_mode( pngyu::OUTPUT_OPTION_OVERWITE_ORIGINAL );
+    }
   }
 }
 
 void PngyuMainWindow::dropEvent( QDropEvent *event )
 {
+  if( is_busy() )
+  {
+    return;
+  }
+
+  // disable file drogging ui effects (1st
+
   QLineEdit * const output_line_edit = ui->lineEdit_output_directory;
   const bool mouse_is_on_output = pngyu::util::is_under_mouse( output_line_edit );
   pngyu::util::set_drop_enabled_palette( output_line_edit, false );
@@ -719,7 +743,7 @@ void PngyuMainWindow::dropEvent( QDropEvent *event )
   const QList<QUrl> &url_list = mimedata->urls();
 
   if( mouse_is_on_output )
-  {
+  { // set output directory path
     if( url_list.size() == 1 )
     {
       set_other_output_directory( url_list.first().toLocalFile() );
@@ -727,7 +751,7 @@ void PngyuMainWindow::dropEvent( QDropEvent *event )
     }
   }
   else if( mouse_is_on_file_list )
-  {
+  { // append png files
     QList<QFileInfo> file_list;
     foreach( const QUrl &url, url_list )
     {
@@ -736,6 +760,7 @@ void PngyuMainWindow::dropEvent( QDropEvent *event )
     append_file_info_list( file_list );
   }
 
+  // disable file drogging ui effect (2nd
   if( ! mouse_is_on_output &&
       m_temporary_custom_output_custom_on )
   {
@@ -759,7 +784,7 @@ void PngyuMainWindow::update_file_table()
   const QString &last_selected_filename = current_selected_filename();
   table_widget->setRowCount( 0 ); // reset file list table
   table_widget->setRowCount( m_file_list.size() );
-  {
+  { // append files
     int row_index = 0;
     foreach( const QFileInfo &file_info, m_file_list )
     {
@@ -806,6 +831,8 @@ void PngyuMainWindow::append_file_info_list( const QList<QFileInfo> &info_list )
 void PngyuMainWindow::append_file_info_recursive( const QFileInfo &file_info,
                                                   const int recursive_directory_depth )
 {
+  // internal implementation of "append_file_info_list"
+
   QApplication::processEvents();
   if( m_stop_request )
   {
@@ -965,7 +992,6 @@ void PngyuMainWindow::ncolor_slider_changed()
 
 void PngyuMainWindow::table_widget_current_changed()
 {
-
   const QString current_path = current_selected_filename();
 
   m_preview_window->set_png_file( current_path );

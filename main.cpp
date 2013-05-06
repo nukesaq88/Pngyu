@@ -21,14 +21,15 @@ public:
 
 protected:
 
-  bool event( QEvent * e )
+  virtual bool event( QEvent * e )
   {
     if( e->type() == QEvent::FileOpen )
-    {
-      QFileOpenEvent *file_event = static_cast<QFileOpenEvent *>(e);
+    { // for MAC OS X Drag and Drop event
+      const QFileOpenEvent * const file_event = static_cast<QFileOpenEvent *>(e);
       if( m_pngyu_main )
       {
         QList<QFileInfo> info_list;
+        const QString file = file_event->file();
         info_list.push_back( file_event->file() );
         m_pngyu_main->append_file_info_list( info_list );
         return true;

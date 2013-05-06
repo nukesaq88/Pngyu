@@ -5,6 +5,8 @@
 #include <QPixmap>
 #include <QList>
 
+// This class enables to visualize "waiting" or "loading", "executeing" condition.
+// If you set SpinnerWidget in your layout, spinner pixmap begin spinning immidiately
 class SpinnerWidget : public QLabel
 {
 public:

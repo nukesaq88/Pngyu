@@ -84,12 +84,12 @@ void ExecuteCompressThread::run()
   {
     if( m_src_png_data.isEmpty() )
     {
-      throw QString( "Error: Original data is empty" );
+      throw tr( "Error: Original data is empty" );
     }
 
     process.start( command );
 
-    { // waiting process started
+    { // waiting for process started or timeout or stop request.
       QTime t;
       t.start();
       while( ! process.waitForStarted( 30 ) )
@@ -97,21 +97,22 @@ void ExecuteCompressThread::run()
         if( m_stop_request )
         {
           b_stop_request_called = true;
-          throw QString( "Error: stop request" );
+          throw tr( "Error: stop request" );
         }
 
         if( t.elapsed() > 20000 )
         {
-          throw QString( "Error: Process cannot started" );
+          throw tr( "Error: Process cannot started" );
         }
       }
     }
 
+    // send src png file data to pngquant with std input
     process.write( m_src_png_data );
     process.closeWriteChannel();
 
 
-    { // waiting process finished
+    { // waiting for process started or timeout or stop request.
       QTime t;
       t.start();
       while( ! process.waitForFinished( 30 ) )
@@ -119,24 +120,24 @@ void ExecuteCompressThread::run()
         if( m_stop_request )
         {
           b_stop_request_called = true;
-          throw QString( "Error: stop request" );
+          throw tr( "Error: stop request" );
         }
 
         if( t.elapsed() > 20000 )
         {
-          QString( "Error: Process timeout" );
+          throw tr( "Error: Process timeout" );
         }
       }
     }
     if( m_stop_request )
     {
-      throw QString( "Error: stop request" );
+      throw tr( "Error: stop request" );
     }
 
     const int exit_code = process.exitCode();
-    if( process.exitCode() != 0 )
+    if( exit_code != 0 )
     {
-      throw QString( "Error code : %1\nCause : %2" )
+      throw tr( "Error code : %1\nCause : %2" )
           .arg( exit_code )
           .arg( QString(process.readAllStandardError()) );
     }

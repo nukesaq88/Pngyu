@@ -37,7 +37,7 @@ QString pngquant_version( const QString &pngquant_path )
   process.start( pngquant_path + " --version" );
   process.waitForFinished();
   const QString &version = process.readAllStandardOutput();
-  qDebug() << pngquant_path << process.exitCode() << version << process.readAllStandardError();
+//  qDebug() << pngquant_path << process.exitCode() << version << process.readAllStandardError();
   return version.trimmed();
 }
 
@@ -57,20 +57,22 @@ QStringList find_executable_pngquant()
   QStringList search_dirs;
 
 #ifdef Q_OS_MACX
-  search_dirs << ( QApplication::applicationDirPath() + "/../Resources/" );
+  search_dirs << ( QApplication::applicationDirPath() + "/../Resources" );
 #endif
 #ifdef Q_OS_UNIX
-  search_dirs << "/usr/bin" << "/usr/local/bin" << "/usr/sbin";
+  search_dirs << "/usr/bin"
+              << "/usr/local/bin"
+              << "/usr/sbin";
 #endif
 #ifdef Q_OS_WIN
-
+  search_dirs << ( QApplication::applicationDirPath() + "/pngquant" );
 #endif
+
   QStringList found_paths;
   foreach( const QString &dir, search_dirs )
   {
     found_paths.append( find_executable_pngquant_from_dir( QDir(dir) ) );
   }
-
 
   return found_paths;
 }
