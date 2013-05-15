@@ -15,6 +15,7 @@ namespace Ui {
 class PngyuMainWindow;
 }
 
+// Main window class of Pngyu application
 class PngyuMainWindow : public QMainWindow
 {
   Q_OBJECT
@@ -64,6 +65,9 @@ public:
   void set_compress_speed( const int speed );
   int compress_speed() const;
 
+  void set_image_optim_enabled( const bool b );
+  bool image_optim_enabled() const;
+
   void execute_compress_all();
 
   bool is_preview_window_visible() const;
@@ -85,6 +89,7 @@ protected:
   virtual void dropEvent( QDropEvent *event );
 
   virtual void moveEvent( QMoveEvent *event );
+  virtual void showEvent( QShowEvent *event );
 
   void update_file_table();
 

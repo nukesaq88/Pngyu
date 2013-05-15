@@ -191,11 +191,6 @@ QToolButton#toolButton_zoomout::pressed
     </item>
     <item row="0" column="0">
      <widget class="QCheckBox" name="checkBox_show_original">
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
       <property name="text">
        <string>Show Original</string>
       </property>
@@ -224,11 +219,6 @@ QToolButton#toolButton_zoomout::pressed
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>10</pointsize>
-       </font>
       </property>
       <property name="text">
        <string>Original Size (100%)</string>

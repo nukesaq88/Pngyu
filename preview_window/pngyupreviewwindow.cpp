@@ -25,8 +25,6 @@ PngyuPreviewWindow::PngyuPreviewWindow(QWidget *parent) :
     ui->imageview->setPalette( p );
   }
 
-//  const QString &temporary_path = pngyu::util::app_temporay_path();
-//  pngyu::util::make_app_temporary_path();
 
   connect( &m_execute_compress_thread, SIGNAL(compress_finished()),
            this, SLOT(compress_finished()) );
@@ -204,12 +202,8 @@ void PngyuPreviewWindow::update_preview()
     }
     else
     {
-
       set_current_preview_image( m_src_image );
-      if( ! is_execute_compress_working() )
-      {
-        execute_compress_start();
-      }
+      execute_compress_start();
     }
   }
 }

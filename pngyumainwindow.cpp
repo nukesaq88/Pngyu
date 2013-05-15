@@ -19,6 +19,7 @@
 #include <QUrl>
 #include <QFileInfo>
 #include <QFileDialog>
+#include <QDesktopWidget>
 
 #include <QImageReader>
 
@@ -44,6 +45,8 @@ enum TableColumn
   TABLE_COLUMN_COUNT
 };
 
+const QString IMAGE_OPTIM_PATH = "/Applications/ImageOptim.app";
+
 } // namespace
 
 PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
@@ -55,6 +58,15 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
   m_temporary_custom_output_custom_on( false )
 {
   ui->setupUi(this);
+
+  { // image optim checkbox init
+    bool image_optim_exists = false;
+    #ifdef Q_OS_MACX
+    image_optim_exists = QFile::exists( IMAGE_OPTIM_PATH );
+    #endif
+    ui->frame_image_optim->setVisible( image_optim_exists );
+    ui->checkBox_image_optim->setEnabled( image_optim_exists );
+  }
 
   { // init file list table widget
     QTableWidget *table_widget = file_list_table_widget();
@@ -153,7 +165,12 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
 
   update_file_table();
 
-  setGeometry( QRect( geometry().topLeft(), QSize( sizeHint().width(), 400 ) ) );
+  { // set window size
+    const QPoint center_pos = QApplication::desktop()->geometry().center();
+    const QSize window_size( 500, 400 );
+    setGeometry( QRect( center_pos - QPoint( window_size.width() / 2, window_size.height() / 2 ),
+                        window_size ) );
+  }
 
   { // find executable pngquant
     const QStringList &executable_pngquant_list =  pngyu::find_executable_pngquant();
@@ -167,6 +184,7 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
       set_executable_pngquant_path( executable_pngquant_list.first() );
     }
   }
+
 }
 
 PngyuMainWindow::~PngyuMainWindow()
@@ -436,6 +454,22 @@ int PngyuMainWindow::compress_speed() const
   return ui->horizontalSlider_compress_speed->value();
 }
 
+void PngyuMainWindow::set_image_optim_enabled( const bool b )
+{
+  ui->checkBox_image_optim->setChecked( b );
+}
+
+bool PngyuMainWindow::image_optim_enabled() const
+{
+#ifdef Q_OS_MACX
+  return ui->checkBox_image_optim->isChecked() &&
+         ( current_compress_option_mode() == pngyu::COMPRESS_OPTION_CUSTOM );
+#endif
+#ifndef Q_OS_MACX
+  return false;
+#endif
+}
+
 
 void PngyuMainWindow::execute_compress_all()
 {
@@ -543,6 +577,14 @@ void PngyuMainWindow::execute_compress_all()
       if( ! dst_png_data.isEmpty() )
       { // Succeed
 
+        //qDebug() << image_optim_enabled() << (current_compress_option_mode() == pngyu::COMPRESS_OPTION_CUSTOM);
+        if( image_optim_enabled() )
+        {
+          qDebug() << "opn";
+          pngyu::util::open_with_mac_app( QStringList() << dst_path, IMAGE_OPTIM_PATH );
+        }
+
+
         succeed_files.push_back( src_path );
 
         resultItem->setIcon( pngyu::util::success_icon() );
@@ -590,7 +632,6 @@ void PngyuMainWindow::execute_compress_all()
   ui->widget_executing->setVisible( false );
   ui->pushButton_stop_exec->setVisible( false );
   ui->pushButton_exec->setVisible( true );
-
 
 }
 
@@ -661,7 +702,7 @@ void PngyuMainWindow::dragLeaveEvent( QDragLeaveEvent *event )
     return;
   }
 
-  { // disable file drogging ui effects
+  { // disable ui effects that while file dragging
     pngyu::util::set_drop_enabled_palette( ui->tableWidget_filelist->viewport(), false );
     pngyu::util::set_drop_here_stylesheet(
           ui->tableWidget_filelist->viewport(),
@@ -773,7 +814,12 @@ void PngyuMainWindow::dropEvent( QDropEvent *event )
 
 void PngyuMainWindow::moveEvent( QMoveEvent *event )
 {
-  Q_UNUSED(event)
+  QMainWindow::moveEvent( event );
+}
+
+void PngyuMainWindow::showEvent( QShowEvent *event )
+{
+  QMainWindow::showEvent( event );
 }
 
 void PngyuMainWindow::update_file_table()
@@ -951,6 +997,8 @@ void PngyuMainWindow::file_list_clear_pushed()
 
 void PngyuMainWindow::ncolor_spinbox_changed()
 {
+  // for syncronize ncolor spinbox and slider
+
   const int n = ncolor();
   int slider_value = 256;
   if( n < 4 )
@@ -974,6 +1022,8 @@ void PngyuMainWindow::ncolor_spinbox_changed()
 
 void PngyuMainWindow::ncolor_slider_changed()
 {
+  // for syncronize ncolor spinbox and slider
+
   const int slider_value = ui->horizontalSlider_colors->value();
   int ncolor = 256;
   switch( slider_value )
@@ -998,13 +1048,16 @@ void PngyuMainWindow::table_widget_current_changed()
 
   if( ! current_path.isEmpty() )
   {
-    ui->pushButton_preview->setEnabled( true );
-    const QSize &icon_size = ui->pushButton_preview->iconSize();
-    const QImage &icon_image =
-        pngyu::util::read_thumbnail_image( current_path,
-                                           icon_size.width() );
 
-    ui->pushButton_preview->setIcon( QPixmap::fromImage( icon_image ) );
+    { // set icon to preview window button
+      ui->pushButton_preview->setEnabled( true );
+      const QSize &icon_size = ui->pushButton_preview->iconSize();
+      const QImage &icon_image =
+          pngyu::util::read_thumbnail_image( current_path,
+                                             icon_size.width() );
+
+      ui->pushButton_preview->setIcon( QPixmap::fromImage( icon_image ) );
+    }
   }
   else
   {
