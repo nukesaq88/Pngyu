@@ -19,16 +19,16 @@ BasicImageView::BasicImageView(QWidget *parent) :
 
 void BasicImageView::setImage( const QImage &image )
 {
-  //setBackgroundBrush( QBrush( image ) );
   m_pixmap = QPixmap::fromImage( image );
   setSceneRect( QRectF(image.rect()) );
+  viewport()->repaint();
 }
 
 void BasicImageView::setPixmap( const QPixmap &pixmap )
 {
-  //setBackgroundBrush( QBrush( pixmap ) );
   m_pixmap = pixmap;
   setSceneRect( QRectF(pixmap.rect()) );
+  viewport()->repaint();
 }
 
 void BasicImageView::mouseMoveEvent(QMouseEvent *event)

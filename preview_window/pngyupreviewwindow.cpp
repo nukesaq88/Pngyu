@@ -75,6 +75,7 @@ void PngyuPreviewWindow::set_png_file( const QString &filename )
 
   if( filename.isEmpty() )
   {
+    // clear all
     m_is_image_loaded = true;
     m_src_image = QImage();
     m_is_compress_finished = true;

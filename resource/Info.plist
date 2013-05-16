@@ -17,12 +17,14 @@
 	<key>CFBundleIdentifier</key>
 	<string>com.nukesaq88.Pngyu</string>
 	<key>CFBundleVersion</key>
-	<string>0.9.2</string>
+	<string>0.9.3</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.9.2</string>
+	<string>0.9.3</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
 			<key>CFBundleTypeName</key>
 			<string></string>
 			<key>LSHandlerRank</key>

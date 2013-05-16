@@ -14,15 +14,14 @@
    <bool>true</bool>
   </property>
   <property name="windowTitle">
-   <string>Pngyu 0.9.2</string>
+   <string>Pngyu 0.9.3</string>
   </property>
   <property name="styleSheet">
    <string notr="true">QFrame#frame_speed,
 QFrame#frame_dithered,
 QFrame#frame_colors,
 QFrame#frame_output_filename,
-QFrame#frame_ie6,
-QFrame#frame_image_optim
+QFrame#frame_ie6
 {
     border: 1px solid rgb(127,127,127,63);
     border-radius: 4px;
@@ -99,9 +98,6 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
     <property name="margin">
-     <number>6</number>
-    </property>
-    <property name="spacing">
      <number>6</number>
     </property>
     <item row="7" column="0" colspan="5">
@@ -786,62 +782,6 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
              <property name="spacing">
               <number>4</number>
              </property>
-             <item row="0" column="0">
-              <widget class="QFrame" name="frame_dithered">
-               <property name="frameShape">
-                <enum>QFrame::Panel</enum>
-               </property>
-               <property name="frameShadow">
-                <enum>QFrame::Sunken</enum>
-               </property>
-               <layout class="QGridLayout" name="gridLayout_4">
-                <property name="margin">
-                 <number>4</number>
-                </property>
-                <property name="spacing">
-                 <number>4</number>
-                </property>
-                <item row="0" column="1">
-                 <widget class="QCheckBox" name="checkBox_dithered">
-                  <property name="text">
-                   <string>Dithered</string>
-                  </property>
-                  <property name="checked">
-                   <bool>true</bool>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-             </item>
-             <item row="0" column="2">
-              <widget class="QFrame" name="frame_image_optim">
-               <property name="frameShape">
-                <enum>QFrame::Panel</enum>
-               </property>
-               <property name="frameShadow">
-                <enum>QFrame::Sunken</enum>
-               </property>
-               <layout class="QGridLayout" name="gridLayout_14">
-                <property name="margin">
-                 <number>4</number>
-                </property>
-                <property name="spacing">
-                 <number>4</number>
-                </property>
-                <item row="0" column="0">
-                 <widget class="QCheckBox" name="checkBox_image_optim">
-                  <property name="text">
-                   <string>Optimize with ImageOptim</string>
-                  </property>
-                  <property name="checked">
-                   <bool>false</bool>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-             </item>
              <item row="0" column="1">
               <widget class="QFrame" name="frame_ie6">
                <property name="frameShape">
@@ -864,6 +804,34 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
                   </property>
                   <property name="checked">
                    <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QFrame" name="frame_dithered">
+               <property name="frameShape">
+                <enum>QFrame::Panel</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Sunken</enum>
+               </property>
+               <layout class="QGridLayout" name="gridLayout_4">
+                <property name="margin">
+                 <number>4</number>
+                </property>
+                <property name="spacing">
+                 <number>4</number>
+                </property>
+                <item row="0" column="1">
+                 <widget class="QCheckBox" name="checkBox_dithered">
+                  <property name="text">
+                   <string>Dithered</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>

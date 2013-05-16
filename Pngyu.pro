@@ -41,4 +41,4 @@ RESOURCES += \
     resource/resource.qrc
 
 macx: ICON = resource/icon.icns
-macx: QMAKE_INFO_PLIST = info.plist
+macx: QMAKE_INFO_PLIST = resource/info.plist

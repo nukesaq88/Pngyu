@@ -22,14 +22,12 @@
 #include <QDesktopWidget>
 
 #include <QImageReader>
+#include <QMessageBox>
 
 #include "pngyupreviewwindow.h"
 
 #include "pngyu_util.h"
 #include "pngyu_execute_pngquant_command.h"
-
-
-
 
 namespace
 {
@@ -55,18 +53,12 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
   m_preview_window( new PngyuPreviewWindow(this) ),
   m_stop_request( false ),
   m_is_busy( false ),
-  m_temporary_custom_output_custom_on( false )
+  m_temporary_custom_output_custom_on( false ),
+  m_image_optim_enabled( false )
 {
   ui->setupUi(this);
 
-  { // image optim checkbox init
-    bool image_optim_exists = false;
-    #ifdef Q_OS_MACX
-    image_optim_exists = QFile::exists( IMAGE_OPTIM_PATH );
-    #endif
-    ui->frame_image_optim->setVisible( image_optim_exists );
-    ui->checkBox_image_optim->setEnabled( image_optim_exists );
-  }
+  ui->mainToolBar->setVisible( false );
 
   { // init file list table widget
     QTableWidget *table_widget = file_list_table_widget();
@@ -89,7 +81,7 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
   }
 
   { // init homepage label layout
-    QWidget *const spacer = new QWidget(this);
+    QWidget * const spacer = new QWidget(this);
     spacer->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
 
     ui->statusBar->addWidget( spacer, 5 );
@@ -456,14 +448,18 @@ int PngyuMainWindow::compress_speed() const
 
 void PngyuMainWindow::set_image_optim_enabled( const bool b )
 {
-  ui->checkBox_image_optim->setChecked( b );
+#ifdef Q_OS_MACX
+  m_image_optim_enabled = b;
+#endif
+#ifndef Q_OS_MACX
+  m_image_optim_enabled = false;
+#endif
 }
 
 bool PngyuMainWindow::image_optim_enabled() const
 {
 #ifdef Q_OS_MACX
-  return ui->checkBox_image_optim->isChecked() &&
-         ( current_compress_option_mode() == pngyu::COMPRESS_OPTION_CUSTOM );
+  return m_image_optim_enabled;
 #endif
 #ifndef Q_OS_MACX
   return false;
@@ -916,6 +912,21 @@ bool PngyuMainWindow::is_other_output_directory_valid() const
 
 void PngyuMainWindow::exec_pushed()
 {
+
+#ifdef Q_OS_MACX
+  if( QFile::exists( IMAGE_OPTIM_PATH ) )
+  { // confirm optimize with ImageOptim
+    const int res =QMessageBox::question(
+                           this,
+                           tr("Optimize with ImageOptim"),
+                           tr("Do you want to optimize with ImageOptim?"),
+                           QMessageBox::Yes | QMessageBox::No,
+                           QMessageBox::Yes );
+
+    set_image_optim_enabled( res == QMessageBox::Yes );
+  }
+#endif
+
   QTime t;
   t.start();
   execute_compress_all();

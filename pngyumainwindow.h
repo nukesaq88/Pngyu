@@ -106,6 +106,7 @@ private:
   bool m_stop_request;
   bool m_is_busy;
   bool m_temporary_custom_output_custom_on;
+  bool m_image_optim_enabled;
 
 private slots:
   void exec_pushed();
