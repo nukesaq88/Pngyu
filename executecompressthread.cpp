@@ -3,6 +3,7 @@
 #include <QProcess>
 #include <QTime>
 #include <QDebug>
+#include <QFile>
 
 ExecuteCompressThread::ExecuteCompressThread(QObject *parent) :
   QThread(parent),
@@ -82,6 +83,11 @@ void ExecuteCompressThread::run()
 
   try
   {
+    if( ! QFile::exists(m_pngquant_path) )
+    {
+      throw tr( "Error: pngquant path not found : " ) + m_pngquant_path ;
+    }
+
     if( m_src_png_data.isEmpty() )
     {
       throw tr( "Error: Original data is empty" );

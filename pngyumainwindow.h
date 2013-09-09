@@ -6,10 +6,11 @@
 #include <QProcess>
 #include <QFileInfo>
 
-#include "pngyu_difines.h"
+#include "pngyu_defines.h"
 #include "pngyu_option.h"
 
 class PngyuPreviewWindow;
+class PngyuPreferencesDialog;
 
 namespace Ui {
 class PngyuMainWindow;
@@ -19,8 +20,9 @@ class PngyuMainWindow;
 class PngyuMainWindow : public QMainWindow
 {
   Q_OBJECT
-  
 public:
+
+  
   explicit PngyuMainWindow(QWidget *parent = 0);
   ~PngyuMainWindow();
 
@@ -34,6 +36,9 @@ public:
 
   void set_executable_pngquant_path( const QString &path );
   QString executable_pngquant_path() const;
+
+  void set_executable_image_optim_path( const QString &path );
+  QString executable_image_optim_path() const;
 
   void set_current_compress_option_mode( const pngyu::CompressOptionMode mode );
   pngyu::CompressOptionMode current_compress_option_mode() const;
@@ -65,10 +70,13 @@ public:
   void set_compress_speed( const int speed );
   int compress_speed() const;
 
-  void set_image_optim_enabled( const bool b );
-  bool image_optim_enabled() const;
+  void set_image_optim_integration_mode( const pngyu::ImageOptimIntegration mode );
+  pngyu::ImageOptimIntegration image_optim_integration_mode() const;
 
-  void execute_compress_all();
+  void set_num_thread( const int num );
+  int num_thread() const;
+
+  void execute_compress_all( bool image_optim_enabled );
 
   bool is_preview_window_visible() const;
 
@@ -90,6 +98,10 @@ protected:
 
   virtual void moveEvent( QMoveEvent *event );
   virtual void showEvent( QShowEvent *event );
+  virtual void closeEvent( QCloseEvent *event );
+
+  void read_settings();
+  void write_settings();
 
   void update_file_table();
 
@@ -101,12 +113,16 @@ protected:
 private:
   Ui::PngyuMainWindow *ui;
   PngyuPreviewWindow *m_preview_window;
+  PngyuPreferencesDialog *m_preferences_dialog;
   QString m_current_pngquant_path;
+  QString m_current_imageoptim_path;
   QFileInfoList m_file_list;
   bool m_stop_request;
   bool m_is_busy;
   bool m_temporary_custom_output_custom_on;
+  int m_num_thread;
   bool m_image_optim_enabled;
+  pngyu::ImageOptimIntegration m_image_optim_integration;
 
 private slots:
   void exec_pushed();
@@ -124,6 +140,9 @@ private slots:
   void preview_button_toggled( bool );
   void preview_window_closed();
   void add_file_button_pushed();
+  void menu_preferences_pushed();
+  void menu_quit_pushed();
+  void preferences_apply_pushed();
   void stop_request();
 };
 

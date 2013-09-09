@@ -14,6 +14,7 @@
 #include <QByteArray>
 #include <QStringList>
 #include <QProcess>
+#include <QIcon>
 
 namespace pngyu
 {
@@ -184,7 +185,7 @@ inline bool open_with_mac_app( const QStringList &files, const QString app_path 
     }
     args.push_back( script );
   }
-  return QProcess::execute( "/usr/bin/python", args );
+  return QProcess::execute( "/usr/bin/pythonw", args );
 }
 
 } // namespace util

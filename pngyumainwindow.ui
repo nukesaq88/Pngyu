@@ -14,7 +14,7 @@
    <bool>true</bool>
   </property>
   <property name="windowTitle">
-   <string>Pngyu 0.9.3</string>
+   <string>Pngyu 1.0.0</string>
   </property>
   <property name="styleSheet">
    <string notr="true">QFrame#frame_speed,
@@ -128,19 +128,6 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
          </property>
         </widget>
        </item>
-       <item row="0" column="4">
-        <spacer name="horizontalSpacer_4">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>0</width>
-           <height>0</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
        <item row="0" column="5">
         <widget class="QPushButton" name="pushButton_stop_exec">
          <property name="minimumSize">
@@ -199,11 +186,24 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
          </layout>
         </widget>
        </item>
+       <item row="0" column="4">
+        <spacer name="horizontalSpacer_5">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>0</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
       </layout>
       <zorder>pushButton_stop_exec</zorder>
       <zorder>pushButton_exec</zorder>
-      <zorder>horizontalSpacer_4</zorder>
       <zorder>widget_executing</zorder>
+      <zorder>horizontalSpacer_5</zorder>
      </widget>
     </item>
     <item row="5" column="0" colspan="5">
@@ -1086,6 +1086,14 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
      <height>22</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuPngyu">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <addaction name="action_preferences"/>
+    <addaction name="action_quit"/>
+   </widget>
+   <addaction name="menuPngyu"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -1096,6 +1104,16 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="action_preferences">
+   <property name="text">
+    <string>&amp;Preferences</string>
+   </property>
+  </action>
+  <action name="action_quit">
+   <property name="text">
+    <string>&amp;Quit</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>

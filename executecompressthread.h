@@ -4,6 +4,7 @@
 #include <QThread>
 #include <QByteArray>
 
+#include "pngyu_defines.h"
 #include "pngyu_option.h"
 
 class ExecuteCompressThread : public QThread
@@ -47,5 +48,7 @@ signals:
 public slots:
   
 };
+
+
 
 #endif // EXECUTECOMPRESSTHREAD_H

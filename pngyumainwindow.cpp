@@ -6,6 +6,7 @@
 #include <QProcess>
 #include <QDebug>
 #include <QTime>
+#include <QDialogButtonBox>
 
 #include <QDragEnterEvent>
 #include <QDragLeaveEvent>
@@ -20,30 +21,22 @@
 #include <QFileInfo>
 #include <QFileDialog>
 #include <QDesktopWidget>
+#include <QSettings>
 
 #include <QImageReader>
 #include <QMessageBox>
 
 #include "pngyupreviewwindow.h"
+#include "pngyupreferencesdialog.h"
+#include "pngyuimageoptimintegrationquestiondialog.h"
 
 #include "pngyu_util.h"
 #include "pngyu_execute_pngquant_command.h"
+#include "executecompressworkerthread.h"
 
 namespace
 {
-
-enum TableColumn
-{
-  COLUMN_BASENAME = 0,
-  COLUMN_ABSOLUTE_PATH,
-  COLUMN_RESULT,
-  COLUMN_ORIGINAL_SIZE,
-  COLUMN_OUTPUT_SIZE,
-  COLUMN_SAVED_SIZE,
-  TABLE_COLUMN_COUNT
-};
-
-const QString IMAGE_OPTIM_PATH = "/Applications/ImageOptim.app";
+const QString DEFAULT_IMAGE_OPTIM_PATH = "/Applications/ImageOptim.app";
 
 } // namespace
 
@@ -51,29 +44,37 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
   QMainWindow( parent ),
   ui( new Ui::PngyuMainWindow ),
   m_preview_window( new PngyuPreviewWindow(this) ),
+  m_preferences_dialog( new PngyuPreferencesDialog(this) ),
+  m_current_pngquant_path(),
+  m_current_imageoptim_path( DEFAULT_IMAGE_OPTIM_PATH ),
   m_stop_request( false ),
   m_is_busy( false ),
   m_temporary_custom_output_custom_on( false ),
-  m_image_optim_enabled( false )
+  m_num_thread(1),
+  m_image_optim_enabled( false ),
+  m_image_optim_integration( pngyu::IMAGEOPTIM_ASK_EVERY_TIME )
 {
   ui->setupUi(this);
+
+  pngyu::util::success_icon();
+  pngyu::util::failure_icon();
 
   ui->mainToolBar->setVisible( false );
 
   { // init file list table widget
     QTableWidget *table_widget = file_list_table_widget();
-    table_widget->setColumnCount( TABLE_COLUMN_COUNT );
-    table_widget->setHorizontalHeaderItem( COLUMN_BASENAME,
+    table_widget->setColumnCount( pngyu::TABLE_COLUMN_COUNT );
+    table_widget->setHorizontalHeaderItem( pngyu::COLUMN_BASENAME,
                                            new QTableWidgetItem( tr("File Name") ) );
-    table_widget->setHorizontalHeaderItem( COLUMN_ABSOLUTE_PATH,
+    table_widget->setHorizontalHeaderItem( pngyu::COLUMN_ABSOLUTE_PATH,
                                            new QTableWidgetItem( tr("Path") ) );
-    table_widget->setHorizontalHeaderItem( COLUMN_RESULT,
+    table_widget->setHorizontalHeaderItem( pngyu::COLUMN_RESULT,
                                            new QTableWidgetItem( tr("Result") ) );
-    table_widget->setHorizontalHeaderItem( COLUMN_ORIGINAL_SIZE,
+    table_widget->setHorizontalHeaderItem( pngyu::COLUMN_ORIGINAL_SIZE,
                                            new QTableWidgetItem( tr("Size") ) );
-    table_widget->setHorizontalHeaderItem( COLUMN_OUTPUT_SIZE,
+    table_widget->setHorizontalHeaderItem( pngyu::COLUMN_OUTPUT_SIZE,
                                            new QTableWidgetItem( tr("Compressed Size") ) );
-    table_widget->setHorizontalHeaderItem( COLUMN_SAVED_SIZE,
+    table_widget->setHorizontalHeaderItem( pngyu::COLUMN_SAVED_SIZE,
                                            new QTableWidgetItem( tr("Saved Size") ) );
 
     pngyu::util::set_drop_here_stylesheet(
@@ -148,6 +149,12 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
   connect( ui->toolButton_add_file, SIGNAL(clicked()),
            this, SLOT(add_file_button_pushed()) );
 
+  connect( ui->action_preferences, SIGNAL(triggered()), this, SLOT(menu_preferences_pushed()) );
+  connect( ui->action_quit, SIGNAL(triggered()), this, SLOT(menu_quit_pushed()) );
+
+  // connect preference dialogs
+  connect( m_preferences_dialog, SIGNAL(apply_pushed_signal()), this, SLOT(preferences_apply_pushed()) );
+
   output_directory_mode_changed();
   output_filename_mode_changed();
   table_widget_current_changed();
@@ -177,11 +184,68 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
     }
   }
 
+  read_settings();
+
 }
 
 PngyuMainWindow::~PngyuMainWindow()
 {
+  write_settings();
+
   delete ui;
+}
+
+void PngyuMainWindow::read_settings()
+{
+  // make application ini file path
+  const QString &app_path = QApplication::applicationFilePath();
+  QString fn = app_path;
+  fn.chop( QFileInfo(app_path).suffix().length() );
+  fn = fn +  (fn.endsWith(".") ? "" : ".")  +  QString("ini");
+
+  QSettings settings( fn, QSettings::IniFormat );
+  settings.beginGroup( "options" );
+  const int imageoptim = settings.value( "imageoptim_integration", pngyu::IMAGEOPTIM_ASK_EVERY_TIME ).toInt();
+  set_image_optim_integration_mode( static_cast<pngyu::ImageOptimIntegration>( imageoptim ) );
+
+  const QString imageoptim_path = settings.value( "imageoptim_path", QString(DEFAULT_IMAGE_OPTIM_PATH) ).toString();
+  if( QFile::exists( imageoptim_path ) )
+  {
+    set_executable_image_optim_path( imageoptim_path );
+  }
+
+  const int n_thread = settings.value( "num_thread", 1 ).toInt();
+  set_num_thread( n_thread );
+
+  settings.endGroup();
+}
+
+void PngyuMainWindow::write_settings()
+{
+  // make application ini file path
+  const QString &app_path = QApplication::applicationFilePath();
+  QString fn = app_path;
+  fn.chop( QFileInfo(app_path).suffix().length() );
+  fn = fn +  (fn.endsWith(".") ? "" : ".")  +  QString("ini");
+
+  QSettings settings( fn, QSettings::IniFormat );
+
+  settings.beginGroup("options");
+  if( image_optim_integration_mode() != pngyu::IMAGEOPTIM_ASK_EVERY_TIME )
+  {
+    settings.setValue( "imageoptim_integration", image_optim_integration_mode() );
+  }
+  if( executable_image_optim_path() != DEFAULT_IMAGE_OPTIM_PATH &&
+      QFile::exists( executable_image_optim_path() ) )
+  {
+    settings.setValue( "imageoptim_path", executable_image_optim_path() );
+  }
+  if( num_thread() != 1 )
+  {
+    settings.setValue( "num_thread", num_thread() );
+  }
+
+  settings.endGroup();
 }
 
 QTableWidget* PngyuMainWindow::file_list_table_widget()
@@ -276,6 +340,16 @@ void PngyuMainWindow::set_executable_pngquant_path( const QString &path )
 QString PngyuMainWindow::executable_pngquant_path() const
 {
   return m_current_pngquant_path;
+}
+
+void PngyuMainWindow::set_executable_image_optim_path( const QString &path )
+{
+  m_current_imageoptim_path = path;
+}
+
+QString PngyuMainWindow::executable_image_optim_path() const
+{
+  return m_current_imageoptim_path;
 }
 
 void PngyuMainWindow::set_current_compress_option_mode( const pngyu::CompressOptionMode mode )
@@ -393,7 +467,12 @@ void PngyuMainWindow::set_other_output_directory( const QString &output_director
 
 QString PngyuMainWindow::other_output_directory() const
 {
-  return QDir( ui->lineEdit_output_directory->text() ).absolutePath();
+  const QString &inputted_dir = ui->lineEdit_output_directory->text();
+  if( inputted_dir.isEmpty() )
+  {
+    return QString();
+  }
+  return QDir( inputted_dir ).absolutePath();
 }
 
 void PngyuMainWindow::set_ncolor( const int n )
@@ -446,28 +525,37 @@ int PngyuMainWindow::compress_speed() const
   return ui->horizontalSlider_compress_speed->value();
 }
 
-void PngyuMainWindow::set_image_optim_enabled( const bool b )
+void PngyuMainWindow::set_image_optim_integration_mode( const pngyu::ImageOptimIntegration mode )
 {
 #ifdef Q_OS_MACX
-  m_image_optim_enabled = b;
+  m_image_optim_integration = mode;
 #endif
 #ifndef Q_OS_MACX
-  m_image_optim_enabled = false;
+  m_image_optim_enabled = IMAGEOPTIM_ALWAYS_DISABLED;
 #endif
 }
 
-bool PngyuMainWindow::image_optim_enabled() const
+pngyu::ImageOptimIntegration PngyuMainWindow::image_optim_integration_mode() const
 {
 #ifdef Q_OS_MACX
-  return m_image_optim_enabled;
+  return m_image_optim_integration;
 #endif
 #ifndef Q_OS_MACX
-  return false;
+  return IMAGEOPTIM_ALWAYS_DISABLED;
 #endif
 }
 
+void PngyuMainWindow::set_num_thread( const int num )
+{
+  m_num_thread = std::min( 8, std::max( 1, num ) );
+}
 
-void PngyuMainWindow::execute_compress_all()
+int PngyuMainWindow::num_thread() const
+{
+  return std::min( 8, std::max( 1, m_num_thread ) );;
+}
+
+void PngyuMainWindow::execute_compress_all( bool image_optim_enabled )
 {
   if( is_busy() )
   {
@@ -489,138 +577,114 @@ void PngyuMainWindow::execute_compress_all()
   const pngyu::PngquantOption &option = make_pngquant_option( QString() );
   const QString &pngquant_path = executable_pngquant_path();
 
-  // init compress thred instance,
-  // compress process will execute in other thread via this instance.
-  ExecuteCompressThread compress_thread;
-  compress_thread.set_executable_pngquant_path( pngquant_path );
-  compress_thread.set_pngquant_option( option );
+  QQueue<pngyu::CompressQueueData> queue;
 
   qint64 total_saved_size = 0;
-  QStringList succeed_files;
+  QStringList succeed_src_filepaths;
+  QStringList succeed_dst_filepaths;
 
   QTableWidget *table_widget = file_list_table_widget();
   const int row_count = table_widget->rowCount();
   for( int row = 0; row < row_count; ++row )
   { // file list loop
 
-    const QTableWidgetItem * const absolute_path_item = table_widget->item( row, COLUMN_ABSOLUTE_PATH );
+    const QTableWidgetItem * const absolute_path_item = table_widget->item( row, pngyu::COLUMN_ABSOLUTE_PATH );
     if( ! absolute_path_item )
     {
       qWarning() << "Item is null. row:" << row;
       continue;
     }
 
-    QTableWidgetItem * const  resultItem = new QTableWidgetItem();
-    table_widget->setItem( row, COLUMN_RESULT, resultItem );
+    const QString &src_path = absolute_path_item->text();
+    const QString &dst_path = make_output_file_path_string( src_path );
 
-    table_widget->scrollToItem( resultItem );
+    pngyu::CompressQueueData data;
+    data.src_path = src_path;
+    data.dst_path = dst_path;
+    data.pngquant_path = pngquant_path;
+    data.pngquant_option = option;
+    data.overwrite_enabled = overwrite_enable;
+    data.table_widget = table_widget;
+    data.table_row = row;
 
-    try
-    {
-      const QString &src_path = absolute_path_item->text();
-      const QString &dst_path = make_output_file_path_string( src_path );
+    queue.enqueue( data );
 
-      if( dst_path.isEmpty() )
-      {
-        throw tr( "Error: Output option is invalid" );
-      }
-
-      const bool dst_path_exists = QFile::exists( dst_path );
-      if( dst_path_exists && ! overwrite_enable )
-      {
-        throw tr( "Error: \"%1\" is already exists" ).arg( dst_path );
-      }
-
-      const QByteArray &src_png_data = pngyu::util::png_file_to_bytearray( src_path );
-
-
-      { // exetute pngquant command
-        compress_thread.clear_result();
-        compress_thread.set_original_png_data( src_png_data );
-        compress_thread.start();
-        // waiting for compress finished
-        while( ! compress_thread.wait(50) )
-        {
-          // avoid "aplication no response"
-          QApplication::processEvents();
-        }
-
-        // compres result check
-        if( ! compress_thread.is_compress_succeeded() )
-        {
-          throw compress_thread.error_string();
-        }
-
-      }
-
-      const QByteArray &dst_png_data = compress_thread.output_png_data();
-
-      if( dst_path_exists )
-      {
-        // remove old file
-        if( ! QFile::remove( dst_path ) )
-        {
-          throw tr( "Error: Couldn't overwrite" );
-        }
-      }
-
-      // copy result file to dst_path
-      if( ! pngyu::util::write_png_data( dst_path, dst_png_data ) )
-      {
-         throw tr( "Couldn't save output file" );
-      }
-
-      if( ! dst_png_data.isEmpty() )
-      { // Succeed
-
-        //qDebug() << image_optim_enabled() << (current_compress_option_mode() == pngyu::COMPRESS_OPTION_CUSTOM);
-        if( image_optim_enabled() )
-        {
-          qDebug() << "opn";
-          pngyu::util::open_with_mac_app( QStringList() << dst_path, IMAGE_OPTIM_PATH );
-        }
-
-
-        succeed_files.push_back( src_path );
-
-        resultItem->setIcon( pngyu::util::success_icon() );
-
-        const qint64 src_size = src_png_data.size();
-        const qint64 dst_size = dst_png_data.size();
-
-        total_saved_size += src_size - dst_size;
-
-        table_widget->setItem( row, COLUMN_ORIGINAL_SIZE,
-                               new QTableWidgetItem( pngyu::util::size_to_string_kb( src_size ) ) );
-        table_widget->setItem( row, COLUMN_OUTPUT_SIZE,
-                               new QTableWidgetItem( pngyu::util::size_to_string_kb( dst_size ) ) );
-        const double saving_rate = static_cast<double>( src_size - dst_size ) / ( src_size );
-
-        table_widget->setItem( row, COLUMN_SAVED_SIZE,
-                               new QTableWidgetItem( QString( "%1%" ).arg( static_cast<int>(saving_rate * 100) ) ) );
-      }
-
-    }
-    catch( const QString &e )
-    {
-      resultItem->setText( e );
-      resultItem->setToolTip( e );
-      resultItem->setIcon( pngyu::util::failure_icon() );
-    }
-
-    QApplication::processEvents();
-
-    if( m_stop_request )
-    {
-      break;
-    }
   } // end of file list loop
+
+  const int n_thread = num_thread();
+
+  QVector<ExecuteCompressWorkerThread*> workers;
+
+  for( int i = 0; i < n_thread; ++i )
+  {
+    ExecuteCompressWorkerThread *worker = new ExecuteCompressWorkerThread();
+
+    worker->set_queue_ptr( &queue );
+    workers.push_back( worker );
+  }
+
+  QApplication::processEvents();
+
+  for( int i = 0; i < n_thread; ++i )
+  {
+    workers[i]->start( QThread::HighPriority );
+  }
+
+  QApplication::processEvents();
+
+  for( int i = 0; i < n_thread; ++i )
+  {
+    ExecuteCompressWorkerThread *worker = workers[i];
+
+    while( ! worker->wait(30) )
+    {
+      if( m_stop_request )
+      {
+        worker->stop_request();
+      }
+      QApplication::processEvents();
+    }
+  }
+
+  QList<pngyu::CompressResult> result_list;
+
+  for( int i = 0; i < n_thread; ++i )
+  {
+    ExecuteCompressWorkerThread *worker = workers[i];
+
+    result_list += worker->compress_results();
+  }
+
+  for( int i = 0; i < n_thread; ++i )
+  {
+    ExecuteCompressWorkerThread *worker = workers[i];
+    delete worker;
+    workers[i] = 0;
+  }
+
+  workers.clear();
+
+
+  foreach( const pngyu::CompressResult &res, result_list )
+  {
+    if( res.result )
+    {
+      succeed_src_filepaths.push_back( res.src_path );
+      succeed_dst_filepaths.push_back( res.dst_path );
+      total_saved_size += res.src_size - res.dst_size;
+    }
+  }
 
   { // show result status bar
     const QString size_string = total_saved_size > 500 * 1024 ?
           pngyu::util::size_to_string_mb( total_saved_size ) :
           pngyu::util::size_to_string_kb( total_saved_size );
     ui->statusBar->showMessage( tr("Total %1 saved").arg(size_string) );
+  }
+
+  if( image_optim_enabled )
+  {
+    pngyu::util::open_with_mac_app( succeed_dst_filepaths, executable_image_optim_path() );
   }
 
   set_busy_mode( false );
@@ -640,7 +704,7 @@ QString PngyuMainWindow::current_selected_filename() const
 {
   QTableWidget * const table_widget = ui->tableWidget_filelist;
   const int current_row = table_widget->currentRow();
-  const QTableWidgetItem * const path_item = table_widget->item( current_row, COLUMN_ABSOLUTE_PATH );
+  const QTableWidgetItem * const path_item = table_widget->item( current_row, pngyu::COLUMN_ABSOLUTE_PATH );
   return path_item ? path_item->text() : QString();
 }
 
@@ -666,9 +730,9 @@ void PngyuMainWindow::clear_compress_result()
   const int row_count = table_widget->rowCount();
   for( int row = 0; row < row_count; ++row )
   {
-    ui->tableWidget_filelist->setItem( row, COLUMN_RESULT, 0 );
-    ui->tableWidget_filelist->setItem( row, COLUMN_OUTPUT_SIZE, 0 );
-    ui->tableWidget_filelist->setItem( row, COLUMN_SAVED_SIZE, 0 );
+    ui->tableWidget_filelist->setItem( row, pngyu::COLUMN_RESULT, 0 );
+    ui->tableWidget_filelist->setItem( row, pngyu::COLUMN_OUTPUT_SIZE, 0 );
+    ui->tableWidget_filelist->setItem( row, pngyu::COLUMN_SAVED_SIZE, 0 );
   }
   ui->statusBar->showMessage( QString() );
 }
@@ -818,6 +882,12 @@ void PngyuMainWindow::showEvent( QShowEvent *event )
   QMainWindow::showEvent( event );
 }
 
+void PngyuMainWindow::closeEvent( QCloseEvent *event )
+{
+  stop_request();
+  QMainWindow::closeEvent( event );
+}
+
 void PngyuMainWindow::update_file_table()
 {
   QTableWidget * const table_widget = file_list_table_widget();
@@ -832,11 +902,11 @@ void PngyuMainWindow::update_file_table()
     {
       QTableWidgetItem * const basename_item = new QTableWidgetItem( file_info.baseName() );
       basename_item->setToolTip( file_info.baseName() );
-      table_widget->setItem( row_index, COLUMN_BASENAME, basename_item );
+      table_widget->setItem( row_index, pngyu::COLUMN_BASENAME, basename_item );
       const QString &absolute_path = file_info.absoluteFilePath();
       QTableWidgetItem * const abspath_item =new QTableWidgetItem( file_info.absoluteFilePath() );
       abspath_item->setToolTip( absolute_path );
-      table_widget->setItem( row_index, COLUMN_ABSOLUTE_PATH, abspath_item );
+      table_widget->setItem( row_index, pngyu::COLUMN_ABSOLUTE_PATH, abspath_item );
       if( last_selected_filename == absolute_path )
       {
         table_widget->setCurrentItem( abspath_item );
@@ -914,22 +984,29 @@ void PngyuMainWindow::exec_pushed()
 {
 
 #ifdef Q_OS_MACX
-  if( QFile::exists( IMAGE_OPTIM_PATH ) )
+  bool b_yes_pushed = false;
+  if( image_optim_integration_mode() == pngyu::IMAGEOPTIM_ASK_EVERY_TIME &&
+      QFile::exists( executable_image_optim_path() )  )
   { // confirm optimize with ImageOptim
-    const int res =QMessageBox::question(
-                           this,
-                           tr("Optimize with ImageOptim"),
-                           tr("Do you want to optimize with ImageOptim?"),
-                           QMessageBox::Yes | QMessageBox::No,
-                           QMessageBox::Yes );
-
-    set_image_optim_enabled( res == QMessageBox::Yes );
+    PngyuImageOptimIntegrationQuestionDialog dlg;
+    const int res = dlg.exec();
+    b_yes_pushed = ( res == QDialog::Accepted );
+    if( dlg.is_dont_ask_next_checked() )
+    {
+      set_image_optim_integration_mode(
+            b_yes_pushed ? pngyu::IMAGEOPTIM_ALWAYS_ENABLED : pngyu::IMAGEOPTIM_ALWAYS_DISABLED );
+    }
   }
+  const bool b_image_optim =
+      image_optim_integration_mode() == pngyu::IMAGEOPTIM_ALWAYS_ENABLED ||
+      b_yes_pushed;
+#elif
+  const bool b_image_optim = false;
 #endif
 
   QTime t;
   t.start();
-  execute_compress_all();
+  execute_compress_all( b_image_optim );
   qDebug() << "execute" << t.elapsed() << "ms elapsed";
 }
 
@@ -956,9 +1033,15 @@ void PngyuMainWindow::other_output_directory_changed()
 
 void PngyuMainWindow::open_output_directory_pushed()
 {
-  const QString path = QFileDialog::getExistingDirectory( this,
-                                                          QString(),
-                                                          QDir::homePath() );
+  const QString &current_dir = other_output_directory();
+
+  const QString default_dir =
+      QFile::exists(current_dir) ? current_dir : QDir::homePath();
+
+  const QString path = QFileDialog::getExistingDirectory(
+        this,
+        QString(),
+        default_dir );
 
   if( ! path.isEmpty() )
   {
@@ -1104,6 +1187,30 @@ void PngyuMainWindow::add_file_button_pushed()
   }
 
   append_file_info_list( fileinfo_list );
+}
+
+void PngyuMainWindow::menu_preferences_pushed()
+{
+
+  m_preferences_dialog->set_n_jobs( num_thread() );
+  m_preferences_dialog->set_image_optim_integrate_mode( image_optim_integration_mode() );
+  m_preferences_dialog->set_image_optim_path( executable_image_optim_path() );
+
+  m_preferences_dialog->set_apply_button_enabled( false );
+
+  m_preferences_dialog->show();
+}
+
+void PngyuMainWindow::menu_quit_pushed()
+{
+  close();
+}
+
+void PngyuMainWindow::preferences_apply_pushed()
+{
+  set_num_thread( m_preferences_dialog->n_jobs() );
+  set_image_optim_integration_mode( m_preferences_dialog->image_optim_integrate_mode() );
+  set_executable_image_optim_path( m_preferences_dialog->image_optim_path() );
 }
 
 void PngyuMainWindow::stop_request()
