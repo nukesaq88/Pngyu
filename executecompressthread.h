@@ -5,7 +5,7 @@
 #include <QByteArray>
 
 #include "pngyu_defines.h"
-#include "pngyu_option.h"
+#include "pngyu_pngquant_option.h"
 
 class ExecuteCompressThread : public QThread
 {
@@ -27,6 +27,8 @@ public:
   bool is_compress_succeeded() const;
 
   QByteArray output_png_data() const;
+
+  int saved_size() const;
 
   QString error_string() const;
 

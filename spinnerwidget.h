@@ -4,6 +4,8 @@
 #include <QLabel>
 #include <QPixmap>
 #include <QList>
+#include <QTime>
+#include <QPaintEvent>
 
 // This class enables to visualize "waiting" or "loading", "executeing" condition.
 // If you set SpinnerWidget in your layout, spinner pixmap begin spinning immidiately
@@ -37,9 +39,12 @@ public:
     startTimer( 50 );
   }
 
-protected:
-  virtual void timerEvent(QTimerEvent *)
+  void redraw()
   {
+    if( m_time.elapsed() < 50 )
+    {
+      return;
+    }
     if( m_spinner_list.empty() || ! isVisible() )
     {
       return;
@@ -53,13 +58,27 @@ protected:
 
     setPixmap( m_spinner_list.at( m_current_index ) );
 
+    m_time.restart();
     m_current_index++;
+  }
+
+protected:
+  virtual void timerEvent(QTimerEvent *)
+  {
+    redraw();
+  }
+
+  virtual void paintEvent(QPaintEvent *p)
+  {
+    redraw();
+    return QLabel::paintEvent(p);
   }
 
 private:
 
   QList<QPixmap> m_spinner_list;
   int m_current_index;
+  QTime m_time;
 };
 
 #endif // SPINNERWIDGET_H

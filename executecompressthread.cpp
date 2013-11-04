@@ -45,6 +45,11 @@ QByteArray ExecuteCompressThread::output_png_data() const
   return m_dst_png_data;
 }
 
+int ExecuteCompressThread::saved_size() const
+{
+  return m_src_png_data.size() - m_dst_png_data.size();
+}
+
 QString ExecuteCompressThread::error_string() const
 {
   return m_error_string;
@@ -71,8 +76,8 @@ void ExecuteCompressThread::run()
 
   clear_result();
 
-  const QString &command = m_pngquant_option.make_pngquant_command_stdio_mode(
-        m_pngquant_path );
+  const QString &command = m_pngquant_option.make_pngquant_command_option_stdio_mode();
+        //m_pngquant_path );
 
   QString error_string;
 
@@ -93,7 +98,7 @@ void ExecuteCompressThread::run()
       throw tr( "Error: Original data is empty" );
     }
 
-    process.start( command );
+    process.start( m_pngquant_path, command.trimmed().split( QRegExp("[ ]+") ) );
 
     { // waiting for process started or timeout or stop request.
       QTime t;

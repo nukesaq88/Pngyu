@@ -6,28 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>410</width>
-    <height>266</height>
+    <width>440</width>
+    <height>355</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Preferences</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="0" colspan="3">
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="2" column="0" colspan="3">
+   <item row="3" column="0" colspan="3">
     <widget class="QWidget" name="widget_buttons" native="true">
      <layout class="QGridLayout" name="gridLayout_2">
       <property name="topMargin">
@@ -98,26 +85,82 @@
          <bool>true</bool>
         </property>
         <layout class="QGridLayout" name="gridLayout_5">
-         <item row="0" column="0">
-          <widget class="QLabel" name="label_n_jobs">
-           <property name="text">
-            <string>Compress N files at once</string>
-           </property>
+         <item row="0" column="0" rowspan="2" colspan="2">
+          <widget class="QWidget" name="widget_n_jbs" native="true">
+           <layout class="QGridLayout" name="gridLayout_6">
+            <property name="margin">
+             <number>0</number>
+            </property>
+            <item row="0" column="1">
+             <widget class="QSpinBox" name="spinBox_n_jobs">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>8</number>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_n_jobs">
+              <property name="text">
+               <string>Compress N files at once</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </widget>
          </item>
-         <item row="0" column="1">
-          <widget class="QSpinBox" name="spinBox_n_jobs">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimum">
-            <number>1</number>
-           </property>
-           <property name="maximum">
-            <number>8</number>
+         <item row="2" column="0" colspan="2">
+          <widget class="QWidget" name="widget_pngquant_path" native="true">
+           <layout class="QGridLayout" name="gridLayout_7">
+            <property name="margin">
+             <number>0</number>
+            </property>
+            <item row="0" column="1">
+             <widget class="QComboBox" name="comboBox_pngquant_path">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="editable">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_pngquant_path">
+              <property name="text">
+               <string>pngquatnt location</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QToolButton" name="toolButton_open_pngquant_location">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="../resource/resource.qrc">
+                <normaloff>:/icons/folder.png</normaloff>:/icons/folder.png</iconset>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item row="3" column="0" colspan="2">
+          <widget class="QCheckBox" name="checkBox_force_execute">
+           <property name="text">
+            <string>Force execute even if saved size was negative</string>
            </property>
           </widget>
          </item>
@@ -177,6 +220,26 @@
        </widget>
       </item>
      </layout>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="3">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="2" column="0" colspan="3">
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
     </widget>
    </item>
   </layout>

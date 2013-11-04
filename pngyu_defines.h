@@ -4,10 +4,18 @@
 #include <QString>
 #include <QTableWidget>
 
-#include "pngyu_option.h"
+#include "pngyu_pngquant_option.h"
 
 namespace pngyu
 {
+
+enum Version
+{
+  VERSION_MAJOR = 1,
+  VERSION_MINOR = 0,
+  VERSION_REVISION = 1
+};
+
 
 enum CompressOptionMode
 {
@@ -51,6 +59,7 @@ enum TableColumn
   COLUMN_ORIGINAL_SIZE,
   COLUMN_OUTPUT_SIZE,
   COLUMN_SAVED_SIZE,
+  COLUMN_SAVED_SIZE_RATE,
   TABLE_COLUMN_COUNT
 };
 
@@ -82,6 +91,8 @@ public:
   QString pngquant_path;
   pngyu::PngquantOption pngquant_option;
   bool overwrite_enabled;
+  bool force_execute_if_negative;
+
   QTableWidget *table_widget;
   int table_row;
 };

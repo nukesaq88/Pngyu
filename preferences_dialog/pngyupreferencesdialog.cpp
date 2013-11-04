@@ -1,9 +1,56 @@
 #include "pngyupreferencesdialog.h"
 #include "ui_pngyupreferencesdialog.h"
 
+
 #include <QDebug>
 #include <QFile>
 #include <QFileDialog>
+#include <QRegExp>
+
+#include "pngyu_util.h"
+
+#include "pngyu_execute_pngquant_command.h"
+
+//namespace
+//{
+
+//const QString& dot_path()
+//{
+//  static QString p = QFileInfo( QApplication::applicationDirPath() ).absoluteFilePath();
+//  return p;
+//}
+
+//const QString& dot_dot_path()
+//{
+//  static QString p = QFileInfo( dot_path() + "/.." ).absoluteFilePath();
+//  return p;
+//}
+
+//QString to_dot_path( const QString &path )
+//{
+//  const QString &dot = dot_path();
+//  const QString &dot_dot = dot_dot_path();
+
+//  QString dot_path = QFileInfo( path ).absoluteFilePath();
+
+//  dot_path.replace( dot, "." );
+//  dot_path.replace( dot_dot, ".." );
+
+//  return dot_path;
+//}
+
+//QString from_dot_path( const QString &path )
+//{
+//  const QString dot = QFileInfo( QApplication::applicationDirPath() ).absoluteFilePath();
+//  const QString dot_dot = QFileInfo( dot_path() + "/.." ).absoluteFilePath();
+
+//  QString abs_path = path;
+//  abs_path.replace( "../", dot_dot + "/" );
+//  abs_path.replace( "./", dot + "/" );
+//  return abs_path;
+//}
+
+//}
 
 PngyuPreferencesDialog::PngyuPreferencesDialog(QWidget *parent) :
   QDialog(parent),
@@ -23,13 +70,18 @@ PngyuPreferencesDialog::PngyuPreferencesDialog(QWidget *parent) :
   connect( ui->pushButton_close, SIGNAL(clicked()), this, SLOT(cancel_pushed()) );
   connect( ui->pushButton_apply, SIGNAL(clicked()), this, SLOT(apply_pushed()) );
 
-  connect( ui->toolButton_open_imageoptim_location, SIGNAL(clicked()), SLOT(open_image_optim_location_pushed()) );
+  connect( ui->toolButton_open_pngquant_location, SIGNAL(clicked()), this, SLOT(open_pngquant_location_pushed()) );
+  connect( ui->comboBox_pngquant_path, SIGNAL(editTextChanged(QString)), this, SLOT(pngquant_location_changed()) );
+
+  connect( ui->toolButton_open_imageoptim_location, SIGNAL(clicked()), this, SLOT(open_image_optim_location_pushed()) );
+  connect( ui->lineEdit_imageoptim_location, SIGNAL(textChanged(QString)), this, SLOT(image_optim_location_changed()) );
 
   // preference changed
   connect( ui->spinBox_n_jobs, SIGNAL(valueChanged(int)), this, SLOT(preference_changed()) );
   connect( ui->comboBox_imageoptim_integration, SIGNAL(currentIndexChanged(int)), this, SLOT(preference_changed()) );
   connect( ui->lineEdit_imageoptim_location, SIGNAL(textChanged(QString)), this, SLOT(preference_changed()) );
-  connect( ui->lineEdit_imageoptim_location, SIGNAL(textChanged(QString)), this, SLOT(image_optim_location_changed()) );
+  connect( ui->comboBox_pngquant_path, SIGNAL(editTextChanged(QString)), this, SLOT(preference_changed()) );
+  connect( ui->checkBox_force_execute, SIGNAL(toggled(bool)), this, SLOT(preference_changed()) );
 
 }
 
@@ -100,6 +152,27 @@ pngyu::ImageOptimIntegration PngyuPreferencesDialog::image_optim_integrate_mode(
   return pngyu::IMAGEOPTIM_ASK_EVERY_TIME;
 }
 
+void PngyuPreferencesDialog::set_pngquant_paths( const QStringList &paths )
+{
+  ui->comboBox_pngquant_path->clear();
+  foreach( const QString &path, paths )
+  {
+    ui->comboBox_pngquant_path->addItem( pngyu::util::to_dot_path( path ) );
+  }
+}
+
+void PngyuPreferencesDialog::set_pngquant_path( const QString &path )
+{
+  ui->comboBox_pngquant_path->insertItem( 0, pngyu::util::to_dot_path( path ) );
+  ui->comboBox_pngquant_path->setCurrentIndex( 0 );
+}
+
+
+QString PngyuPreferencesDialog::pngquant_path() const
+{
+  return pngyu::util::from_dot_path( ui->comboBox_pngquant_path->currentText() );
+}
+
 
 void PngyuPreferencesDialog::set_image_optim_path( const QString &path )
 {
@@ -109,6 +182,16 @@ void PngyuPreferencesDialog::set_image_optim_path( const QString &path )
 QString PngyuPreferencesDialog::image_optim_path() const
 {
   return ui->lineEdit_imageoptim_location->text();
+}
+
+void PngyuPreferencesDialog::set_force_execute_if_negative_enabled( const bool enabled )
+{
+  ui->checkBox_force_execute->setChecked( enabled );
+}
+
+bool PngyuPreferencesDialog::is_force_execute_if_negative_enabled() const
+{
+  return ui->checkBox_force_execute->isChecked();
 }
 
 void PngyuPreferencesDialog::cancel_pushed()
@@ -135,6 +218,41 @@ void PngyuPreferencesDialog::apply_pushed()
 void PngyuPreferencesDialog::preference_changed()
 {
   set_apply_button_enabled( true );
+}
+
+void PngyuPreferencesDialog::pngquant_location_changed()
+{
+  QComboBox *combo_box = ui->comboBox_pngquant_path;
+  const QString &path = pngyu::util::from_dot_path( combo_box->currentText() );
+
+  QPalette palette = combo_box->palette();
+  if( pngyu::is_executable_pnqguant( path ) )
+  {
+    palette.setBrush( QPalette::Text, QBrush() );
+    combo_box->setToolTip( pngyu::pngquant_version(path) );
+  }
+  else
+  {
+    combo_box->setToolTip( "" );
+    palette.setBrush( QPalette::Text, QBrush(Qt::red) );
+  }
+  combo_box->setPalette( palette );
+}
+
+void PngyuPreferencesDialog::open_pngquant_location_pushed()
+{
+  const QString default_dir = "/Applications";
+
+  const QString path = QFileDialog::getOpenFileName(
+        this,
+        QString(),
+        default_dir );
+
+  if( ! path.isEmpty() )
+  {
+    ui->comboBox_pngquant_path->insertItem( 0, path );
+    ui->comboBox_pngquant_path->setCurrentIndex( 0 );
+  }
 }
 
 void PngyuPreferencesDialog::image_optim_location_changed()

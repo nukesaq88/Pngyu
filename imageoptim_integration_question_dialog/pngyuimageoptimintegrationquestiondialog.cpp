@@ -13,7 +13,7 @@ PngyuImageOptimIntegrationQuestionDialog::~PngyuImageOptimIntegrationQuestionDia
   delete ui;
 }
 
-bool PngyuImageOptimIntegrationQuestionDialog::is_dont_ask_next_checked() const
+bool PngyuImageOptimIntegrationQuestionDialog::is_dont_ask_again_checked() const
 {
-  return ui->checkBox_dont_ask_next_time->isChecked();
+  return ui->checkBox_dont_ask_again->isChecked();
 }

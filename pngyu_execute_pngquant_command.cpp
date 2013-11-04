@@ -34,17 +34,15 @@ QString pngquant_version( const QString &pngquant_path )
 {
   QProcess process;
   process.setProcessEnvironment( QProcessEnvironment::systemEnvironment() );
-  process.start( pngquant_path + " --version" );
+  process.start( pngquant_path, QStringList() << "--version" );
   process.waitForFinished();
   const QString &version = process.readAllStandardOutput();
-//  qDebug() << pngquant_path << process.exitCode() << version << process.readAllStandardError();
   return version.trimmed();
 }
 
 bool is_executable_pnqguant( const QFileInfo pngquant_path )
 {
-  if( ! pngquant_path.baseName().contains( QRegExp( "pngquant", Qt::CaseInsensitive ) ) ||
-      ! pngquant_path.isExecutable() )
+  if( ! pngquant_path.exists() || ! pngquant_path.isExecutable() || pngquant_path.isBundle() )
   {
     return false;
   }
@@ -95,7 +93,7 @@ QPair<bool,QString> execute_compress(
     {
       throw QString( "Error: Process cannot started" );
     }
-    if( ! process.waitForFinished() )
+    if( ! process.waitForFinished( 30000 ) )
     {
       throw QString( "Error: Process timeout" );
     }

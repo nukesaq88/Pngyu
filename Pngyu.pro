@@ -30,7 +30,7 @@ SOURCES += \
 HEADERS  += \
     pngyumainwindow.h \
     pngyu_util.h \
-    pngyu_option.h \
+    pngyu_pngquant_option.h \
     pngyu_defines.h \
     pngyu_execute_pngquant_command.h \
     preview_window/basicimageview.h \
@@ -39,7 +39,9 @@ HEADERS  += \
     spinnerwidget.h \
     preferences_dialog/pngyupreferencesdialog.h \
     imageoptim_integration_question_dialog/pngyuimageoptimintegrationquestiondialog.h \
-    executecompressworkerthread.h
+    executecompressworkerthread.h \
+    pngyu_custom_tablewidget_item.h
+
 
 FORMS += \
     pngyumainwindow.ui \

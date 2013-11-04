@@ -6,7 +6,7 @@
 #include <QPair>
 #include <QFileInfo>
 
-#include "pngyu_option.h"
+#include "pngyu_pngquant_option.h"
 
 namespace pngyu
 {

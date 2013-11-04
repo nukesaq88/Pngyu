@@ -32,9 +32,9 @@
     </widget>
    </item>
    <item row="2" column="0">
-    <widget class="QCheckBox" name="checkBox_dont_ask_next_time">
+    <widget class="QCheckBox" name="checkBox_dont_ask_again">
      <property name="text">
-      <string>Don't ask next time</string>
+      <string>Don't ask again</string>
      </property>
     </widget>
    </item>

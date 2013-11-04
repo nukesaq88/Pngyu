@@ -7,10 +7,6 @@
 
 #include "pngyu_util.h"
 
-namespace
-{
-}
-
 PngyuPreviewWindow::PngyuPreviewWindow(QWidget *parent) :
   QMainWindow(parent),
   ui(new Ui::PngyuPreviewWindow),

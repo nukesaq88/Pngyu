@@ -172,21 +172,61 @@ inline const QIcon& failure_icon()
 
 inline bool open_with_mac_app( const QStringList &files, const QString app_path )
 {
-  QStringList args;
-  args.push_back( "-c" ); // python option
-  { // make python script
-    QString script;
-    script += "# -*- coding: utf-8-mac -*-\n"
-              "import AppKit\n"
-              "w = AppKit.NSWorkspace.sharedWorkspace()\n";
-    foreach( const QString &filepath, files )
-    {
-      script += QString("w.openFile_withApplication_(u'%1', '%2')\n" ).arg( filepath, app_path );
-    }
-    args.push_back( script );
-  }
-  return QProcess::execute( "/usr/bin/pythonw", args );
+//  QStringList args;
+//  args.push_back( "-c" ); // python option
+//  { // make python script
+//    QString script;
+//    script += "# -*- coding: utf-8-mac -*-\n"
+//              "import AppKit\n"
+//              "w = AppKit.NSWorkspace.sharedWorkspace()\n";
+//    foreach( const QString &filepath, files )
+//    {
+//      script += QString("w.openFile_withApplication_(u'%1', '%2')\n" ).arg( filepath, app_path );
+//    }
+//    args.push_back( script );
+//  }
+//  return QProcess::execute( "/usr/bin/pythonw", args );
+  return QProcess::startDetached( "/usr/bin/open", (QStringList() << "-a" << app_path) += files );
+  //return QProcess::startDetached( app_path, files );
+  //return QProcess::execute( app_path, files );
 }
+
+inline const QString& dot_path()
+{
+  static QString p = QFileInfo( QApplication::applicationDirPath() ).absoluteFilePath();
+  return p;
+}
+
+inline const QString& dot_dot_path()
+{
+  static QString p = QFileInfo( dot_path() + "/.." ).absoluteFilePath();
+  return p;
+}
+
+inline QString to_dot_path( const QString &path )
+{
+  const QString &dot = dot_path();
+  const QString &dot_dot = dot_dot_path();
+
+  QString dot_path = QFileInfo( path ).absoluteFilePath();
+
+  dot_path.replace( dot, "." );
+  dot_path.replace( dot_dot, ".." );
+
+  return dot_path;
+}
+
+inline QString from_dot_path( const QString &path )
+{
+  const QString &dot = QFileInfo( QApplication::applicationDirPath() ).absoluteFilePath();
+  const QString &dot_dot = QFileInfo( dot_path() + "/.." ).absoluteFilePath();
+
+  QString abs_path = path;
+  abs_path.replace( "../", dot_dot + "/" );
+  abs_path.replace( "./", dot + "/" );
+  return abs_path;
+}
+
 
 } // namespace util
 } // namespace pngyu

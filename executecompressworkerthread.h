@@ -4,6 +4,7 @@
 #include <QThread>
 #include <QQueue>
 #include <QTableWidget>
+#include <QMutex>
 
 #include "pngyu_defines.h"
 
@@ -18,14 +19,16 @@ public:
       const QString &dst_path,
       const QString &pngquant_path,
       const pngyu::PngquantOption &option,
-      const bool overwrite_enable );
+      const bool overwrite_enable,
+      const bool force_execute_if_negative );
 
   static pngyu::CompressResult execute_compress(
       const pngyu::CompressQueueData &data );
 
   static void show_compress_result( QTableWidget *table_widget, const int row, const pngyu::CompressResult &result );
 
-  void set_queue_ptr( QQueue<pngyu::CompressQueueData> *queue_ptr );
+  void set_queue_ptr( QQueue<pngyu::CompressQueueData> *queue_ptr,
+                      QMutex *mutex = 0);
 
   QList<pngyu::CompressResult> compress_results() const;
   void clear_result();
@@ -37,6 +40,7 @@ protected:
 
 private:
   QQueue<pngyu::CompressQueueData> *m_queue_ptr;
+  QMutex *m_mutex_ptr;
 
   QList<pngyu::CompressResult> m_result_list;
 

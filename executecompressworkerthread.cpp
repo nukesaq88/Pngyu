@@ -1,6 +1,5 @@
 #include "executecompressworkerthread.h"
 
-
 #include <QFile>
 #include <QDebug>
 #include <QMutexLocker>
@@ -8,14 +7,12 @@
 #include "executecompressthread.h"
 #include "pngyu_util.h"
 
-namespace
-{
-QMutex g_mutex;
-}
+#include "pngyu_custom_tablewidget_item.h"
 
 ExecuteCompressWorkerThread::ExecuteCompressWorkerThread(QObject *parent) :
   QThread(parent),
   m_queue_ptr( 0 ),
+  m_mutex_ptr( 0 ),
   m_stop_request(false)
 {
 }
@@ -25,7 +22,8 @@ pngyu::CompressResult ExecuteCompressWorkerThread::execute_compress(
     const QString &dst_path,
     const QString &pngquant_path,
     const pngyu::PngquantOption &option,
-    const bool overwrite_enable )
+    const bool overwrite_enable,
+    const bool force_execute_if_negative )
 {
   pngyu::CompressResult res;
   res.src_path = src_path;
@@ -46,7 +44,6 @@ pngyu::CompressResult ExecuteCompressWorkerThread::execute_compress(
     }
 
     const QByteArray &src_png_data = pngyu::util::png_file_to_bytearray( src_path );
-
 
     // init compress thred instance,
     // compress process will execute in other thread via this instance.
@@ -73,7 +70,10 @@ pngyu::CompressResult ExecuteCompressWorkerThread::execute_compress(
 
     }
 
-    const QByteArray &dst_png_data = compress_thread.output_png_data();
+    const QByteArray &dst_png_data =
+        (force_execute_if_negative || compress_thread.saved_size() >= 0 ) ?
+          compress_thread.output_png_data() :
+          compress_thread.original_png_data();
 
     if( dst_path_exists )
     {
@@ -87,7 +87,7 @@ pngyu::CompressResult ExecuteCompressWorkerThread::execute_compress(
     // copy result file to dst_path
     if( ! pngyu::util::write_png_data( dst_path, dst_png_data ) )
     {
-       throw tr( "Couldn't save output file" );
+       throw tr( "Error: Couldn't save output file" );
     }
 
     res.result = true;
@@ -111,7 +111,8 @@ pngyu::CompressResult ExecuteCompressWorkerThread::execute_compress(
         data.dst_path,
         data.pngquant_path,
         data.pngquant_option,
-        data.overwrite_enabled );
+        data.overwrite_enabled,
+        data.force_execute_if_negative );
 }
 
 void ExecuteCompressWorkerThread::show_compress_result( QTableWidget *table_widget, const int row, const pngyu::CompressResult &result )
@@ -132,14 +133,34 @@ void ExecuteCompressWorkerThread::show_compress_result( QTableWidget *table_widg
     const qint64 src_size = result.src_size;
     const qint64 dst_size = result.dst_size;
 
-    table_widget->setItem( row, pngyu::COLUMN_ORIGINAL_SIZE,
-                           new QTableWidgetItem( pngyu::util::size_to_string_kb( src_size ) ) );
-    table_widget->setItem( row, pngyu::COLUMN_OUTPUT_SIZE,
-                           new QTableWidgetItem( pngyu::util::size_to_string_kb( dst_size ) ) );
-    const double saving_rate = static_cast<double>( src_size - dst_size ) / ( src_size );
+    pngyu::TableValueCompareItem * const origin_size_item =
+        new pngyu::TableValueCompareItem(pngyu::util::size_to_string_kb( src_size ));
+    origin_size_item->setData(1, static_cast<double>(src_size) );
 
+    pngyu::TableValueCompareItem * const output_size_item =
+        new pngyu::TableValueCompareItem(pngyu::util::size_to_string_kb( dst_size ));
+    output_size_item->setData(1, static_cast<double>(dst_size) );
+
+    const double saving_size = static_cast<double>( src_size - dst_size );
+    const double saving_rate = saving_size / ( src_size );
+
+    pngyu::TableValueCompareItem * const saving_size_item =
+        new pngyu::TableValueCompareItem(pngyu::util::size_to_string_kb( saving_size ) );
+    saving_size_item->setData(1, static_cast<double>(saving_size) );
+
+    pngyu::TableValueCompareItem * const saving_rate_item =
+        new pngyu::TableValueCompareItem(QString( "%1%" ).arg( static_cast<int>(saving_rate * 100) ) );
+    saving_rate_item->setData(1, static_cast<double>(saving_rate) );
+
+
+    table_widget->setItem( row, pngyu::COLUMN_ORIGINAL_SIZE,
+                           origin_size_item );
+    table_widget->setItem( row, pngyu::COLUMN_OUTPUT_SIZE,
+                           output_size_item );
     table_widget->setItem( row, pngyu::COLUMN_SAVED_SIZE,
-                           new QTableWidgetItem( QString( "%1%" ).arg( static_cast<int>(saving_rate * 100) ) ) );
+                           saving_size_item );
+    table_widget->setItem( row, pngyu::COLUMN_SAVED_SIZE_RATE,
+                           saving_rate_item );
   }
   else
   {
@@ -152,9 +173,10 @@ void ExecuteCompressWorkerThread::show_compress_result( QTableWidget *table_widg
 }
 
 
-void ExecuteCompressWorkerThread::set_queue_ptr( QQueue<pngyu::CompressQueueData> *queue_ptr )
+void ExecuteCompressWorkerThread::set_queue_ptr( QQueue<pngyu::CompressQueueData> *queue_ptr, QMutex *mutex )
 {
   m_queue_ptr = queue_ptr;
+  m_mutex_ptr = mutex;
 }
 
 QList<pngyu::CompressResult> ExecuteCompressWorkerThread::compress_results() const
@@ -185,7 +207,7 @@ void ExecuteCompressWorkerThread::run()
   {
     pngyu::CompressQueueData data;
     {
-      QMutexLocker locker( &g_mutex );
+      QMutexLocker locker( m_mutex_ptr );
       if( m_queue_ptr->isEmpty() )
       {
         break;

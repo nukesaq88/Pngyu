@@ -115,14 +115,14 @@ public:
     return command;
   }
 
-  QString make_pngquant_command( const QString &pngquant_path, const QString &src_file_path ) const
+  QString make_pngquant_command(const QString &src_file_path ) const
   {
-    return pngquant_path + to_pngquant_command_option() + src_file_path;
+    return to_pngquant_command_option() + src_file_path;
   }
 
-  QString make_pngquant_command_stdio_mode( const QString &pngquant_path) const
+  QString make_pngquant_command_option_stdio_mode() const
   {
-    return pngquant_path + to_pngquant_command_option() + " -";
+    return to_pngquant_command_option() + " -";
   }
 
   friend inline bool operator==( const pngyu::PngquantOption &o1, const pngyu::PngquantOption &o2 );

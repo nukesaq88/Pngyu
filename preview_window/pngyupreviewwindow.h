@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 
-#include "pngyu_option.h"
+#include "pngyu_pngquant_option.h"
 
 #include "executecompressthread.h"
 
