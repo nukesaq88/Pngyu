@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
 <meta charset="utf-8">
 <title>Pngyu</title>
@@ -54,7 +54,7 @@
 <div class="jumbotron masthead container">
 
 <div class="span10">
-<div style="text-align:right">en&nbsp|&nbsp<a href="ja.html">ja</a></div>
+<div style="text-align:right"><a href="/">en</a>&nbsp|&nbspja</div>
 <h1><img id="icon" title="icon" src="imgs/icon.png" alt=""> Pngyu</h1>
 
 <!--hatena bookmark-->
@@ -66,9 +66,17 @@
 
 
 <p><img id="screenshot01" title="screenshot01" src="imgs/ss01.png" alt="" class="img-rounded"></p>
-<p><b>Pngyu</b> is simple PNG image file compression tool.<br>
-Pngyu use <a href="http://pngquant.org/">pngquant</a> as a compression engine.<br>
+<p><b>Pngyu</b>は簡単なマウス操作のみで複数のPNG形式の画像ファイルを一括で圧縮し、大幅なファイルサイズ削減を実現するツールです。<br>
+PNGファイルの圧縮エンジンには<a href="http://pngmini.com/">ImageAlpha</a>や<a href="http://tinypng.org/">TinyPNG</a>でも使用されている
+<a href="http://pngquant.org/">pngquant</a>を使用しています。<br>
+pngquantでは24bit/32bitフルカラーのPNGファイルを優秀な減色アルゴリズムを用いて8bitインデックスカラーに変換することで、
+圧縮を実現します。<br>
+<small><b>※圧縮には減色処理が伴うため圧縮後は元の画像に戻すことは不可能となります。<br>
+重要なファイルの圧縮の際には事前にバックアップを行なってください。<br>
+またこのソフトウェアを使用した結果より生じた損害に対していかなる責任も負いかねます。
+</small></b>
 </p>
+</ul>
 </div>
 
 </div>
@@ -80,6 +88,7 @@ Pngyu use <a href="http://pngquant.org/">pngquant</a> as a compression engine.<b
     <section id="Download">
     <div class="container">
     <h3><li>Download</li></h3>
+    ダウンロードは下記のリンクから可能です。<br>
     <div class="container">
     <div class="span6">
     <a class="btn btn-primary btn-large" onclick="location.href = 'download/Pngyu_mac_101.zip';ga('send', 'event', 'Download', 'App', 'mac_101');">
@@ -91,22 +100,36 @@ Pngyu use <a href="http://pngquant.org/">pngquant</a> as a compression engine.<b
     <p class="text-right"> Version mac:1.0.1 win:1.0.1 <a href="#ReleaseDate">Release</a></p>
     </div>
     </div>
+    <a href="#Feedback">動作報告、不具合報告などお待ちしております。</a><br>
     </div>
     </section>
 
-    <!--<section id="HowToUse">-->
-    <!--<div class="container">-->
-    <!--<h3><li>How to use</li></h3>-->
-    <!--<p>-->
-    <!--</p>-->
-    <!--</div>-->
-    <!--</section>-->
+    <section id="HowToUse">
+    <div class="container">
+    <h3><li>How to use</li></h3>
+    <p>
+    使い方は簡単です。<br>
+    まず<b>Pngyu</b>を起動し画面中央の<b>Drop here</b>と書かれたエリアに圧縮したいPNGファイルをドラッグ&ドロップしてください。<br>
+    あとは画面下部の<b>Compress Start</b>ボタンをクリックすれば圧縮処理が始まります。<br>
+    デフォルトでは入力したファイルに上書き保存されます。<br>
+    圧縮後の出力先やファイル名を変更したい場合は<b>Output Option</b>を<b>Custom</b>に変更して出力先を変更することができます。<br>
+    圧縮の細かな設定をしたい場合は<b>Compress Option</b>を<b>Custom</b>に変更することで圧縮設定の変更が可能になります。<br>
+    またリストからファイルを選択して<b>Preview</b>ボタンをクリックすればプレビューウィンドウが現れます。<br>
+    プレビューウィンドウでは現在の設定で圧縮した場合の結果が確認できます。<br>
+    </b></small>
+    </p>
+    </div>
+    </section>
 
     <section id="Feedback">
     <div class="container">
     <h3><li>Feedback</li></h3>
+    <b>
+    動作報告、不具合報告、機能要望等 お待ちしております。<br>
+    連絡頂ける方は下記の連絡先までご連絡ください。<br>
+    </b>
 
-    github :<a href="https://github.com/nukesaq88/Pngyu/issues">@nukesaq88/Pngyu/issues</a><br>
+    github : <a href="https://github.com/nukesaq88/Pngyu/issues">@nukesaq88/Pngyu/issues</a><br>
     twitter : <a href="https://twitter.com/nukesaq88">@nukesaq88</a><br>
     hatena : <a href="http://nukesaq88.hatenablog.com/about">id:nukesaq88</a><br>
     mail : nukesaq88@gmail.com
