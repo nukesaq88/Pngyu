@@ -68,6 +68,9 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
 
   ui->mainToolBar->setVisible( false );
 
+  // Enable drag and drop
+  setAcceptDrops(true);
+
   { // init file list table widget
     QTableWidget *table_widget = file_list_table_widget();
     table_widget->setColumnCount( pngyu::TABLE_COLUMN_COUNT );

@@ -13,7 +13,7 @@ enum Version
 {
   VERSION_MAJOR = 1,
   VERSION_MINOR = 0,
-  VERSION_REVISION = 1
+  VERSION_REVISION = 2
 };
 
 

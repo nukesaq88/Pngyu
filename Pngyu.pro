@@ -52,5 +52,10 @@ RESOURCES += \
 
 macx: ICON = resource/icon.icns
 macx: QMAKE_INFO_PLIST = resource/info.plist
+macx: QMAKE_POST_LINK += mkdir -p $$OUT_PWD/Pngyu.app/Contents/Resources &&
+macx: QMAKE_POST_LINK += cp -f $$PWD/pngquant_bin/mac/pngquant $$OUT_PWD/Pngyu.app/Contents/Resources/ &&
+macx: QMAKE_POST_LINK += chmod +x $$OUT_PWD/Pngyu.app/Contents/Resources/pngquant &&
+macx: QMAKE_POST_LINK += macdeployqt $$OUT_PWD/Pngyu.app -always-overwrite -libpath=/opt/homebrew/lib &&
+macx: QMAKE_POST_LINK += codesign --deep --force --sign - $$OUT_PWD/Pngyu.app
 
 win32: RC_FILE = resource/resource.rc

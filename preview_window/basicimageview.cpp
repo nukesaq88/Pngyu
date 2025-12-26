@@ -15,6 +15,14 @@ BasicImageView::BasicImageView(QWidget *parent) :
   setMouseTracking(true);
 
   setInteractive( true );
+  
+  // Always show scrollbars
+  setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+  setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+  
+  // Force scrollbars to always be visible on macOS
+  horizontalScrollBar()->setStyleSheet("QScrollBar:horizontal { height: 15px; }");
+  verticalScrollBar()->setStyleSheet("QScrollBar:vertical { width: 15px; }");
 }
 
 void BasicImageView::setImage( const QImage &image )
