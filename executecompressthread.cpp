@@ -1,9 +1,10 @@
 #include "executecompressthread.h"
 
 #include <QProcess>
-#include <QTime>
+#include <QElapsedTimer>
 #include <QDebug>
 #include <QFile>
+#include <QRegularExpression>
 
 ExecuteCompressThread::ExecuteCompressThread(QObject *parent) :
   QThread(parent),
@@ -98,10 +99,10 @@ void ExecuteCompressThread::run()
       throw tr( "Error: Original data is empty" );
     }
 
-    process.start( m_pngquant_path, command.trimmed().split( QRegExp("[ ]+") ) );
+    process.start( m_pngquant_path, command.trimmed().split( QRegularExpression("[ ]+") ) );
 
     { // waiting for process started or timeout or stop request.
-      QTime t;
+      QElapsedTimer t;
       t.start();
       while( ! process.waitForStarted( 30 ) )
       {
@@ -124,7 +125,7 @@ void ExecuteCompressThread::run()
 
 
     { // waiting for process started or timeout or stop request.
-      QTime t;
+      QElapsedTimer t;
       t.start();
       while( ! process.waitForFinished( 30 ) )
       {

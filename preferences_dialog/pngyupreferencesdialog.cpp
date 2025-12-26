@@ -58,7 +58,7 @@ PngyuPreferencesDialog::PngyuPreferencesDialog(QWidget *parent) :
 {
   ui->setupUi(this);
 
-#ifndef Q_OS_MACX
+#ifndef Q_OS_MACOS
   ui->groupBox_imageoptim_integration->setVisible( false );
 #endif
 
@@ -226,7 +226,7 @@ void PngyuPreferencesDialog::pngquant_location_changed()
   const QString &path = pngyu::util::from_dot_path( combo_box->currentText() );
 
   QPalette palette = combo_box->palette();
-  if( pngyu::is_executable_pnqguant( path ) )
+  if( pngyu::is_executable_pnqguant( QFileInfo(path) ) )
   {
     palette.setBrush( QPalette::Text, QBrush() );
     combo_box->setToolTip( pngyu::pngquant_version(path) );

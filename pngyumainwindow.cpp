@@ -20,7 +20,7 @@
 #include <QUrl>
 #include <QFileInfo>
 #include <QFileDialog>
-#include <QDesktopWidget>
+#include <QScreen>
 #include <QSettings>
 
 #include <QImageReader>
@@ -174,7 +174,8 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
   update_file_table();
 
   { // set window size
-    const QPoint center_pos = QApplication::desktop()->geometry().center();
+    const QRect screen_geometry = QGuiApplication::primaryScreen()->geometry();
+    const QPoint center_pos = screen_geometry.center();
     const QSize window_size( 500, 400 );
     setGeometry( QRect( center_pos - QPoint( window_size.width() / 2, window_size.height() / 2 ),
                         window_size ) );
@@ -219,7 +220,7 @@ void PngyuMainWindow::read_settings()
 
   const QString pngquant_path =
       pngyu::util::from_dot_path( settings.value( "pngquant_path", QString() ).toString() );
-  if( pngyu::is_executable_pnqguant(pngquant_path) )
+  if( pngyu::is_executable_pnqguant(QFileInfo(pngquant_path)) )
   {
     set_executable_pngquant_path( pngquant_path );
   }
@@ -559,7 +560,7 @@ int PngyuMainWindow::compress_speed() const
 
 void PngyuMainWindow::set_image_optim_integration_mode( const pngyu::ImageOptimIntegration mode )
 {
-#ifdef Q_OS_MACX
+#ifdef Q_OS_MACOS
   m_image_optim_integration = mode;
 #else
   m_image_optim_enabled = pngyu::IMAGEOPTIM_ALWAYS_DISABLED;
@@ -568,7 +569,7 @@ void PngyuMainWindow::set_image_optim_integration_mode( const pngyu::ImageOptimI
 
 pngyu::ImageOptimIntegration PngyuMainWindow::image_optim_integration_mode() const
 {
-#ifdef Q_OS_MACX
+#ifdef Q_OS_MACOS
   return m_image_optim_integration;
 #else
   return pngyu::IMAGEOPTIM_ALWAYS_DISABLED;
@@ -1045,14 +1046,14 @@ bool PngyuMainWindow::is_other_output_directory_valid() const
 
 void PngyuMainWindow::exec_pushed()
 {
-  if( ! pngyu::is_executable_pnqguant(executable_pngquant_path()) )
+  if( ! pngyu::is_executable_pnqguant(QFileInfo(executable_pngquant_path())) )
   {
     QMessageBox::warning( this, "", "pngquant path is invalid" );
     menu_preferences_pushed();
     return;
   }
 
-#ifdef Q_OS_MACX
+#ifdef Q_OS_MACOS
   bool b_yes_pushed = false;
   if( image_optim_integration_mode() == pngyu::IMAGEOPTIM_ASK_EVERY_TIME &&
       QFile::exists( executable_image_optim_path() )  )
@@ -1073,7 +1074,7 @@ void PngyuMainWindow::exec_pushed()
   const bool b_image_optim = false;
 #endif
 
-  QTime t;
+  QElapsedTimer t;
   t.start();
   execute_compress_all( b_image_optim );
   qDebug() << "execute" << t.elapsed() << "ms elapsed";
