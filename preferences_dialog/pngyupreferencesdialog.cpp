@@ -82,6 +82,7 @@ PngyuPreferencesDialog::PngyuPreferencesDialog(QWidget *parent) :
   connect( ui->lineEdit_imageoptim_location, SIGNAL(textChanged(QString)), this, SLOT(preference_changed()) );
   connect( ui->comboBox_pngquant_path, SIGNAL(editTextChanged(QString)), this, SLOT(preference_changed()) );
   connect( ui->checkBox_force_execute, SIGNAL(toggled(bool)), this, SLOT(preference_changed()) );
+  connect( ui->spinBox_timeout, SIGNAL(valueChanged(int)), this, SLOT(preference_changed()) );
 
 }
 
@@ -283,4 +284,14 @@ void PngyuPreferencesDialog::open_image_optim_location_pushed()
   {
     set_image_optim_path( path );
   }
+}
+
+void PngyuPreferencesDialog::set_timeout_ms( const int timeout_ms )
+{
+  ui->spinBox_timeout->setValue( timeout_ms );
+}
+
+int PngyuPreferencesDialog::timeout_ms() const
+{
+  return ui->spinBox_timeout->value();
 }

@@ -85,7 +85,7 @@
          <bool>true</bool>
         </property>
         <layout class="QGridLayout" name="gridLayout_5">
-         <item row="0" column="0" rowspan="2" colspan="2">
+         <item row="0" column="0" colspan="2">
           <widget class="QWidget" name="widget_n_jbs" native="true">
            <layout class="QGridLayout" name="gridLayout_6">
             <property name="margin">
@@ -111,6 +111,47 @@
              <widget class="QLabel" name="label_n_jobs">
               <property name="text">
                <string>Compress N files at once</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item row="1" column="0" colspan="2">
+          <widget class="QWidget" name="widget_timeout" native="true">
+           <layout class="QGridLayout" name="gridLayout_timeout">
+            <property name="margin">
+             <number>0</number>
+            </property>
+            <item row="0" column="1">
+             <widget class="QSpinBox" name="spinBox_timeout">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="suffix">
+               <string> ms</string>
+              </property>
+              <property name="minimum">
+               <number>1000</number>
+              </property>
+              <property name="maximum">
+               <number>300000</number>
+              </property>
+              <property name="singleStep">
+               <number>1000</number>
+              </property>
+              <property name="value">
+               <number>20000</number>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_timeout">
+              <property name="text">
+               <string>Process timeout</string>
               </property>
              </widget>
             </item>

@@ -37,6 +37,9 @@ public:
 
   void set_force_execute_if_negative_enabled( const bool enable );
   bool is_force_execute_if_negative_enabled() const;
+
+  void set_timeout_ms( const int timeout_ms );
+  int timeout_ms() const;
   
 private:
   Ui::PngyuPreferencesDialog *ui;

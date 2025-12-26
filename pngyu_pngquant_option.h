@@ -17,7 +17,8 @@ public:
     m_speed(-1),
     m_force_overwrite(false),
     m_ie6_alpha_support(false),
-    m_disable_floyd_steinberg_dithering(false)
+    m_disable_floyd_steinberg_dithering(false),
+    m_timeout_ms(20000)
   {}
 
   ~PngquantOption(){}
@@ -82,6 +83,16 @@ public:
     return m_disable_floyd_steinberg_dithering;
   }
 
+  void set_timeout_ms( const int timeout_ms )
+  {
+    m_timeout_ms = timeout_ms;
+  }
+
+  int get_timeout_ms() const
+  {
+    return m_timeout_ms;
+  }
+
   QString to_pngquant_command_option() const
   {
     QString command( " " );
@@ -135,6 +146,7 @@ private:
   bool m_force_overwrite;
   bool m_ie6_alpha_support;
   bool m_disable_floyd_steinberg_dithering;
+  int m_timeout_ms;
 };
 
 inline bool operator!=( const pngyu::PngquantOption &o1, const pngyu::PngquantOption &o2 )
@@ -145,7 +157,8 @@ inline bool operator!=( const pngyu::PngquantOption &o1, const pngyu::PngquantOp
       o1.m_speed != o2.m_speed ||
       o1.m_force_overwrite != o2.m_force_overwrite ||
       o1.m_ie6_alpha_support != o2.m_ie6_alpha_support ||
-      o1.m_disable_floyd_steinberg_dithering != o2.m_disable_floyd_steinberg_dithering;
+      o1.m_disable_floyd_steinberg_dithering != o2.m_disable_floyd_steinberg_dithering ||
+      o1.m_timeout_ms != o2.m_timeout_ms;
 }
 
 inline bool operator==( const pngyu::PngquantOption &o1, const pngyu::PngquantOption &o2 )

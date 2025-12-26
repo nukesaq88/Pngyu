@@ -104,6 +104,7 @@ void ExecuteCompressThread::run()
     { // waiting for process started or timeout or stop request.
       QElapsedTimer t;
       t.start();
+      const int timeout_ms = m_pngquant_option.get_timeout_ms();
       while( ! process.waitForStarted( 30 ) )
       {
         if( m_stop_request )
@@ -112,7 +113,7 @@ void ExecuteCompressThread::run()
           throw tr( "Error: stop request" );
         }
 
-        if( t.elapsed() > 20000 )
+        if( t.elapsed() > timeout_ms )
         {
           throw tr( "Error: Process cannot started" );
         }
@@ -127,6 +128,7 @@ void ExecuteCompressThread::run()
     { // waiting for process started or timeout or stop request.
       QElapsedTimer t;
       t.start();
+      const int timeout_ms = m_pngquant_option.get_timeout_ms();
       while( ! process.waitForFinished( 30 ) )
       {
         if( m_stop_request )
@@ -135,7 +137,7 @@ void ExecuteCompressThread::run()
           throw tr( "Error: stop request" );
         }
 
-        if( t.elapsed() > 20000 )
+        if( t.elapsed() > timeout_ms )
         {
           throw tr( "Error: Process timeout" );
         }

@@ -54,7 +54,8 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
   m_num_thread(1),
   m_image_optim_enabled( false ),
   m_image_optim_integration( pngyu::IMAGEOPTIM_ASK_EVERY_TIME ),
-  m_force_execute_if_negative_enables( false )
+  m_force_execute_if_negative_enables( false ),
+  m_timeout_ms( 20000 )
 {
   ui->setupUi(this);
 
@@ -240,6 +241,9 @@ void PngyuMainWindow::read_settings()
   const bool force_execute_if_negative = settings.value( "force_execute_if_negative", false ).toBool();
   set_force_execute_if_negative_enabled( force_execute_if_negative );
 
+  const int timeout_ms = settings.value( "timeout_ms", 20000 ).toInt();
+  set_timeout_ms( timeout_ms );
+
   settings.endGroup();
 }
 
@@ -264,6 +268,8 @@ void PngyuMainWindow::write_settings()
   settings.setValue( "num_thread", num_thread() );
 
   settings.setValue( "force_execute_if_negative", is_force_execute_if_negative_enabled() );
+
+  settings.setValue( "timeout_ms", timeout_ms() );
 
   settings.endGroup();
 }
@@ -364,6 +370,7 @@ pngyu::PngquantOption PngyuMainWindow::make_pngquant_option( const QString &outp
     option.set_floyd_steinberg_dithering_disabled( ! dither_enabled() );
     option.set_ie6_alpha_support( ie6_alpha_support_enabled() );
   }
+  option.set_timeout_ms( timeout_ms() );
   return option;
 }
 
@@ -598,6 +605,16 @@ void PngyuMainWindow::set_force_execute_if_negative_enabled( const bool b )
 bool PngyuMainWindow::is_force_execute_if_negative_enabled() const
 {
   return m_force_execute_if_negative_enables;
+}
+
+void PngyuMainWindow::set_timeout_ms( const int timeout_ms )
+{
+  m_timeout_ms = timeout_ms;
+}
+
+int PngyuMainWindow::timeout_ms() const
+{
+  return m_timeout_ms;
 }
 
 void PngyuMainWindow::execute_compress_all( bool image_optim_enabled )
@@ -1272,6 +1289,7 @@ void PngyuMainWindow::menu_preferences_pushed()
   m_preferences_dialog->set_pngquant_paths( pngyu::find_executable_pngquant() );
   m_preferences_dialog->set_pngquant_path( executable_pngquant_path() );
   m_preferences_dialog->set_force_execute_if_negative_enabled( is_force_execute_if_negative_enabled() );
+  m_preferences_dialog->set_timeout_ms( timeout_ms() );
 
 
   m_preferences_dialog->set_apply_button_enabled( false );
@@ -1291,6 +1309,7 @@ void PngyuMainWindow::preferences_apply_pushed()
   set_executable_image_optim_path( m_preferences_dialog->image_optim_path() );
   set_executable_pngquant_path( m_preferences_dialog->pngquant_path());
   set_force_execute_if_negative_enabled( m_preferences_dialog->is_force_execute_if_negative_enabled() );
+  set_timeout_ms( m_preferences_dialog->timeout_ms() );
 }
 
 void PngyuMainWindow::stop_request()
