@@ -1,204 +1,265 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<title>Pngyu</title>
-<link href="css/bootstrap.min.css" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pngyu - PNG Image Compression Tool</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-L0WNVHPJB9"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-L0WNVHPJB9');
+  </script>
 </head>
 
-<body>
-
-<!--google analytics-->
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-39788765-3', 'github.io');
-  ga('send', 'pageview');
-</script>
-
-<!--facebook like pre-->
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-
-<!-- ===== navigation barー ===== -->
-<div class="navbar">
-<div class="navbar-inner">
-<div class="container">
-<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-<span class="icon-bar"></span>
-<span class="icon-bar"></span>
-<span class="icon-bar"></span>
-</a>
-<!--<a class="brand" href="/">Pngyu</a>-->
-<a class="brand">Pngyu</a>
-<div class="nav-collapse">
-<ul class="nav">
-<!--<li class="active"><a href="">hogehoge</a></li>-->
-</ul>
-</div><!--/.nav-collapse -->
-</div>
-</div>
-</div>
-
-
-
-<div class="jumbotron masthead container">
-
-<div class="span10">
-<div style="text-align:right">en&nbsp|&nbsp<a href="ja.html">ja</a></div>
-<h1><img id="icon" title="icon" src="imgs/icon.png" alt=""> Pngyu</h1>
-
-<!--hatena bookmark-->
-<a href="http://b.hatena.ne.jp/entry/http://nukesaq88.github.io/Pngyu/" class="hatena-bookmark-button" data-hatena-bookmark-title="Pngyu" data-hatena-bookmark-layout="simple-balloon" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
-<!--facebook like-->
-<div class="fb-like" data-href="http://nukesaq88.github.io/Pngyu/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="true"></div>
-<!--twitter-->
-<a href="https://twitter.com/share" class="twitter-share-button" data-via="nukesaq88" data-lang="ja">ツイート</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-
-
-<p><img id="screenshot01" title="screenshot01" src="imgs/ss01.png" alt="" class="img-rounded"></p>
-<p><b>Pngyu</b> is simple PNG image file compression tool.<br>
-Pngyu use <a href="http://pngquant.org/">pngquant</a> as a compression engine.<br>
-</p>
-</div>
-
-</div>
-
-
-  <div class="container">
-  <div class="span8">
-
-    <section id="Download">
-    <div class="container">
-    <h3><li>Download</li></h3>
-    <div class="container">
-    <div class="span6">
-    <a class="btn btn-primary btn-large" onclick="location.href = 'download/Pngyu_mac_101.zip';ga('send', 'event', 'Download', 'App', 'mac_101');">
-    Download (Mac OS X)
-    </a>
-    <a class="btn btn-primary btn-large" onclick="location.href = 'download/Pngyu_win_101.zip';ga('send', 'event', 'Download', 'App', 'win_101');">
-    Download (Windows)
-    </a>
-    <p class="text-right"> Version mac:1.0.1 win:1.0.1 <a href="#ReleaseDate">Release</a></p>
+<body class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen">
+  <nav class="bg-white shadow-sm border-b border-slate-200">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center space-x-2">
+          <img src="imgs/icon.png" alt="Pngyu Icon" class="h-10 w-10">
+          <span class="text-2xl font-bold text-slate-800">Pngyu</span>
+        </div>
+        <div class="flex space-x-4">
+          <span class="text-slate-900 font-semibold">en</span>
+          <span class="text-slate-400">|</span>
+          <a href="ja.html" class="text-slate-600 hover:text-slate-900 transition">ja</a>
+        </div>
+      </div>
     </div>
+  </nav>
+
+  <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="text-center mb-12">
+      <h1 class="text-5xl font-bold text-slate-900 mb-4">Pngyu</h1>
+      <p class="text-xl text-slate-600 mb-8">Simple PNG Image Compression Tool</p>
+      
     </div>
+
+    <div class="max-w-4xl mx-auto mb-12">
+      <img src="imgs/ss01.png" alt="Pngyu Screenshot" class="w-full rounded-2xl shadow-2xl">
     </div>
-    </section>
 
-    <!--<section id="HowToUse">-->
-    <!--<div class="container">-->
-    <!--<h3><li>How to use</li></h3>-->
-    <!--<p>-->
-    <!--</p>-->
-    <!--</div>-->
-    <!--</section>-->
-
-    <section id="Feedback">
-    <div class="container">
-    <h3><li>Feedback</li></h3>
-
-    github :<a href="https://github.com/nukesaq88/Pngyu/issues">@nukesaq88/Pngyu/issues</a><br>
-    twitter : <a href="https://twitter.com/nukesaq88">@nukesaq88</a><br>
-    hatena : <a href="http://nukesaq88.hatenablog.com/about">id:nukesaq88</a><br>
-    mail : nukesaq88@gmail.com
+    <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-md p-8 mb-16">
+      <p class="text-slate-700 leading-relaxed mb-4">
+        <strong class="text-slate-900">Pngyu</strong> is a simple PNG image compression tool that allows you to batch compress multiple PNG files with just a few mouse operations, achieving significant file size reduction.
+      </p>
+      <p class="text-slate-700 leading-relaxed mb-4">
+        Pngyu uses <a href="http://pngquant.org/" class="text-blue-600 hover:text-blue-700 underline">pngquant</a> as its compression engine, which is also used by <a href="http://pngmini.com/" class="text-blue-600 hover:text-blue-700 underline">ImageAlpha</a> and <a href="http://tinypng.org/" class="text-blue-600 hover:text-blue-700 underline">TinyPNG</a>.
+      </p>
+      <p class="text-slate-700 leading-relaxed mb-4">
+        Pngquant achieves compression by converting 24bit/32bit full-color PNG files to 8bit indexed color using an excellent color reduction algorithm.
+      </p>
+      <div class="bg-amber-50 border-l-4 border-amber-400 p-4 rounded">
+        <p class="text-sm text-amber-800">
+          <strong>※ Note:</strong> Compression involves color reduction processing, so it is impossible to restore the original image after compression.<br>
+          Please make a backup in advance when compressing important files.<br>
+          We accept no responsibility for any damage resulting from the use of this software.
+        </p>
+      </div>
     </div>
-    </section>
+  </section>
 
-    <br>
-
-    <style>
-    td
-    {
-      padding-left:5px;
-      padding-right:5px;
-    }
-    </style>
-    <section id="ReleaseDate">
-    <div class="container">
-    <h3><li>Release Date</li></h3>
-    <p>
-    <table>
-    <tr>
-      <td>Version1.0.1</td>
-      <td>mac / win</td>
-      <td>2013/11/04</td>
-    </tr>
-    <tr>
-      <td>Version1.0.0</td>
-      <td>
-        <a href="download/Pngyu_mac_100.zip" onclick="ga('send', 'event', 'Download', 'AppPrev', 'mac_100');" >mac</a>
-      </td>
-      <td>2013/09/09</td>
-    </tr>
-    <tr>
-    <td>Version0.9.3β</td>
-    <td>
-      <a href="download/Pngyu_mac_093.zip" onclick="ga('send', 'event', 'Download', 'AppPrev', 'mac_093');" >mac</a>
-      /
-      <a href="download/Pngyu_win_093.zip" onclick="ga('send', 'event', 'Download', 'AppPrev', 'win_093');" >win</a>
-    </td>
-    <td>2013/05/16</td>
-    </tr>
-    <tr>
-      <td>Version0.9.2β</td>
-      <td>
-        <a href="download/Pngyu_mac_092.zip" onclick="ga('send', 'event', 'Download', 'AppPrev', 'mac_092');" >mac</a>
-      </td>
-      <td>2013/04/27</td>
-    </tr>
-    <tr>
-      <td>Version0.9.1β</td>
-      <td>
-        <a href="download/Pngyu_mac_091.zip" onclick="ga('send', 'event', 'Download', 'AppPrev', 'mac_091');" >mac</a>
-      </td>
-      <td>2013/04/25</td>
-    </tr>
-    <tr>
-    <td>Version0.9.0β</td>
-    <td>
-      <a href="download/Pngyu_mac_090.zip" onclick="ga('send', 'event', 'Download', 'AppPrev', 'mac_090');" >mac</a>
-    </td>
-    <td>2013/04/24</td>
-    </tr>
-    <tr>
-      <td>Development started</td>
-      <td></td>
-      <td>2013/04/15</td>
-    </tr>
-    </table>
-
-
-    </p>
+  <section id="Download" class="bg-white py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Download</h2>
+      <p class="text-center text-slate-600 mb-8">Download from the links below.</p>
+      
+      <div class="grid md:grid-cols-2 gap-6 mb-6">
+        <a href="download/Pngyu_mac_102.dmg" 
+           onclick="gtag('event', 'download', { 'event_category': 'Download', 'event_label': 'mac_102' });"
+           class="block bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-6 px-8 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-1 text-center">
+          <svg class="w-12 h-12 mx-auto mb-3" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+          </svg>
+          <div class="text-xl mb-2">macOS</div>
+          <div class="text-sm opacity-90">Version 1.0.2</div>
+        </a>
+        
+        <a href="download/Pngyu_win_101.zip" 
+           onclick="gtag('event', 'download', { 'event_category': 'Download', 'event_label': 'win_101' });"
+           class="block bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-semibold py-6 px-8 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-1 text-center">
+          <svg class="w-12 h-12 mx-auto mb-3" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/>
+          </svg>
+          <div class="text-xl mb-2">Windows</div>
+          <div class="text-sm opacity-90">Version 1.0.1</div>
+        </a>
+      </div>
+      
+      <p class="text-center text-slate-500 text-sm">
+        <a href="#Feedback" class="text-blue-600 hover:text-blue-700 underline">Bug reports and feedback are welcome.</a>
+      </p>
     </div>
-    </section>
+  </section>
 
+  <section id="HowToUse" class="py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">How to Use</h2>
+      
+      <div class="bg-white rounded-xl shadow-md p-8 space-y-4">
+        <p class="text-slate-700 leading-relaxed">It's easy to use.</p>
+        
+        <ol class="list-decimal list-inside space-y-3 text-slate-700">
+          <li class="pl-2">Launch <strong>Pngyu</strong> and drag & drop PNG files you want to compress into the <strong>Drop here</strong> area in the center of the screen.</li>
+          <li class="pl-2">Click the <strong>Compress Start</strong> button at the bottom of the screen to start the compression process.</li>
+          <li class="pl-2">By default, the input files will be overwritten.</li>
+        </ol>
+        
+        <div class="bg-slate-50 rounded-lg p-6 mt-6 space-y-3">
+          <p class="font-semibold text-slate-900">Advanced Settings</p>
+          <ul class="space-y-2 text-slate-700">
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+              <span>If you want to change the output destination or file name after compression, change <strong>Output Option</strong> to <strong>Custom</strong>.</span>
+            </li>
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+              <span>If you want to make detailed compression settings, change <strong>Compress Option</strong> to <strong>Custom</strong>.</span>
+            </li>
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+              <span>Select a file from the list and click the <strong>Preview</strong> button to open a preview window where you can check the result of compression with current settings.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
-    </section>
+  </section>
 
-  </div>
-  </div>
+  <section id="Feedback" class="bg-white py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Feedback</h2>
+      
+      <div class="bg-slate-50 rounded-xl p-8">
+        <p class="text-slate-700 mb-6 text-center">Bug reports, feedback, and feature requests are welcome.<br>Please contact us through the following channels.</p>
+        
+        <div class="space-y-4">
+          <div class="flex items-center justify-center space-x-3">
+            <svg class="w-6 h-6 text-slate-600" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+            <span class="text-slate-600">GitHub:</span>
+            <a href="https://github.com/nukesaq88/Pngyu/issues" class="text-blue-600 hover:text-blue-700 font-medium underline">@nukesaq88/Pngyu/issues</a>
+          </div>
+          
+          <div class="flex items-center justify-center space-x-3">
+            <svg class="w-6 h-6 text-slate-600" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+            </svg>
+            <span class="text-slate-600">Twitter:</span>
+            <a href="https://twitter.com/nukesaq88" class="text-blue-600 hover:text-blue-700 font-medium underline">@nukesaq88</a>
+          </div>
+          
+          <div class="flex items-center justify-center space-x-3">
+            <svg class="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+            <span class="text-slate-600">Email:</span>
+            <a href="mailto:nukesaq88@gmail.com" class="text-blue-600 hover:text-blue-700 font-medium underline">nukesaq88@gmail.com</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
+  <section id="ReleaseDate" class="py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Release History</h2>
+      
+      <div class="bg-white rounded-xl shadow-md overflow-hidden">
+        <table class="w-full">
+          <thead class="bg-slate-50">
+            <tr>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700">Version</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700">Platform</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700">Release Date</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-200">
+            <tr class="hover:bg-slate-50 transition">
+              <td class="px-6 py-4 text-sm text-slate-900">Version 1.0.2</td>
+              <td class="px-6 py-4 text-sm">
+                <a href="download/Pngyu_mac_102.dmg" onclick="gtag('event', 'download', { 'event_category': 'Download', 'event_label': 'mac_102' });" 
+                   class="text-blue-600 hover:text-blue-700 underline">mac</a>
+              </td>
+              <td class="px-6 py-4 text-sm text-slate-600">2025/12/27</td>
+            </tr>
+            <tr class="hover:bg-slate-50 transition">
+              <td class="px-6 py-4 text-sm text-slate-900">Version 1.0.1</td>
+              <td class="px-6 py-4 text-sm">
+                <a href="download/Pngyu_mac_101.zip" onclick="gtag('event', 'download', { 'event_category': 'PreviousVersion', 'event_label': 'mac_101' });" 
+                   class="text-blue-600 hover:text-blue-700 underline">mac</a>
+                /
+                <a href="download/Pngyu_win_101.zip" onclick="gtag('event', 'download', { 'event_category': 'Download', 'event_label': 'win_101' });" 
+                   class="text-blue-600 hover:text-blue-700 underline">win</a>
+              </td>
+              <td class="px-6 py-4 text-sm text-slate-600">2013/11/04</td>
+            </tr>
+            <tr class="hover:bg-slate-50 transition">
+              <td class="px-6 py-4 text-sm text-slate-900">Version 1.0.0</td>
+              <td class="px-6 py-4 text-sm">
+                <a href="download/Pngyu_mac_100.zip" onclick="gtag('event', 'download', { 'event_category': 'PreviousVersion', 'event_label': 'mac_100' });" 
+                   class="text-blue-600 hover:text-blue-700 underline">mac</a>
+              </td>
+              <td class="px-6 py-4 text-sm text-slate-600">2013/09/09</td>
+            </tr>
+            <tr class="hover:bg-slate-50 transition">
+              <td class="px-6 py-4 text-sm text-slate-900">Version 0.9.3β</td>
+              <td class="px-6 py-4 text-sm">
+                <a href="download/Pngyu_mac_093.zip" onclick="gtag('event', 'download', { 'event_category': 'PreviousVersion', 'event_label': 'mac_093' });" 
+                   class="text-blue-600 hover:text-blue-700 underline">mac</a>
+                /
+                <a href="download/Pngyu_win_093.zip" onclick="gtag('event', 'download', { 'event_category': 'PreviousVersion', 'event_label': 'win_093' });" 
+                   class="text-blue-600 hover:text-blue-700 underline">win</a>
+              </td>
+              <td class="px-6 py-4 text-sm text-slate-600">2013/05/16</td>
+            </tr>
+            <tr class="hover:bg-slate-50 transition">
+              <td class="px-6 py-4 text-sm text-slate-900">Version 0.9.2β</td>
+              <td class="px-6 py-4 text-sm">
+                <a href="download/Pngyu_mac_092.zip" onclick="gtag('event', 'download', { 'event_category': 'PreviousVersion', 'event_label': 'mac_092' });" 
+                   class="text-blue-600 hover:text-blue-700 underline">mac</a>
+              </td>
+              <td class="px-6 py-4 text-sm text-slate-600">2013/04/27</td>
+            </tr>
+            <tr class="hover:bg-slate-50 transition">
+              <td class="px-6 py-4 text-sm text-slate-900">Version 0.9.1β</td>
+              <td class="px-6 py-4 text-sm">
+                <a href="download/Pngyu_mac_091.zip" onclick="gtag('event', 'download', { 'event_category': 'PreviousVersion', 'event_label': 'mac_091' });" 
+                   class="text-blue-600 hover:text-blue-700 underline">mac</a>
+              </td>
+              <td class="px-6 py-4 text-sm text-slate-600">2013/04/25</td>
+            </tr>
+            <tr class="hover:bg-slate-50 transition">
+              <td class="px-6 py-4 text-sm text-slate-900">Version 0.9.0β</td>
+              <td class="px-6 py-4 text-sm">
+                <a href="download/Pngyu_mac_090.zip" onclick="gtag('event', 'download', { 'event_category': 'PreviousVersion', 'event_label': 'mac_090' });" 
+                   class="text-blue-600 hover:text-blue-700 underline">mac</a>
+              </td>
+              <td class="px-6 py-4 text-sm text-slate-600">2013/04/24</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
 
-  <hr>
-  <div class="row">
-  <span style="font-size:small;color:grey;">
-  <p class="text-center">
-  Pngyu is Free Software released under the BSD License.<br>
-  This project is hosted on <a href="https://github.com/nukesaq88/Pngyu">GitHub</a>.<br>
-  </p>
-  </span>
-  <p class="text-center"> <a href="http://nukesaq88.hatenablog.com/">nukesaq88</a> </p>
-  </div>
-
-
+  <footer class="bg-white border-t border-slate-200 py-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-slate-600 text-sm">
+      <p class="mb-2">Pngyu is Free Software released under the BSD License.</p>
+      <p>This project is hosted on <a href="https://github.com/nukesaq88/Pngyu" class="text-blue-600 hover:text-blue-700 underline">GitHub</a>.</p>
+    </div>
+  </footer>
 </body>
 </html>
