@@ -15,6 +15,14 @@ BasicImageView::BasicImageView(QWidget *parent) :
   setMouseTracking(true);
 
   setInteractive( true );
+  
+  // Always show scrollbars
+  setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+  setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+  
+  // Force scrollbars to always be visible on macOS
+  horizontalScrollBar()->setStyleSheet("QScrollBar:horizontal { height: 15px; }");
+  verticalScrollBar()->setStyleSheet("QScrollBar:vertical { width: 15px; }");
 }
 
 void BasicImageView::setImage( const QImage &image )
@@ -35,7 +43,7 @@ void BasicImageView::mouseMoveEvent(QMouseEvent *event)
 {
   const QPointF pos = event->pos();
 
-  if( event->buttons() == Qt::MidButton )
+  if( event->buttons() == Qt::MiddleButton )
   {
     const QPointF delta = pos - m_lastMovePoint;
 
@@ -51,11 +59,9 @@ void BasicImageView::mouseMoveEvent(QMouseEvent *event)
 
 void BasicImageView::drawBackground(QPainter *painter, const QRectF &rect)
 {
-  const QRectF rectf = rect.intersect( sceneRect() );
+  const QRectF rectf = rect.intersected( sceneRect() );
 
   painter->fillRect( rectf, backgroundBrush() );
-
-  const QMatrix m = matrix();
 
   painter->fillRect( rectf, QBrush( m_pixmap ) );
   //QGraphicsView::drawBackground( painter, rect.intersect( sceneRect() ) );
@@ -63,7 +69,7 @@ void BasicImageView::drawBackground(QPainter *painter, const QRectF &rect)
 
 void BasicImageView::wheelEvent(QWheelEvent *event)
 {
-  const int delta = event->delta();
+  const int delta = event->angleDelta().y();
   const double SCALING_STEP = 1.2;
   if( 0 < delta )
   {

@@ -20,7 +20,7 @@
 #include <QUrl>
 #include <QFileInfo>
 #include <QFileDialog>
-#include <QDesktopWidget>
+#include <QScreen>
 #include <QSettings>
 
 #include <QImageReader>
@@ -54,7 +54,8 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
   m_num_thread(1),
   m_image_optim_enabled( false ),
   m_image_optim_integration( pngyu::IMAGEOPTIM_ASK_EVERY_TIME ),
-  m_force_execute_if_negative_enables( false )
+  m_force_execute_if_negative_enables( false ),
+  m_timeout_ms( 20000 )
 {
   ui->setupUi(this);
 
@@ -67,6 +68,9 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
   pngyu::util::failure_icon();
 
   ui->mainToolBar->setVisible( false );
+
+  // Enable drag and drop
+  setAcceptDrops(true);
 
   { // init file list table widget
     QTableWidget *table_widget = file_list_table_widget();
@@ -174,7 +178,8 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
   update_file_table();
 
   { // set window size
-    const QPoint center_pos = QApplication::desktop()->geometry().center();
+    const QRect screen_geometry = QGuiApplication::primaryScreen()->geometry();
+    const QPoint center_pos = screen_geometry.center();
     const QSize window_size( 500, 400 );
     setGeometry( QRect( center_pos - QPoint( window_size.width() / 2, window_size.height() / 2 ),
                         window_size ) );
@@ -219,7 +224,7 @@ void PngyuMainWindow::read_settings()
 
   const QString pngquant_path =
       pngyu::util::from_dot_path( settings.value( "pngquant_path", QString() ).toString() );
-  if( pngyu::is_executable_pnqguant(pngquant_path) )
+  if( pngyu::is_executable_pnqguant(QFileInfo(pngquant_path)) )
   {
     set_executable_pngquant_path( pngquant_path );
   }
@@ -235,6 +240,9 @@ void PngyuMainWindow::read_settings()
 
   const bool force_execute_if_negative = settings.value( "force_execute_if_negative", false ).toBool();
   set_force_execute_if_negative_enabled( force_execute_if_negative );
+
+  const int timeout_ms = settings.value( "timeout_ms", 20000 ).toInt();
+  set_timeout_ms( timeout_ms );
 
   settings.endGroup();
 }
@@ -260,6 +268,8 @@ void PngyuMainWindow::write_settings()
   settings.setValue( "num_thread", num_thread() );
 
   settings.setValue( "force_execute_if_negative", is_force_execute_if_negative_enabled() );
+
+  settings.setValue( "timeout_ms", timeout_ms() );
 
   settings.endGroup();
 }
@@ -360,6 +370,7 @@ pngyu::PngquantOption PngyuMainWindow::make_pngquant_option( const QString &outp
     option.set_floyd_steinberg_dithering_disabled( ! dither_enabled() );
     option.set_ie6_alpha_support( ie6_alpha_support_enabled() );
   }
+  option.set_timeout_ms( timeout_ms() );
   return option;
 }
 
@@ -559,7 +570,7 @@ int PngyuMainWindow::compress_speed() const
 
 void PngyuMainWindow::set_image_optim_integration_mode( const pngyu::ImageOptimIntegration mode )
 {
-#ifdef Q_OS_MACX
+#ifdef Q_OS_MACOS
   m_image_optim_integration = mode;
 #else
   m_image_optim_enabled = pngyu::IMAGEOPTIM_ALWAYS_DISABLED;
@@ -568,7 +579,7 @@ void PngyuMainWindow::set_image_optim_integration_mode( const pngyu::ImageOptimI
 
 pngyu::ImageOptimIntegration PngyuMainWindow::image_optim_integration_mode() const
 {
-#ifdef Q_OS_MACX
+#ifdef Q_OS_MACOS
   return m_image_optim_integration;
 #else
   return pngyu::IMAGEOPTIM_ALWAYS_DISABLED;
@@ -594,6 +605,16 @@ void PngyuMainWindow::set_force_execute_if_negative_enabled( const bool b )
 bool PngyuMainWindow::is_force_execute_if_negative_enabled() const
 {
   return m_force_execute_if_negative_enables;
+}
+
+void PngyuMainWindow::set_timeout_ms( const int timeout_ms )
+{
+  m_timeout_ms = timeout_ms;
+}
+
+int PngyuMainWindow::timeout_ms() const
+{
+  return m_timeout_ms;
 }
 
 void PngyuMainWindow::execute_compress_all( bool image_optim_enabled )
@@ -1045,14 +1066,14 @@ bool PngyuMainWindow::is_other_output_directory_valid() const
 
 void PngyuMainWindow::exec_pushed()
 {
-  if( ! pngyu::is_executable_pnqguant(executable_pngquant_path()) )
+  if( ! pngyu::is_executable_pnqguant(QFileInfo(executable_pngquant_path())) )
   {
     QMessageBox::warning( this, "", "pngquant path is invalid" );
     menu_preferences_pushed();
     return;
   }
 
-#ifdef Q_OS_MACX
+#ifdef Q_OS_MACOS
   bool b_yes_pushed = false;
   if( image_optim_integration_mode() == pngyu::IMAGEOPTIM_ASK_EVERY_TIME &&
       QFile::exists( executable_image_optim_path() )  )
@@ -1073,7 +1094,7 @@ void PngyuMainWindow::exec_pushed()
   const bool b_image_optim = false;
 #endif
 
-  QTime t;
+  QElapsedTimer t;
   t.start();
   execute_compress_all( b_image_optim );
   qDebug() << "execute" << t.elapsed() << "ms elapsed";
@@ -1268,6 +1289,7 @@ void PngyuMainWindow::menu_preferences_pushed()
   m_preferences_dialog->set_pngquant_paths( pngyu::find_executable_pngquant() );
   m_preferences_dialog->set_pngquant_path( executable_pngquant_path() );
   m_preferences_dialog->set_force_execute_if_negative_enabled( is_force_execute_if_negative_enabled() );
+  m_preferences_dialog->set_timeout_ms( timeout_ms() );
 
 
   m_preferences_dialog->set_apply_button_enabled( false );
@@ -1287,6 +1309,7 @@ void PngyuMainWindow::preferences_apply_pushed()
   set_executable_image_optim_path( m_preferences_dialog->image_optim_path() );
   set_executable_pngquant_path( m_preferences_dialog->pngquant_path());
   set_force_execute_if_negative_enabled( m_preferences_dialog->is_force_execute_if_negative_enabled() );
+  set_timeout_ms( m_preferences_dialog->timeout_ms() );
 }
 
 void PngyuMainWindow::stop_request()

@@ -277,7 +277,7 @@ void PngyuPreviewWindow::background_select_button_pressed()
 
 void PngyuPreviewWindow::reset_view_scaling()
 {
-  ui->imageview->resetMatrix();
+  ui->imageview->resetTransform();
 }
 
 void PngyuPreviewWindow::zoomin_pushed()

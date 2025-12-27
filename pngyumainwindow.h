@@ -79,6 +79,9 @@ public:
   void set_force_execute_if_negative_enabled( const bool b );
   bool is_force_execute_if_negative_enabled() const;
 
+  void set_timeout_ms( const int timeout_ms );
+  int timeout_ms() const;
+
   void execute_compress_all( bool image_optim_enabled );
 
   bool is_preview_window_visible() const;
@@ -127,6 +130,7 @@ private:
   bool m_image_optim_enabled;
   pngyu::ImageOptimIntegration m_image_optim_integration;
   bool m_force_execute_if_negative_enables;
+  int m_timeout_ms;
 
 private slots:
   void exec_pushed();

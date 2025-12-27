@@ -1,2 +1,24 @@
 *.pro.user
 .DS_Store
+
+# Qt build artifacts
+*.o
+moc_*.cpp
+moc_*.h
+ui_*.h
+qrc_*.cpp
+moc_predefs.h
+.qmake.stash
+Makefile
+
+# Build directories
+build/
+build-*/
+
+# Application bundle (macOS)
+*.app/
+
+# Temporary files
+*~
+*.swp
+*.swo

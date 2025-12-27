@@ -4,6 +4,7 @@
 #include <QDir>
 #include <QApplication>
 #include <QDebug>
+#include <QRegularExpression>
 
 namespace pngyu
 {
@@ -17,7 +18,7 @@ QStringList find_executable_pngquant_from_dir( const QDir &dir )
   }
   foreach( const QFileInfo &child_file_info, dir.entryInfoList() )
   {
-    if( ! child_file_info.baseName().contains( QRegExp( "pngquant", Qt::CaseInsensitive ) ) ||
+    if( ! child_file_info.baseName().contains( QRegularExpression( "pngquant", QRegularExpression::CaseInsensitiveOption ) ) ||
         ! child_file_info.isExecutable() )
     {
       continue;
@@ -54,7 +55,7 @@ QStringList find_executable_pngquant()
 {
   QStringList search_dirs;
 
-#ifdef Q_OS_MACX
+#ifdef Q_OS_MACOS
   search_dirs << ( QApplication::applicationDirPath() + "/../Resources" );
 #endif
 #ifdef Q_OS_UNIX

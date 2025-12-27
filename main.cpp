@@ -30,7 +30,7 @@ protected:
       {
         QList<QFileInfo> info_list;
         const QString file = file_event->file();
-        info_list.push_back( file_event->file() );
+        info_list.push_back( QFileInfo(file_event->file()) );
         m_pngyu_main->append_file_info_list( info_list );
         return true;
       }
@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
     const QFileInfo finfo( argments.at(i) );
     if( finfo.exists() )
     {
-      file_list.push_back( argments.at(i) );
+      file_list.push_back( finfo );
     }
   }
   w.append_file_info_list( file_list );

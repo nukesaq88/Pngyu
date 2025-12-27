@@ -20,7 +20,7 @@ QToolButton#toolButton_background_checkerboard,
 QToolButton#toolButton_zoomout
 {
   border-style: outset;
-  border : 1px solid rgb(127,127,127,127);
+  border : 1px solid rgba(127,127,127,127);
   border-top-left-radius : 6px;
   border-bottom-left-radius: 6px;
   padding: 3px;
@@ -32,7 +32,7 @@ QToolButton#toolButton_zoomout
 QToolButton#toolButton_background_black
 {
   border-style: outset;
-  border : 1px solid rgb(127,127,127,127);
+  border : 1px solid rgba(127,127,127,127);
   border-radius : 0px;
   padding: 3px;
   background : qlineargradient(spread:reflect, x1:0, y1:1, x2:0, y2:0,
@@ -44,7 +44,7 @@ QToolButton#toolButton_background_white,
 QToolButton#toolButton_zoomin
 {
   border-style: outset;
-  border : 1px solid rgb(127,127,127,127);
+  border : 1px solid rgba(127,127,127,127);
   border-top-right-radius : 6px;
   border-bottom-right-radius: 6px;
   padding: 3px;
@@ -58,7 +58,7 @@ QToolButton#toolButton_background_white::checked,
 QToolButton#toolButton_zoomin::checked,
 QToolButton#toolButton_zoomout::checked
 {
-  border : 1px solid rgb(100,100,100,127);
+  border : 1px solid rgba(100,100,100,127);
   border-style: inset;
   padding-top : 4px;
   padding-left : 4px;
@@ -74,7 +74,7 @@ QToolButton#toolButton_background_white::pressed,
 QToolButton#toolButton_zoomin::pressed,
 QToolButton#toolButton_zoomout::pressed
 { 
-  border : 1px solid rgb(80,80,80,127);
+  border : 1px solid rgba(80,80,80,127);
   border-style: inset;
   padding-top : 4px;
   padding-left : 4px;
