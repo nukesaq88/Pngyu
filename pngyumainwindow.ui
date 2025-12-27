@@ -22,7 +22,7 @@
 #pushButton_stop_exec
 {
   border-style: outset;
-  border : 1px solid rgb(127,127,127,127);
+  border : 1px solid rgba(127,127,127,127);
   border-radius: 5px;
   background : qlineargradient(spread:reflect, x1:0, y1:1, x2:0, y2:0,
     stop:0 rgba(127, 127, 127, 64), stop:1 rgba(255, 255, 255, 100));
@@ -45,7 +45,7 @@ QToolButton#toolButton_compress_option_default,
 QToolButton#toolButton_output_option_overwrite_original
 {
   border-style: outset;
-  border : 1px solid rgb(127,127,127,127);
+  border : 1px solid rgba(127,127,127,127);
   border-top-left-radius : 6px;
   border-bottom-left-radius: 6px;
   padding: 3px;
@@ -57,7 +57,7 @@ QToolButton#toolButton_output_option_overwrite_original
 QToolButton#toolButton_background_black
 {
   border-style: outset;
-  border : 1px solid rgb(127,127,127,127);
+  border : 1px solid rgba(127,127,127,127);
   border-radius : 0px;
   padding: 3px;
   background : qlineargradient(spread:reflect, x1:0, y1:1, x2:0, y2:0,
@@ -69,7 +69,7 @@ QToolButton#toolButton_compress_option_custom,
 QToolButton#toolButton_output_option_custom
 {
   border-style: outset;
-  border : 1px solid rgb(127,127,127,127);
+  border : 1px solid rgba(127,127,127,127);
   border-top-right-radius : 6px;
   border-bottom-right-radius: 6px;
   padding: 3px;
@@ -82,7 +82,7 @@ QToolButton#toolButton_compress_option_custom::checked,
 QToolButton#toolButton_output_option_custom::checked,
 QToolButton#toolButton_output_option_overwrite_original::checked
 {
-  border : 1px solid rgb(100,100,100,127);
+  border : 1px solid rgba(100,100,100,127);
   border-style: inset;
   padding-top : 4px;
   padding-left : 4px;
@@ -97,7 +97,7 @@ QToolButton#toolButton_compress_option_custom::pressed,
 QToolButton#toolButton_output_option_custom::pressed,
 QToolButton#toolButton_output_option_overwrite_original::pressed
 { 
-  border : 1px solid rgb(80,80,80,127);
+  border : 1px solid rgba(80,80,80,127);
   border-style: inset;
   padding-top : 4px;
   padding-left : 4px;
