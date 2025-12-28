@@ -8,7 +8,7 @@
 #include <QCursor>
 #include <QFileInfo>
 #include <QImageReader>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QDir>
 #include <QFile>
 #include <QByteArray>
@@ -81,7 +81,7 @@ inline QString size_to_string_mb( const qint64 size )
 
 inline bool has_png_extention( const QFileInfo &file )
 {
-  return QRegExp( "png", Qt::CaseInsensitive ).exactMatch( file.suffix() );
+  return file.suffix().compare("png", Qt::CaseInsensitive) == 0;
 }
 
 inline bool can_read_png_file( const QFileInfo &file )

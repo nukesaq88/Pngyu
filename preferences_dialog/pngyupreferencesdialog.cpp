@@ -5,7 +5,6 @@
 #include <QDebug>
 #include <QFile>
 #include <QFileDialog>
-#include <QRegExp>
 
 #include "pngyu_util.h"
 
