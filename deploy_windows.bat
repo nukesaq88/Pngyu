@@ -14,17 +14,13 @@ set APP_NAME=Pngyu.exe
 echo Looking for: %BUILD_DIR%\%APP_NAME%
 echo.
 
-if exist "%BUILD_DIR%\%APP_NAME%" (
-    echo Found: %BUILD_DIR%\%APP_NAME%
-) else (
+if not exist "%BUILD_DIR%\%APP_NAME%" (
     echo Error: %APP_NAME% not found in %BUILD_DIR%
     echo Please build the project in Qt Creator first (Release mode)
     echo.
     echo Current directory: %CD%
-    echo Checking if directory exists...
     if exist "%BUILD_DIR%" (
         echo Directory exists: %BUILD_DIR%
-        echo Contents:
         dir "%BUILD_DIR%"
     ) else (
         echo Directory does not exist: %BUILD_DIR%
@@ -32,9 +28,23 @@ if exist "%BUILD_DIR%\%APP_NAME%" (
     exit /b 1
 )
 
+echo Found: %BUILD_DIR%\%APP_NAME%
 echo.
 echo Deploying Qt DLLs and plugins...
+echo Running: windeployqt "%BUILD_DIR%\%APP_NAME%" --release --no-translations
+echo.
+
 windeployqt "%BUILD_DIR%\%APP_NAME%" --release --no-translations
+if errorlevel 1 (
+    echo.
+    echo Error: windeployqt failed
+    echo Make sure Qt bin directory is in your PATH
+    echo Example: C:\Qt\6.10.1\mingw_64\bin
+    exit /b 1
+)
+
+echo.
+echo windeployqt completed successfully
 
 echo.
 echo Copying pngquant...
