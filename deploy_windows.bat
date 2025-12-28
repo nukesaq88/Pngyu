@@ -4,7 +4,8 @@ REM Run this after building in Qt Creator (Release mode)
 
 setlocal
 
-set BUILD_DIR=build\Desktop-Release\release
+REM Use environment variable if set, otherwise use default
+if not defined BUILD_DIR set BUILD_DIR=build\Desktop_Qt_6_10_1_MinGW_64_bit-Release\release
 set APP_NAME=Pngyu.exe
 
 if not exist "%BUILD_DIR%\%APP_NAME%" (
