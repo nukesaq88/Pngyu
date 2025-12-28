@@ -32,13 +32,65 @@ if (-not (Test-Path $AppPath)) {
 Write-Host "Found: $AppPath" -ForegroundColor Green
 Write-Host ""
 
+# Find windeployqt
+$windeployqt = $null
+
+# First check if it's in PATH
+$windeployqt = Get-Command windeployqt -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source
+
+# If not in PATH, search common Qt installation locations
+if (-not $windeployqt) {
+    Write-Host "windeployqt not found in PATH, searching for Qt installation..." -ForegroundColor Yellow
+    
+    $qtSearchPaths = @(
+        "C:\Qt\6.10.1\mingw_64\bin\windeployqt.exe",
+        "C:\Qt\6.10.0\mingw_64\bin\windeployqt.exe",
+        "C:\Qt\6.9.3\mingw_64\bin\windeployqt.exe",
+        "C:\Qt6\6.10.1\mingw_64\bin\windeployqt.exe",
+        "C:\Qt6\6.10.0\mingw_64\bin\windeployqt.exe"
+    )
+    
+    # Also search in Qt online installer locations
+    $qtRoot = "C:\Qt"
+    if (Test-Path $qtRoot) {
+        $qtVersions = Get-ChildItem $qtRoot -Directory | Where-Object { $_.Name -match '^\d+\.\d+' }
+        foreach ($version in $qtVersions) {
+            $mingwDirs = Get-ChildItem $version.FullName -Directory -ErrorAction SilentlyContinue | Where-Object { $_.Name -match 'mingw' }
+            foreach ($mingw in $mingwDirs) {
+                $qtSearchPaths += Join-Path $mingw.FullName "bin\windeployqt.exe"
+            }
+        }
+    }
+    
+    foreach ($path in $qtSearchPaths) {
+        if (Test-Path $path) {
+            $windeployqt = $path
+            Write-Host "Found Qt at: $windeployqt" -ForegroundColor Green
+            break
+        }
+    }
+}
+
+if (-not $windeployqt) {
+    Write-Host ""
+    Write-Host "Error: windeployqt not found" -ForegroundColor Red
+    Write-Host ""
+    Write-Host "Please add Qt bin directory to your PATH or install Qt." -ForegroundColor Yellow
+    Write-Host "Example: C:\Qt\6.10.1\mingw_64\bin" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "Or set the PATH temporarily:" -ForegroundColor Yellow
+    Write-Host '  $env:PATH += ";C:\Qt\6.10.1\mingw_64\bin"' -ForegroundColor Cyan
+    exit 1
+}
+
 # Deploy Qt DLLs and plugins
+Write-Host ""
 Write-Host "Deploying Qt DLLs and plugins..." -ForegroundColor Cyan
-Write-Host "Running: windeployqt `"$AppPath`" --release --no-translations"
+Write-Host "Running: $windeployqt `"$AppPath`" --release --no-translations"
 Write-Host ""
 
 try {
-    & windeployqt "$AppPath" --release --no-translations
+    & $windeployqt "$AppPath" --release --no-translations
     if ($LASTEXITCODE -ne 0) {
         throw "windeployqt failed with exit code $LASTEXITCODE"
     }
@@ -48,9 +100,6 @@ try {
     Write-Host ""
     Write-Host "Error: windeployqt failed" -ForegroundColor Red
     Write-Host $_.Exception.Message -ForegroundColor Red
-    Write-Host ""
-    Write-Host "Make sure Qt bin directory is in your PATH" -ForegroundColor Yellow
-    Write-Host "Example: C:\Qt\6.10.1\mingw_64\bin" -ForegroundColor Yellow
     exit 1
 }
 
