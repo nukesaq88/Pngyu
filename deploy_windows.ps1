@@ -90,7 +90,23 @@ if (-not $windeployqt) {
         }
     }
 }
-DeployAppPath`" --release --no-translations"
+
+if (-not $windeployqt) {
+    Write-Host ""
+    Write-Host "Error: windeployqt not found" -ForegroundColor Red
+    Write-Host ""
+    Write-Host "Please add Qt bin directory to your PATH or install Qt." -ForegroundColor Yellow
+    Write-Host "Example: C:\Qt\6.10.1\mingw_64\bin" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "Or set the PATH temporarily:" -ForegroundColor Yellow
+    Write-Host '  $env:PATH += ";C:\Qt\6.10.1\mingw_64\bin"' -ForegroundColor Cyan
+    exit 1
+}
+
+# Deploy Qt DLLs and plugins
+Write-Host ""
+Write-Host "Deploying Qt DLLs and plugins..." -ForegroundColor Cyan
+Write-Host "Running: $windeployqt `"$DeployAppPath`" --release --no-translations"
 Write-Host ""
 
 try {
@@ -112,22 +128,7 @@ Write-Host ""
 # Copy pngquant executable
 Write-Host "Copying pngquant executable..." -ForegroundColor Cyan
 $PngquantSrc = "pngquant_bin\win\pngquant.exe"
-$PngquantDest = Join-Path $Deployd with exit code $LASTEXITCODE"
-    }
-    Write-Host ""
-    Write-Host "windeployqt completed successfully" -ForegroundColor Green
-} catch {
-    Write-Host ""
-    Write-Host "Error: windeployqt failed" -ForegroundColor Red
-    Write-Host $_.Exception.Message -ForegroundColor Red
-    exit 1
-}
-
-Write-Host ""
-
-# Copy pngquant executable
-Write-Host "Copying pngquant executable..." -ForegroundColor Cyan
-$PngquantSrc = "pngquant_bin\win\pngquant.exe"
+$PngquantDest = Join-Path $DeployDir "pngquant.exe"
 $PngquantDest = Join-Path $BuildDir "pngquant.exe"
 
 if (Test-Path $PngquantSrc) {
