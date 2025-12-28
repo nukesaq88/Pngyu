@@ -14,17 +14,11 @@ set APP_NAME=Pngyu.exe
 echo Looking for: %BUILD_DIR%\%APP_NAME%
 echo.
 
-if not exist "%BUILD_DIR%\%APP_NAME%" (
+REM Check if the executable exists
+dir /b "%BUILD_DIR%\%APP_NAME%" >nul 2>&1
+if errorlevel 1 (
     echo Error: %APP_NAME% not found in %BUILD_DIR%
     echo Please build the project in Qt Creator first (Release mode)
-    echo.
-    echo Current directory: %CD%
-    if exist "%BUILD_DIR%" (
-        echo Directory exists: %BUILD_DIR%
-        dir "%BUILD_DIR%"
-    ) else (
-        echo Directory does not exist: %BUILD_DIR%
-    )
     exit /b 1
 )
 
