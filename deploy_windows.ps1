@@ -128,9 +128,11 @@ Write-Host ""
 # Copy pngquant executable
 Write-Host "Copying pngquant executable..." -ForegroundColor Cyan
 $PngquantSrc = "pngquant_bin\win\pngquant.exe"
-$PngquantDest = Join-Path $DeployDir "pngquant.exe"
+$PngquantDir = Join-Path $DeployDir "pngquant"
+$PngquantDest = Join-Path $PngquantDir "pngquant.exe"
 
 if (Test-Path $PngquantSrc) {
+    New-Item -ItemType Directory -Path $PngquantDir -Force | Out-Null
     Copy-Item $PngquantSrc $PngquantDest -Force
     Write-Host "Copied: $PngquantSrc -> $PngquantDest" -ForegroundColor Green
 } else {
