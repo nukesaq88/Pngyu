@@ -1,5 +1,8 @@
 
-QT += core gui widgets core5compat
+QT += core gui widgets
+
+# Add core5compat if available (helps macdeployqt on macOS)
+qtHaveModule(core5compat): QT += core5compat
 
 TARGET = Pngyu
 TEMPLATE = app
