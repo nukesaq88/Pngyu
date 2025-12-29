@@ -895,7 +895,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
              <bool>true</bool>
             </property>
             <attribute name="buttonGroup">
-             <string notr="true">buttonGroup_compres_option_mode</string>
+             <string notr="true">buttonGroup_compress_option_mode</string>
             </attribute>
            </widget>
           </item>
@@ -914,7 +914,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
              <bool>true</bool>
             </property>
             <attribute name="buttonGroup">
-             <string notr="true">buttonGroup_compres_option_mode</string>
+             <string notr="true">buttonGroup_compress_option_mode</string>
             </attribute>
            </widget>
           </item>
@@ -1169,6 +1169,6 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
  <buttongroups>
   <buttongroup name="buttonGroup_output_directory_mode"/>
   <buttongroup name="buttonGroup_output_option_mode"/>
-  <buttongroup name="buttonGroup_compres_option_mode"/>
+  <buttongroup name="buttonGroup_compress_option_mode"/>
  </buttongroups>
 </ui>
