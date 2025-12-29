@@ -445,8 +445,8 @@ QString PngyuMainWindow::make_output_file_path_string( const QString &input_file
       }
       else if( output_filename_mode == pngyu::OUTPUT_FILE_CUSTOM )
       {
-        const QString &prefix = ui->lineEdit_output_file_prefix->text();
-        const QString &suffix = ui->lineEdit_output_file_suffix->text();
+        const QString &prefix = output_filename_prefix();
+        const QString &suffix = output_filename_suffix();
 
         const QString &base_name = input_file_info.completeBaseName();
         output_file_name = prefix + base_name + suffix;
