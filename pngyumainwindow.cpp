@@ -55,7 +55,9 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent) :
   m_image_optim_enabled( false ),
   m_image_optim_integration( pngyu::IMAGEOPTIM_ASK_EVERY_TIME ),
   m_force_execute_if_negative_enables( false ),
-  m_timeout_ms( 20000 )
+  m_timeout_ms( 20000 ),
+  m_save_compress_options_enabled( false ),
+  m_save_output_options_enabled( false )
 {
   ui->setupUi(this);
 
@@ -209,15 +211,19 @@ PngyuMainWindow::~PngyuMainWindow()
   delete ui;
 }
 
-void PngyuMainWindow::read_settings()
+QString PngyuMainWindow::get_settings_file_path() const
 {
   // make application ini file path
   const QString &app_path = QApplication::applicationFilePath();
   QString fn = app_path;
   fn.chop( QFileInfo(app_path).suffix().length() );
   fn = fn +  (fn.endsWith(".") ? "" : ".")  +  QString("ini");
+  return fn;
+}
 
-  QSettings settings( fn, QSettings::IniFormat );
+void PngyuMainWindow::read_settings()
+{
+  QSettings settings( get_settings_file_path(), QSettings::IniFormat );
   settings.beginGroup( "options" );
   const int imageoptim = settings.value( "imageoptim_integration", pngyu::IMAGEOPTIM_ASK_EVERY_TIME ).toInt();
   set_image_optim_integration_mode( static_cast<pngyu::ImageOptimIntegration>( imageoptim ) );
@@ -244,18 +250,84 @@ void PngyuMainWindow::read_settings()
   const int timeout_ms = settings.value( "timeout_ms", 20000 ).toInt();
   set_timeout_ms( timeout_ms );
 
+  const bool save_compress_options = settings.value( "save_compress_options", false ).toBool();
+  set_save_compress_options_enabled( save_compress_options );
+
+  const bool save_output_options = settings.value( "save_output_options", false ).toBool();
+  set_save_output_options_enabled( save_output_options );
+
   settings.endGroup();
+  
+  // Load last used options if enabled
+  load_last_used_options();
+}
+
+void PngyuMainWindow::load_last_used_options()
+{
+  QSettings settings( get_settings_file_path(), QSettings::IniFormat );
+
+  // Load compress options if enabled
+  if( is_save_compress_options_enabled() )
+  {
+    settings.beginGroup( "last_used_compress_options" );
+
+    const int compress_mode = settings.value( "compress_mode", pngyu::COMPRESS_OPTION_DEFAULT ).toInt();
+    set_current_compress_option_mode( static_cast<pngyu::CompressOptionMode>( compress_mode ) );
+
+    if( compress_mode == pngyu::COMPRESS_OPTION_CUSTOM )
+    {
+      const int ncolor = settings.value( "ncolor", 256 ).toInt();
+      set_ncolor( ncolor );
+
+      const int speed = settings.value( "compress_speed", 3 ).toInt();
+      set_compress_speed( speed );
+
+      const bool dither = settings.value( "dither_enabled", true ).toBool();
+      set_dither_enabled( dither );
+
+      const bool ie6_support = settings.value( "ie6_support_enabled", false ).toBool();
+      set_ie6_alpha_support_enabled( ie6_support );
+    }
+
+    settings.endGroup();
+  }
+
+  // Load output options if enabled
+  if( is_save_output_options_enabled() )
+  {
+    settings.beginGroup( "last_used_output_options" );
+
+    const int output_mode = settings.value( "output_mode", pngyu::OUTPUT_OPTION_CUSTOM ).toInt();
+    set_current_output_option_mode( static_cast<pngyu::OutputOptionMode>( output_mode ) );
+
+    const int output_dir_mode = settings.value( "output_directory_mode", pngyu::OUTPUT_DIR_SAME ).toInt();
+    set_current_output_directory_mode( static_cast<pngyu::OuputDirectoryMode>( output_dir_mode ) );
+
+    const int output_filename_mode = settings.value( "output_filename_mode", pngyu::OUTPUT_FILE_SAME_AS_ORIGINAL ).toInt();
+    set_current_outoput_filename_mode( static_cast<pngyu::OutputFinenameMode>( output_filename_mode ) );
+
+    const QString other_dir = settings.value( "other_output_directory", QString() ).toString();
+    if( !other_dir.isEmpty() )
+    {
+      set_other_output_directory( other_dir );
+    }
+
+    const QString prefix = settings.value( "output_filename_prefix", QString() ).toString();
+    set_output_filename_prefix( prefix );
+
+    const QString suffix = settings.value( "output_filename_suffix", QString() ).toString();
+    set_output_filename_suffix( suffix );
+
+    const bool overwrite = settings.value( "file_overwrite_enabled", false ).toBool();
+    set_file_overwrite_enabled( overwrite );
+
+    settings.endGroup();
+  }
 }
 
 void PngyuMainWindow::write_settings()
 {
-  // make application ini file path
-  const QString &app_path = QApplication::applicationFilePath();
-  QString fn = app_path;
-  fn.chop( QFileInfo(app_path).suffix().length() );
-  fn = fn +  (fn.endsWith(".") ? "" : ".")  +  QString("ini");
-
-  QSettings settings( fn, QSettings::IniFormat );
+  QSettings settings( get_settings_file_path(), QSettings::IniFormat );
 
   settings.beginGroup("options");
 
@@ -271,7 +343,45 @@ void PngyuMainWindow::write_settings()
 
   settings.setValue( "timeout_ms", timeout_ms() );
 
+  settings.setValue( "save_compress_options", is_save_compress_options_enabled() );
+  settings.setValue( "save_output_options", is_save_output_options_enabled() );
+
   settings.endGroup();
+}
+
+void PngyuMainWindow::save_last_used_options()
+{
+  QSettings settings( get_settings_file_path(), QSettings::IniFormat );
+
+  // Save compress options if enabled
+  if( is_save_compress_options_enabled() )
+  {
+    settings.beginGroup("last_used_compress_options");
+
+    settings.setValue( "compress_mode", current_compress_option_mode() );
+    settings.setValue( "ncolor", ncolor() );
+    settings.setValue( "compress_speed", compress_speed() );
+    settings.setValue( "dither_enabled", dither_enabled() );
+    settings.setValue( "ie6_support_enabled", ie6_alpha_support_enabled() );
+
+    settings.endGroup();
+  }
+
+  // Save output options if enabled
+  if( is_save_output_options_enabled() )
+  {
+    settings.beginGroup("last_used_output_options");
+
+    settings.setValue( "output_mode", current_output_option_mode() );
+    settings.setValue( "output_directory_mode", current_output_directory_mode() );
+    settings.setValue( "output_filename_mode", current_output_filename_mode() );
+    settings.setValue( "other_output_directory", other_output_directory() );
+    settings.setValue( "output_filename_prefix", output_filename_prefix() );
+    settings.setValue( "output_filename_suffix", output_filename_suffix() );
+    settings.setValue( "file_overwrite_enabled", file_overwrite_enabled() );
+
+    settings.endGroup();
+  }
 }
 
 QTableWidget* PngyuMainWindow::file_list_table_widget()
@@ -485,7 +595,7 @@ void PngyuMainWindow::set_current_outoput_filename_mode( const pngyu::OutputFine
   }
   else if( mode == pngyu::OUTPUT_FILE_CUSTOM )
   {
-    ui->comboBox_output_filename_mode->setCurrentIndex( 0 );
+    ui->comboBox_output_filename_mode->setCurrentIndex( 1 );
   }
 }
 
@@ -516,6 +626,26 @@ QString PngyuMainWindow::other_output_directory() const
     return QString();
   }
   return QDir( inputted_dir_path ).absolutePath();
+}
+
+void PngyuMainWindow::set_output_filename_prefix( const QString &prefix )
+{
+  ui->lineEdit_output_file_prefix->setText( prefix );
+}
+
+QString PngyuMainWindow::output_filename_prefix() const
+{
+  return ui->lineEdit_output_file_prefix->text();
+}
+
+void PngyuMainWindow::set_output_filename_suffix( const QString &suffix )
+{
+  ui->lineEdit_output_file_suffix->setText( suffix );
+}
+
+QString PngyuMainWindow::output_filename_suffix() const
+{
+  return ui->lineEdit_output_file_suffix->text();
 }
 
 void PngyuMainWindow::set_ncolor( const int n )
@@ -615,6 +745,26 @@ void PngyuMainWindow::set_timeout_ms( const int timeout_ms )
 int PngyuMainWindow::timeout_ms() const
 {
   return m_timeout_ms;
+}
+
+void PngyuMainWindow::set_save_compress_options_enabled( const bool b )
+{
+  m_save_compress_options_enabled = b;
+}
+
+bool PngyuMainWindow::is_save_compress_options_enabled() const
+{
+  return m_save_compress_options_enabled;
+}
+
+void PngyuMainWindow::set_save_output_options_enabled( const bool b )
+{
+  m_save_output_options_enabled = b;
+}
+
+bool PngyuMainWindow::is_save_output_options_enabled() const
+{
+  return m_save_output_options_enabled;
 }
 
 void PngyuMainWindow::execute_compress_all( bool image_optim_enabled )
@@ -1094,6 +1244,9 @@ void PngyuMainWindow::exec_pushed()
   const bool b_image_optim = false;
 #endif
 
+  // Save last used options before executing compression
+  save_last_used_options();
+
   QElapsedTimer t;
   t.start();
   execute_compress_all( b_image_optim );
@@ -1129,12 +1282,9 @@ void PngyuMainWindow::open_output_directory_pushed()
   const QString default_dir =
       QFile::exists(current_dir) ? current_dir : QDir::homePath();
 
-  const QString path = QFileDialog::getExistingDirectory(
-        this,
-        QString(),
-        default_dir );
-
-  if( ! path.isEmpty() )
+  const QString path =
+      QFileDialog::getExistingDirectory( this, QString(), default_dir );
+  if( !path.isEmpty() )
   {
     set_other_output_directory( path );
   }
@@ -1290,6 +1440,8 @@ void PngyuMainWindow::menu_preferences_pushed()
   m_preferences_dialog->set_pngquant_path( executable_pngquant_path() );
   m_preferences_dialog->set_force_execute_if_negative_enabled( is_force_execute_if_negative_enabled() );
   m_preferences_dialog->set_timeout_ms( timeout_ms() );
+  m_preferences_dialog->set_save_compress_options_enabled( is_save_compress_options_enabled() );
+  m_preferences_dialog->set_save_output_options_enabled( is_save_output_options_enabled() );
 
 
   m_preferences_dialog->set_apply_button_enabled( false );
@@ -1310,6 +1462,8 @@ void PngyuMainWindow::preferences_apply_pushed()
   set_executable_pngquant_path( m_preferences_dialog->pngquant_path());
   set_force_execute_if_negative_enabled( m_preferences_dialog->is_force_execute_if_negative_enabled() );
   set_timeout_ms( m_preferences_dialog->timeout_ms() );
+  set_save_compress_options_enabled( m_preferences_dialog->is_save_compress_options_enabled() );
+  set_save_output_options_enabled( m_preferences_dialog->is_save_output_options_enabled() );
 }
 
 void PngyuMainWindow::stop_request()

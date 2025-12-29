@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>689</width>
-    <height>673</height>
+    <height>715</height>
    </rect>
   </property>
   <property name="acceptDrops">
@@ -109,13 +109,13 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <property name="margin">
+    <property name="margin" stdset="0">
      <number>6</number>
     </property>
     <item row="7" column="0" colspan="5">
      <widget class="QWidget" name="widget" native="true">
       <layout class="QGridLayout" name="gridLayout_16">
-       <property name="margin">
+       <property name="margin" stdset="0">
         <number>0</number>
        </property>
        <property name="spacing">
@@ -169,7 +169,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
           <property name="spacing">
            <number>4</number>
           </property>
-          <property name="margin">
+          <property name="margin" stdset="0">
            <number>0</number>
           </property>
           <item>
@@ -201,7 +201,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
        <item row="0" column="4">
         <spacer name="horizontalSpacer_5">
          <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+          <enum>Qt::Orientation::Horizontal</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -242,7 +242,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
        <item row="0" column="1">
         <spacer name="horizontalSpacer_3">
          <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+          <enum>Qt::Orientation::Horizontal</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -264,7 +264,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
           <property name="verticalSpacing">
            <number>4</number>
           </property>
-          <property name="margin">
+          <property name="margin" stdset="0">
            <number>0</number>
           </property>
           <item row="1" column="0">
@@ -276,7 +276,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
              <bool>true</bool>
             </property>
             <layout class="QGridLayout" name="gridLayout_10">
-             <property name="margin">
+             <property name="margin" stdset="0">
               <number>6</number>
              </property>
              <item row="0" column="0" colspan="3">
@@ -305,7 +305,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
              <item row="1" column="0" colspan="3">
               <widget class="QWidget" name="widget_custom_output_filename" native="true">
                <layout class="QHBoxLayout" name="horizontalLayout_3">
-                <property name="margin">
+                <property name="margin" stdset="0">
                  <number>0</number>
                 </property>
                 <item>
@@ -324,13 +324,13 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
                    </sizepolicy>
                   </property>
                   <property name="frameShape">
-                   <enum>QFrame::Panel</enum>
+                   <enum>QFrame::Shape::Panel</enum>
                   </property>
                   <property name="frameShadow">
-                   <enum>QFrame::Sunken</enum>
+                   <enum>QFrame::Shadow::Sunken</enum>
                   </property>
                   <layout class="QGridLayout" name="gridLayout_3">
-                   <property name="margin">
+                   <property name="margin" stdset="0">
                     <number>2</number>
                    </property>
                    <item row="0" column="2">
@@ -339,7 +339,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
                       <string>Input cumtom filename prefix</string>
                      </property>
                      <property name="alignment">
-                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                      </property>
                     </widget>
                    </item>
@@ -378,13 +378,13 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
              </sizepolicy>
             </property>
             <property name="title">
-             <string> </string>
+             <string/>
             </property>
             <property name="flat">
              <bool>true</bool>
             </property>
             <layout class="QGridLayout" name="gridLayout_11">
-             <property name="margin">
+             <property name="margin" stdset="0">
               <number>6</number>
              </property>
              <item row="0" column="0">
@@ -406,7 +406,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
              <bool>true</bool>
             </property>
             <layout class="QGridLayout" name="gridLayout_9">
-             <property name="margin">
+             <property name="margin" stdset="0">
               <number>6</number>
              </property>
              <item row="1" column="1">
@@ -415,7 +415,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
                 <property name="spacing">
                  <number>4</number>
                 </property>
-                <property name="margin">
+                <property name="margin" stdset="0">
                  <number>0</number>
                 </property>
                 <item>
@@ -569,7 +569,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
        <string>&lt;a href=&quot;http://nukesaq88.github.io/Pngyu/&quot; style=&quot;color: darkgray;&quot;&gt;Home Page&lt;/a&gt;</string>
       </property>
       <property name="textFormat">
-       <enum>Qt::RichText</enum>
+       <enum>Qt::TextFormat::RichText</enum>
       </property>
       <property name="openExternalLinks">
        <bool>true</bool>
@@ -606,7 +606,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
        <item row="1" column="1">
         <spacer name="horizontalSpacer_2">
          <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+          <enum>Qt::Orientation::Horizontal</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -653,7 +653,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
           </sizepolicy>
          </property>
          <layout class="QGridLayout" name="gridLayout_19">
-          <property name="margin">
+          <property name="margin" stdset="0">
            <number>0</number>
           </property>
           <property name="spacing">
@@ -662,7 +662,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
           <item row="0" column="0" colspan="2">
            <widget class="QWidget" name="widget_compress_option_sliders" native="true">
             <layout class="QGridLayout" name="gridLayout_15">
-             <property name="margin">
+             <property name="margin" stdset="0">
               <number>0</number>
              </property>
              <property name="spacing">
@@ -671,13 +671,13 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
              <item row="0" column="0">
               <widget class="QFrame" name="frame_colors">
                <property name="frameShape">
-                <enum>QFrame::Panel</enum>
+                <enum>QFrame::Shape::Panel</enum>
                </property>
                <property name="frameShadow">
-                <enum>QFrame::Sunken</enum>
+                <enum>QFrame::Shadow::Sunken</enum>
                </property>
                <layout class="QGridLayout" name="gridLayout_6">
-                <property name="margin">
+                <property name="margin" stdset="0">
                  <number>4</number>
                 </property>
                 <property name="spacing">
@@ -708,10 +708,10 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
                    <number>7</number>
                   </property>
                   <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
+                   <enum>Qt::Orientation::Horizontal</enum>
                   </property>
                   <property name="tickPosition">
-                   <enum>QSlider::TicksAbove</enum>
+                   <enum>QSlider::TickPosition::TicksAbove</enum>
                   </property>
                   <property name="tickInterval">
                    <number>1</number>
@@ -731,13 +731,13 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
              <item row="0" column="1">
               <widget class="QFrame" name="frame_speed">
                <property name="frameShape">
-                <enum>QFrame::Panel</enum>
+                <enum>QFrame::Shape::Panel</enum>
                </property>
                <property name="frameShadow">
-                <enum>QFrame::Sunken</enum>
+                <enum>QFrame::Shadow::Sunken</enum>
                </property>
                <layout class="QGridLayout" name="gridLayout_5">
-                <property name="margin">
+                <property name="margin" stdset="0">
                  <number>4</number>
                 </property>
                 <property name="spacing">
@@ -762,10 +762,10 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
                    <number>3</number>
                   </property>
                   <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
+                   <enum>Qt::Orientation::Horizontal</enum>
                   </property>
                   <property name="tickPosition">
-                   <enum>QSlider::TicksAbove</enum>
+                   <enum>QSlider::TickPosition::TicksAbove</enum>
                   </property>
                   <property name="tickInterval">
                    <number>1</number>
@@ -788,7 +788,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
           <item row="1" column="0" colspan="2">
            <widget class="QWidget" name="widget_compress_option_check_boxes" native="true">
             <layout class="QGridLayout" name="gridLayout_17">
-             <property name="margin">
+             <property name="margin" stdset="0">
               <number>0</number>
              </property>
              <property name="spacing">
@@ -797,13 +797,13 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
              <item row="0" column="1">
               <widget class="QFrame" name="frame_ie6">
                <property name="frameShape">
-                <enum>QFrame::Panel</enum>
+                <enum>QFrame::Shape::Panel</enum>
                </property>
                <property name="frameShadow">
-                <enum>QFrame::Sunken</enum>
+                <enum>QFrame::Shadow::Sunken</enum>
                </property>
                <layout class="QGridLayout" name="gridLayout_7">
-                <property name="margin">
+                <property name="margin" stdset="0">
                  <number>4</number>
                 </property>
                 <property name="spacing">
@@ -825,13 +825,13 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
              <item row="0" column="0">
               <widget class="QFrame" name="frame_dithered">
                <property name="frameShape">
-                <enum>QFrame::Panel</enum>
+                <enum>QFrame::Shape::Panel</enum>
                </property>
                <property name="frameShadow">
-                <enum>QFrame::Sunken</enum>
+                <enum>QFrame::Shadow::Sunken</enum>
                </property>
                <layout class="QGridLayout" name="gridLayout_4">
-                <property name="margin">
+                <property name="margin" stdset="0">
                  <number>4</number>
                 </property>
                 <property name="spacing">
@@ -927,7 +927,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
           <property name="spacing">
            <number>4</number>
           </property>
-          <property name="margin">
+          <property name="margin" stdset="0">
            <number>0</number>
           </property>
          </layout>
@@ -1000,7 +1000,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
        <item row="3" column="1">
         <widget class="QWidget" name="widget_file_appending" native="true">
          <layout class="QHBoxLayout" name="horizontalLayout_4">
-          <property name="margin">
+          <property name="margin" stdset="0">
            <number>0</number>
           </property>
           <item>
@@ -1052,13 +1052,13 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
        <item row="1" column="0" colspan="5">
         <widget class="QTableWidget" name="tableWidget_filelist">
          <property name="editTriggers">
-          <set>QAbstractItemView::NoEditTriggers</set>
+          <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
          </property>
          <property name="selectionMode">
-          <enum>QAbstractItemView::SingleSelection</enum>
+          <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
          </property>
          <property name="selectionBehavior">
-          <enum>QAbstractItemView::SelectRows</enum>
+          <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
          </property>
          <property name="showGrid">
           <bool>false</bool>
@@ -1070,14 +1070,14 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
           <bool>false</bool>
          </attribute>
          <attribute name="verticalHeaderDefaultSectionSize">
-          <number>20</number>
+          <number>24</number>
          </attribute>
         </widget>
        </item>
        <item row="3" column="3">
         <spacer name="horizontalSpacer">
          <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+          <enum>Qt::Orientation::Horizontal</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -1098,7 +1098,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
      <x>0</x>
      <y>0</y>
      <width>689</width>
-     <height>22</height>
+     <height>39</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuPngyu">
@@ -1167,8 +1167,8 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_compres_option_mode"/>
-  <buttongroup name="buttonGroup_output_option_mode"/>
   <buttongroup name="buttonGroup_output_directory_mode"/>
+  <buttongroup name="buttonGroup_output_option_mode"/>
+  <buttongroup name="buttonGroup_compres_option_mode"/>
  </buttongroups>
 </ui>

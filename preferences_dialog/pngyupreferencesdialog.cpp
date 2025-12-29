@@ -82,6 +82,8 @@ PngyuPreferencesDialog::PngyuPreferencesDialog(QWidget *parent) :
   connect( ui->comboBox_pngquant_path, SIGNAL(editTextChanged(QString)), this, SLOT(preference_changed()) );
   connect( ui->checkBox_force_execute, SIGNAL(toggled(bool)), this, SLOT(preference_changed()) );
   connect( ui->spinBox_timeout, SIGNAL(valueChanged(int)), this, SLOT(preference_changed()) );
+  connect( ui->checkBox_save_compress_options, SIGNAL(toggled(bool)), this, SLOT(preference_changed()) );
+  connect( ui->checkBox_save_output_options, SIGNAL(toggled(bool)), this, SLOT(preference_changed()) );
 
 }
 
@@ -293,4 +295,24 @@ void PngyuPreferencesDialog::set_timeout_ms( const int timeout_ms )
 int PngyuPreferencesDialog::timeout_ms() const
 {
   return ui->spinBox_timeout->value();
+}
+
+void PngyuPreferencesDialog::set_save_compress_options_enabled( const bool enable )
+{
+  ui->checkBox_save_compress_options->setChecked( enable );
+}
+
+bool PngyuPreferencesDialog::is_save_compress_options_enabled() const
+{
+  return ui->checkBox_save_compress_options->isChecked();
+}
+
+void PngyuPreferencesDialog::set_save_output_options_enabled( const bool enable )
+{
+  ui->checkBox_save_output_options->setChecked( enable );
+}
+
+bool PngyuPreferencesDialog::is_save_output_options_enabled() const
+{
+  return ui->checkBox_save_output_options->isChecked();
 }

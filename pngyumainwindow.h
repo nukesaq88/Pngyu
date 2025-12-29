@@ -55,6 +55,12 @@ public:
   void set_other_output_directory( const QString &other_output_directory );
   QString other_output_directory() const;
 
+  void set_output_filename_prefix( const QString &prefix );
+  QString output_filename_prefix() const;
+
+  void set_output_filename_suffix( const QString &suffix );
+  QString output_filename_suffix() const;
+
   void set_ncolor( const int n );
   int ncolor() const;
 
@@ -81,6 +87,12 @@ public:
 
   void set_timeout_ms( const int timeout_ms );
   int timeout_ms() const;
+
+  void set_save_compress_options_enabled( const bool b );
+  bool is_save_compress_options_enabled() const;
+
+  void set_save_output_options_enabled( const bool b );
+  bool is_save_output_options_enabled() const;
 
   void execute_compress_all( bool image_optim_enabled );
 
@@ -109,6 +121,11 @@ protected:
   void read_settings();
   void write_settings();
 
+  void save_last_used_options();
+  void load_last_used_options();
+
+  QString get_settings_file_path() const;
+
   void update_file_table();
 
   void append_file_info_recursive( const QFileInfo &file_info,
@@ -131,6 +148,8 @@ private:
   pngyu::ImageOptimIntegration m_image_optim_integration;
   bool m_force_execute_if_negative_enables;
   int m_timeout_ms;
+  bool m_save_compress_options_enabled;
+  bool m_save_output_options_enabled;
 
 private slots:
   void exec_pushed();

@@ -40,6 +40,12 @@ public:
 
   void set_timeout_ms( const int timeout_ms );
   int timeout_ms() const;
+
+  void set_save_compress_options_enabled( const bool enable );
+  bool is_save_compress_options_enabled() const;
+
+  void set_save_output_options_enabled( const bool enable );
+  bool is_save_output_options_enabled() const;
   
 private:
   Ui::PngyuPreferencesDialog *ui;
