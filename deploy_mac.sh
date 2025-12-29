@@ -12,12 +12,10 @@ if [ ! -d "$BUILD_DIR/Pngyu.app" ]; then
     exit 1
 fi
 
-echo "Cleaning old deployment..."
-rm -rf "$BUILD_DIR/Pngyu.app/Contents/Frameworks"
-rm -rf "$BUILD_DIR/Pngyu.app/Contents/PlugIns"
 
 echo "Deploying Qt frameworks..."
 QT_LIB_PATH=$(qmake -query QT_INSTALL_LIBS)
+echo macdeployqt "$BUILD_DIR/Pngyu.app" -always-overwrite -libpath="$QT_LIB_PATH"
 macdeployqt "$BUILD_DIR/Pngyu.app" -always-overwrite -libpath="$QT_LIB_PATH"
 
 echo ""

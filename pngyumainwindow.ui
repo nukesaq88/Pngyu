@@ -215,7 +215,6 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
       <zorder>pushButton_stop_exec</zorder>
       <zorder>pushButton_exec</zorder>
       <zorder>widget_executing</zorder>
-      <zorder>horizontalSpacer_5</zorder>
      </widget>
     </item>
     <item row="5" column="0" colspan="5">
