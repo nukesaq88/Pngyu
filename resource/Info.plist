@@ -17,9 +17,9 @@
 	<key>CFBundleIdentifier</key>
 	<string>com.nukesaq88.Pngyu</string>
 	<key>CFBundleVersion</key>
-	<string>1.0.2</string>
+	<string>1.0.3</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.2</string>
+	<string>1.0.3</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>

@@ -205,6 +205,20 @@
            </property>
           </widget>
          </item>
+         <item row="4" column="0" colspan="2">
+          <widget class="QCheckBox" name="checkBox_save_compress_options">
+           <property name="text">
+            <string>Remember last compress options</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="0" colspan="2">
+          <widget class="QCheckBox" name="checkBox_save_output_options">
+           <property name="text">
+            <string>Remember last output options</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </widget>
       </item>
