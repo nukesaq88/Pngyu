@@ -2,10 +2,9 @@ name: Build Test
 
 on:
   push:
-    branches: [ master, feature/* ]
-  pull_request:
-    branches: [ master ]
-  workflow_dispatch:  # 手動実行を許可
+    tags:
+      - 'v*'
+  workflow_dispatch:
 
 jobs:
   build-macos:
