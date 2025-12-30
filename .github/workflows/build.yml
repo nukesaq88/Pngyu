@@ -90,9 +90,7 @@ jobs:
       id: version
       run: |
         VERSION=${GITHUB_REF#refs/tags/v}
-        VERSION_NO_DOTS=${VERSION//./}
         echo "version=$VERSION" >> $GITHUB_OUTPUT
-        echo "version_no_dots=$VERSION_NO_DOTS" >> $GITHUB_OUTPUT
         
     - name: Download macOS DMG
       uses: actions/download-artifact@v4
@@ -106,15 +104,15 @@ jobs:
         
     - name: Rename files with version
       run: |
-        mv Pngyu.dmg Pngyu_mac_${{ steps.version.outputs.version_no_dots }}.dmg
-        mv Pngyu-Windows-x64.zip Pngyu_win_${{ steps.version.outputs.version_no_dots }}.zip
+        mv Pngyu.dmg Pngyu-mac-${{ steps.version.outputs.version }}.dmg
+        mv Pngyu-Windows-x64.zip Pngyu-win-${{ steps.version.outputs.version }}.zip
         ls -la
         
     - name: Create Release
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          Pngyu_mac_${{ steps.version.outputs.version_no_dots }}.dmg
-          Pngyu_win_${{ steps.version.outputs.version_no_dots }}.zip
+          Pngyu-mac-${{ steps.version.outputs.version }}.dmg
+          Pngyu-win-${{ steps.version.outputs.version }}.zip
         draft: false
         prerelease: false
