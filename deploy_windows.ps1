@@ -5,7 +5,7 @@ Write-Host "Starting deployment..." -ForegroundColor Green
 Write-Host ""
 
 # Use environment variable if set, otherwise use default
-$BuildDir = if ($env:BUILD_DIR) { $env:BUILD_DIR } else { "build\Desktop_Qt_6_10_1_MinGW_64_bit-Release\release" }
+$BuildDir = if ($env:BUILD_DIR) { $env:BUILD_DIR } else { "build\Desktop-Release\release" }
 $AppName = "Pngyu.exe"
 $AppPath = Join-Path $BuildDir $AppName
 
@@ -52,65 +52,13 @@ Copy-Item $AppPath $DeployAppPath -Force
 Write-Host "Copied: $AppName -> $DeployDir" -ForegroundColor Green
 Write-Host ""
 
-# Find windeployqt
-$windeployqt = $null
-
-# First check if it's in PATH
-$windeployqt = Get-Command windeployqt -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source
-
-# If not in PATH, search common Qt installation locations
-if (-not $windeployqt) {
-    Write-Host "windeployqt not found in PATH, searching for Qt installation..." -ForegroundColor Yellow
-    
-    $qtSearchPaths = @(
-        "C:\Qt\6.10.1\mingw_64\bin\windeployqt.exe",
-        "C:\Qt\6.10.0\mingw_64\bin\windeployqt.exe",
-        "C:\Qt\6.9.3\mingw_64\bin\windeployqt.exe",
-        "C:\Qt6\6.10.1\mingw_64\bin\windeployqt.exe",
-        "C:\Qt6\6.10.0\mingw_64\bin\windeployqt.exe"
-    )
-    
-    # Also search in Qt online installer locations
-    $qtRoot = "C:\Qt"
-    if (Test-Path $qtRoot) {
-        $qtVersions = Get-ChildItem $qtRoot -Directory | Where-Object { $_.Name -match '^\d+\.\d+' }
-        foreach ($version in $qtVersions) {
-            $mingwDirs = Get-ChildItem $version.FullName -Directory -ErrorAction SilentlyContinue | Where-Object { $_.Name -match 'mingw' }
-            foreach ($mingw in $mingwDirs) {
-                $qtSearchPaths += Join-Path $mingw.FullName "bin\windeployqt.exe"
-            }
-        }
-    }
-    
-    foreach ($path in $qtSearchPaths) {
-        if (Test-Path $path) {
-            $windeployqt = $path
-            Write-Host "Found Qt at: $windeployqt" -ForegroundColor Green
-            break
-        }
-    }
-}
-
-if (-not $windeployqt) {
-    Write-Host ""
-    Write-Host "Error: windeployqt not found" -ForegroundColor Red
-    Write-Host ""
-    Write-Host "Please add Qt bin directory to your PATH or install Qt." -ForegroundColor Yellow
-    Write-Host "Example: C:\Qt\6.10.1\mingw_64\bin" -ForegroundColor Yellow
-    Write-Host ""
-    Write-Host "Or set the PATH temporarily:" -ForegroundColor Yellow
-    Write-Host '  $env:PATH += ";C:\Qt\6.10.1\mingw_64\bin"' -ForegroundColor Cyan
-    exit 1
-}
-
 # Deploy Qt DLLs and plugins
-Write-Host ""
 Write-Host "Deploying Qt DLLs and plugins..." -ForegroundColor Cyan
-Write-Host "Running: $windeployqt `"$DeployAppPath`" --release --no-translations"
+Write-Host "Running: windeployqt `"$DeployAppPath`" --release --no-translations"
 Write-Host ""
 
 try {
-    & $windeployqt "$DeployAppPath" --release --no-translations
+    windeployqt "$DeployAppPath" --release --no-translations
     if ($LASTEXITCODE -ne 0) {
         throw "windeployqt failed with exit code $LASTEXITCODE"
     }
@@ -120,6 +68,8 @@ try {
     Write-Host ""
     Write-Host "Error: windeployqt failed" -ForegroundColor Red
     Write-Host $_.Exception.Message -ForegroundColor Red
+    Write-Host ""
+    Write-Host "Please ensure Qt bin directory is in your PATH" -ForegroundColor Yellow
     exit 1
 }
 
@@ -150,5 +100,19 @@ Get-ChildItem $DeployDir -Recurse -File | Measure-Object -Property Length -Sum |
     Write-Host "  Total size: $totalSize MB" -ForegroundColor White
 }
 Write-Host ""
-Write-Host "To create a ZIP archive, run:" -ForegroundColor Yellow
-Write-Host "  Compress-Archive -Path '$DeployDir\*' -DestinationPath 'Pngyu-Windows-x64.zip'" -ForegroundColor Cyan
+
+# Create ZIP archive
+Write-Host "Creating ZIP archive..." -ForegroundColor Cyan
+$ZipPath = "build\Pngyu-Windows-x64.zip"
+if (Test-Path $ZipPath) {
+    Remove-Item $ZipPath -Force
+    Write-Host "Removed existing ZIP file" -ForegroundColor Yellow
+}
+Compress-Archive -Path "$DeployDir\*" -DestinationPath $ZipPath -Force
+Write-Host "Created: $ZipPath" -ForegroundColor Green
+Write-Host ""
+
+$zipSize = [math]::Round((Get-Item $ZipPath).Length / 1MB, 2)
+Write-Host "ZIP archive size: $zipSize MB" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "Deployment and packaging completed!" -ForegroundColor Green

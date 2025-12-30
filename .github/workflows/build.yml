@@ -1,0 +1,79 @@
+name: Build Test
+
+on:
+  push:
+    branches: [ master, feature/* ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:  # 手動実行を許可
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: '6.9.3'
+        host: 'mac'
+        target: 'desktop'
+        arch: 'clang_64'
+        modules: 'qt5compat'
+        
+    - name: Build
+      run: |
+        mkdir -p build/Desktop-Release
+        cd build/Desktop-Release
+        qmake ../../Pngyu.pro CONFIG+=release
+        make
+        ls -la
+        
+    - name: Deploy
+      run: |
+        chmod +x deploy_mac.sh
+        ./deploy_mac.sh
+        
+    - name: Upload DMG
+      uses: actions/upload-artifact@v4
+      with:
+        name: Pngyu-macOS
+        path: build/Desktop-Release/Pngyu.dmg
+        
+  build-windows:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: '6.9.3'
+        host: 'windows'
+        target: 'desktop'
+        arch: 'win64_mingw'
+        modules: 'qt5compat'
+        
+    - name: Build
+      shell: cmd
+      run: |
+        mkdir build\Desktop-Release\release
+        cd build\Desktop-Release\release
+        qmake ..\..\..\Pngyu.pro CONFIG+=release
+        mingw32-make
+        
+    - name: Deploy
+      shell: powershell
+      run: |
+        .\deploy_windows.ps1
+        
+    - name: Upload ZIP
+      uses: actions/upload-artifact@v4
+      with:
+        name: Pngyu-Windows
+        path: build/Pngyu-Windows-x64.zip
