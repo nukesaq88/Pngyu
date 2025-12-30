@@ -1,0 +1,139 @@
+name: Build Test
+
+on:
+  push:
+    branches:
+      - 'feature/small_fix'  # テスト用、後で削除
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Extract version
+      id: version
+      run: |
+        if [[ "$GITHUB_REF" == refs/tags/* ]]; then
+          VERSION=${GITHUB_REF#refs/tags/v}
+          VERSION_NO_DOTS=${VERSION//./}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "version_no_dots=$VERSION_NO_DOTS" >> $GITHUB_OUTPUT
+        else
+          echo "version=dev" >> $GITHUB_OUTPUT
+          echo "version_no_dots=dev" >> $GITHUB_OUTPUT
+        fi
+      
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: '6.9.3'
+        host: 'mac'
+        target: 'desktop'
+        arch: 'clang_64'
+        modules: 'qt5compat'
+        
+    - name: Build
+      run: |
+        mkdir -p build/Desktop-Release
+        cd build/Desktop-Release
+        qmake ../../Pngyu.pro CONFIG+=release
+        make
+        ls -la
+        
+    - name: Deploy
+      env:
+        VERSION_NO_DOTS: ${{ steps.version.outputs.version_no_dots }}
+      run: |
+        chmod +x deploy_mac.sh
+        ./deploy_mac.sh
+        
+    - name: Upload DMG
+      uses: actions/upload-artifact@v4
+      with:
+        name: Pngyu-macOS
+        path: build/Desktop-Release/Pngyu-*.dmg
+        
+  build-windows:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Extract version
+      id: version
+      shell: bash
+      run: |
+        if [[ "$GITHUB_REF" == refs/tags/* ]]; then
+          VERSION=${GITHUB_REF#refs/tags/v}
+          VERSION_NO_DOTS=${VERSION//./}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "version_no_dots=$VERSION_NO_DOTS" >> $GITHUB_OUTPUT
+        else
+          echo "version=dev" >> $GITHUB_OUTPUT
+          echo "version_no_dots=dev" >> $GITHUB_OUTPUT
+        fi
+      
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: '6.9.3'
+        host: 'windows'
+        target: 'desktop'
+        arch: 'win64_msvc2022_64'
+        modules: 'qt5compat'
+        
+    - name: Build
+      shell: cmd
+      run: |
+        call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
+        mkdir build\Desktop-Release
+        cd build\Desktop-Release
+        qmake ..\..\Pngyu.pro CONFIG+=release
+        nmake
+        
+    - name: Deploy
+      shell: powershell
+      env:
+        VERSION_NO_DOTS: ${{ steps.version.outputs.version_no_dots }}
+      run: |
+        .\deploy_windows.ps1
+        
+    - name: Upload ZIP
+      uses: actions/upload-artifact@v4
+      with:
+        name: Pngyu-Windows
+        path: build/Pngyu-Windows-x64-*.zip
+        
+  create-release:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: [build-macos, build-windows]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+    - name: Download macOS DMG
+      uses: actions/download-artifact@v4
+      with:
+        name: Pngyu-macOS
+        
+    - name: Download Windows ZIP
+      uses: actions/download-artifact@v4
+      with:
+        name: Pngyu-Windows
+        
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          Pngyu-*.dmg
+          Pngyu-Windows-x64-*.zip
+        draft: false
+        prerelease: false

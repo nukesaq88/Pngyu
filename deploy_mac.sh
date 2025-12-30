@@ -24,7 +24,11 @@ codesign --deep --force --sign - "$BUILD_DIR/Pngyu.app"
 
 echo ""
 echo "Creating DMG..."
-DMG_NAME="Pngyu.dmg"
+if [ -n "$VERSION_NO_DOTS" ] && [ "$VERSION_NO_DOTS" != "dev" ]; then
+    DMG_NAME="Pngyu-$VERSION_NO_DOTS.dmg"
+else
+    DMG_NAME="Pngyu.dmg"
+fi
 DMG_PATH="$BUILD_DIR/$DMG_NAME"
 VOLUME_NAME="Pngyu"
 

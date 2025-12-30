@@ -180,7 +180,7 @@
             <item row="0" column="0">
              <widget class="QLabel" name="label_pngquant_path">
               <property name="text">
-               <string>pngquatnt location</string>
+               <string>pngquant location</string>
               </property>
              </widget>
             </item>

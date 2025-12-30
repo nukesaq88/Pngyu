@@ -139,7 +139,7 @@ inline void set_drop_here_stylesheet(
   }
   else
   {
-    stylesheet += "background-color : " + QColor(Qt::white).name() + ";\n";
+    stylesheet += "background-color : none;\n";
   }
   stylesheet += "}";
 

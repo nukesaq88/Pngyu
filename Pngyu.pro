@@ -10,42 +10,43 @@ TEMPLATE = app
 CONFIG += sdk_no_version_check
 
 INCLUDEPATH += \
-    preview_window \
-    preferences_dialog \
-    imageoptim_integration_question_dialog
+    src/ \
+    src/preview_window \
+    src/preferences_dialog \
+    src/imageoptim_integration_question_dialog
 
 SOURCES += \
-    main.cpp\
-    pngyumainwindow.cpp \
-    pngyu_execute_pngquant_command.cpp \
-    preview_window/basicimageview.cpp \
-    preview_window/pngyupreviewwindow.cpp \
-    executecompressthread.cpp \
-    preferences_dialog/pngyupreferencesdialog.cpp \
-    imageoptim_integration_question_dialog/pngyuimageoptimintegrationquestiondialog.cpp \
-    executecompressworkerthread.cpp
+    src/main.cpp\
+    src/pngyumainwindow.cpp \
+    src/pngyu_execute_pngquant_command.cpp \
+    src/preview_window/basicimageview.cpp \
+    src/preview_window/pngyupreviewwindow.cpp \
+    src/executecompressthread.cpp \
+    src/preferences_dialog/pngyupreferencesdialog.cpp \
+    src/imageoptim_integration_question_dialog/pngyuimageoptimintegrationquestiondialog.cpp \
+    src/executecompressworkerthread.cpp
 
 HEADERS  += \
-    pngyumainwindow.h \
-    pngyu_util.h \
-    pngyu_pngquant_option.h \
-    pngyu_defines.h \
-    pngyu_execute_pngquant_command.h \
-    preview_window/basicimageview.h \
-    preview_window/pngyupreviewwindow.h \
-    executecompressthread.h \
-    spinnerwidget.h \
-    preferences_dialog/pngyupreferencesdialog.h \
-    imageoptim_integration_question_dialog/pngyuimageoptimintegrationquestiondialog.h \
-    executecompressworkerthread.h \
-    pngyu_custom_tablewidget_item.h
+    src/pngyumainwindow.h \
+    src/pngyu_util.h \
+    src/pngyu_pngquant_option.h \
+    src/pngyu_defines.h \
+    src/pngyu_execute_pngquant_command.h \
+    src/preview_window/basicimageview.h \
+    src/preview_window/pngyupreviewwindow.h \
+    src/executecompressthread.h \
+    src/spinnerwidget.h \
+    src/preferences_dialog/pngyupreferencesdialog.h \
+    src/imageoptim_integration_question_dialog/pngyuimageoptimintegrationquestiondialog.h \
+    src/executecompressworkerthread.h \
+    src/pngyu_custom_tablewidget_item.h
 
 
 FORMS += \
-    pngyumainwindow.ui \
-    preview_window/pngyupreviewwindow.ui \
-    preferences_dialog/pngyupreferencesdialog.ui \
-    imageoptim_integration_question_dialog/pngyuimageoptimintegrationquestiondialog.ui
+    src/pngyumainwindow.ui \
+    src/preview_window/pngyupreviewwindow.ui \
+    src/preferences_dialog/pngyupreferencesdialog.ui \
+    src/imageoptim_integration_question_dialog/pngyuimageoptimintegrationquestiondialog.ui
 
 RESOURCES += \
     resource/resource.qrc
