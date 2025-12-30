@@ -55,7 +55,9 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: Pngyu-macOS
-        path: build/Desktop-Release/Pngyu-*.dmg
+        path: |
+          build/Desktop-Release/Pngyu.dmg
+          build/Desktop-Release/Pngyu-*.dmg
         
   build-windows:
     runs-on: windows-latest
@@ -107,7 +109,9 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: Pngyu-Windows
-        path: build/Pngyu-Windows-x64-*.zip
+        path: |
+          build/Pngyu-Windows-x64.zip
+          build/Pngyu-Windows-x64-*.zip
         
   create-release:
     if: startsWith(github.ref, 'refs/tags/')
