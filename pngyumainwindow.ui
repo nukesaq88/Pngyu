@@ -335,7 +335,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
                    <item row="0" column="2">
                     <widget class="QLineEdit" name="lineEdit_output_file_prefix">
                      <property name="toolTip">
-                      <string>Input cumtom filename prefix</string>
+                      <string>Input custom filename prefix</string>
                      </property>
                      <property name="alignment">
                       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
@@ -352,7 +352,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
                    <item row="0" column="4">
                     <widget class="QLineEdit" name="lineEdit_output_file_suffix">
                      <property name="toolTip">
-                      <string>Input cumtom filename suffix</string>
+                      <string>Input custom filename suffix</string>
                      </property>
                      <property name="text">
                       <string>.png</string>
@@ -426,7 +426,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
                    </sizepolicy>
                   </property>
                   <property name="toolTip">
-                   <string>Save to specified other directory</string>
+                   <string>Save to a specified directory</string>
                   </property>
                   <property name="text">
                    <string>Other Directory</string>
@@ -469,7 +469,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
                 </sizepolicy>
                </property>
                <property name="toolTip">
-                <string>Save to same as directory that original file exists</string>
+                <string>Save to the same directory as the original file</string>
                </property>
                <property name="text">
                 <string>Same Directory</string>
@@ -514,8 +514,13 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
             <property name="minimumSize">
              <size>
               <width>100</width>
-              <height>0</height>
+              <height>30</height>
              </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>13</pointsize>
+             </font>
             </property>
             <property name="text">
              <string>Custom</string>
@@ -533,8 +538,13 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
             <property name="minimumSize">
              <size>
               <width>120</width>
-              <height>0</height>
+              <height>30</height>
              </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>13</pointsize>
+             </font>
             </property>
             <property name="text">
              <string>Overwrite the original</string>
@@ -565,7 +575,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
        </sizepolicy>
       </property>
       <property name="text">
-       <string>&lt;a href=&quot;http://nukesaq88.github.io/Pngyu/&quot; style=&quot;color: darkgray;&quot;&gt;Home Page&lt;/a&gt;</string>
+       <string>&lt;a href=&quot;http://nukesaq88.github.io/Pngyu/&quot; style=&quot;color: darkgray;&quot;&gt;Homepage&lt;/a&gt;</string>
       </property>
       <property name="textFormat">
        <enum>Qt::TextFormat::RichText</enum>
@@ -602,48 +612,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
        <property name="spacing">
         <number>4</number>
        </property>
-       <item row="1" column="1">
-        <spacer name="horizontalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Orientation::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>0</width>
-           <height>0</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="1" column="2" colspan="2">
-        <widget class="QPushButton" name="pushButton_preview">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>160</width>
-           <height>40</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Preview</string>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>20</width>
-           <height>20</height>
-          </size>
-         </property>
-         <property name="checkable">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0" rowspan="2" colspan="4">
+       <item row="5" column="0" rowspan="2" colspan="5">
         <widget class="QWidget" name="widget_compress_option_custom_options" native="true">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
@@ -855,7 +824,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
          </layout>
         </widget>
        </item>
-       <item row="1" column="0" rowspan="2">
+       <item row="2" column="0" rowspan="2">
         <widget class="QWidget" name="widget_compress_option_mode" native="true">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -876,13 +845,42 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
           <property name="spacing">
            <number>0</number>
           </property>
+          <item row="0" column="2">
+           <widget class="QToolButton" name="toolButton_compress_option_custom">
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>13</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Custom</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+            <attribute name="buttonGroup">
+             <string notr="true">buttonGroup_compress_option_mode</string>
+            </attribute>
+           </widget>
+          </item>
           <item row="0" column="0">
            <widget class="QToolButton" name="toolButton_compress_option_default">
             <property name="minimumSize">
              <size>
               <width>100</width>
-              <height>0</height>
+              <height>30</height>
              </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>13</pointsize>
+             </font>
             </property>
             <property name="text">
              <string>Default</string>
@@ -898,29 +896,23 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
             </attribute>
            </widget>
           </item>
-          <item row="0" column="1">
-           <widget class="QToolButton" name="toolButton_compress_option_custom">
-            <property name="minimumSize">
-             <size>
-              <width>100</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Custom</string>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <attribute name="buttonGroup">
-             <string notr="true">buttonGroup_compress_option_mode</string>
-            </attribute>
-           </widget>
-          </item>
          </layout>
         </widget>
        </item>
-       <item row="0" column="0" colspan="4">
+       <item row="2" column="2">
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="0" column="0" colspan="5">
         <widget class="QWidget" name="widget_compress_option_row_1" native="true">
          <layout class="QHBoxLayout" name="horizontalLayout">
           <property name="spacing">
@@ -930,6 +922,34 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
            <number>0</number>
           </property>
          </layout>
+        </widget>
+       </item>
+       <item row="2" column="3">
+        <widget class="QPushButton" name="pushButton_preview">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>160</width>
+           <height>35</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Preview</string>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>20</width>
+           <height>20</height>
+          </size>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
         </widget>
        </item>
       </layout>
@@ -1141,7 +1161,6 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
  <tabstops>
   <tabstop>toolButton_compress_option_default</tabstop>
   <tabstop>toolButton_compress_option_custom</tabstop>
-  <tabstop>pushButton_preview</tabstop>
   <tabstop>horizontalSlider_colors</tabstop>
   <tabstop>spinBox_colors</tabstop>
   <tabstop>horizontalSlider_compress_speed</tabstop>
@@ -1166,8 +1185,8 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
  </resources>
  <connections/>
  <buttongroups>
+  <buttongroup name="buttonGroup_compress_option_mode"/>
   <buttongroup name="buttonGroup_output_directory_mode"/>
   <buttongroup name="buttonGroup_output_option_mode"/>
-  <buttongroup name="buttonGroup_compress_option_mode"/>
  </buttongroups>
 </ui>
