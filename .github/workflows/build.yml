@@ -63,9 +63,9 @@ jobs:
       shell: cmd
       run: |
         call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
-        mkdir build\Desktop-Release\release
-        cd build\Desktop-Release\release
-        qmake ..\..\..\Pngyu.pro CONFIG+=release
+        mkdir build\Desktop-Release
+        cd build\Desktop-Release
+        qmake ..\..\Pngyu.pro CONFIG+=release
         nmake
         
     - name: Deploy
