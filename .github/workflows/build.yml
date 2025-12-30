@@ -14,19 +14,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       
-    - name: Extract version
-      id: version
-      run: |
-        if [[ "$GITHUB_REF" == refs/tags/* ]]; then
-          VERSION=${GITHUB_REF#refs/tags/v}
-          VERSION_NO_DOTS=${VERSION//./}
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "version_no_dots=$VERSION_NO_DOTS" >> $GITHUB_OUTPUT
-        else
-          echo "version=dev" >> $GITHUB_OUTPUT
-          echo "version_no_dots=dev" >> $GITHUB_OUTPUT
-        fi
-      
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
@@ -45,8 +32,6 @@ jobs:
         ls -la
         
     - name: Deploy
-      env:
-        VERSION_NO_DOTS: ${{ steps.version.outputs.version_no_dots }}
       run: |
         chmod +x deploy_mac.sh
         ./deploy_mac.sh
@@ -55,9 +40,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: Pngyu-macOS
-        path: |
-          build/Desktop-Release/Pngyu.dmg
-          build/Desktop-Release/Pngyu-*.dmg
+        path: build/Desktop-Release/Pngyu.dmg
         
   build-windows:
     runs-on: windows-latest
@@ -65,20 +48,6 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
-    - name: Extract version
-      id: version
-      shell: bash
-      run: |
-        if [[ "$GITHUB_REF" == refs/tags/* ]]; then
-          VERSION=${GITHUB_REF#refs/tags/v}
-          VERSION_NO_DOTS=${VERSION//./}
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "version_no_dots=$VERSION_NO_DOTS" >> $GITHUB_OUTPUT
-        else
-          echo "version=dev" >> $GITHUB_OUTPUT
-          echo "version_no_dots=dev" >> $GITHUB_OUTPUT
-        fi
       
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
@@ -100,8 +69,6 @@ jobs:
         
     - name: Deploy
       shell: powershell
-      env:
-        VERSION_NO_DOTS: ${{ steps.version.outputs.version_no_dots }}
       run: |
         .\deploy_windows.ps1
         
@@ -109,9 +76,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: Pngyu-Windows
-        path: |
-          build/Pngyu-Windows-x64.zip
-          build/Pngyu-Windows-x64-*.zip
+        path: build/Pngyu-Windows-x64.zip
         
   create-release:
     if: startsWith(github.ref, 'refs/tags/')
@@ -121,6 +86,14 @@ jobs:
       contents: write
     
     steps:
+    - name: Extract version
+      id: version
+      run: |
+        VERSION=${GITHUB_REF#refs/tags/v}
+        VERSION_NO_DOTS=${VERSION//./}
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "version_no_dots=$VERSION_NO_DOTS" >> $GITHUB_OUTPUT
+        
     - name: Download macOS DMG
       uses: actions/download-artifact@v4
       with:
@@ -131,11 +104,17 @@ jobs:
       with:
         name: Pngyu-Windows
         
+    - name: Rename files with version
+      run: |
+        mv Pngyu.dmg Pngyu_mac_${{ steps.version.outputs.version_no_dots }}.dmg
+        mv Pngyu-Windows-x64.zip Pngyu_win_${{ steps.version.outputs.version_no_dots }}.zip
+        ls -la
+        
     - name: Create Release
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          Pngyu-*.dmg
-          Pngyu-Windows-x64-*.zip
+          Pngyu_mac_${{ steps.version.outputs.version_no_dots }}.dmg
+          Pngyu_win_${{ steps.version.outputs.version_no_dots }}.zip
         draft: false
         prerelease: false
