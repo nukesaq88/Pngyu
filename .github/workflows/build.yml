@@ -2,8 +2,6 @@ name: Build Test
 
 on:
   push:
-    branches:
-      - 'feature/small_fix'  # テスト用、後で削除
     tags:
       - 'v*'
   workflow_dispatch:
