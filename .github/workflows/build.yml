@@ -58,6 +58,8 @@ jobs:
         target: 'desktop'
         arch: 'win64_mingw'
         modules: 'qt5compat'
+        tools: 'tools_mingw90'
+        aqtversion: '==3.1.*'
         
     - name: Build
       shell: cmd
@@ -77,3 +79,30 @@ jobs:
       with:
         name: Pngyu-Windows
         path: build/Pngyu-Windows-x64.zip
+        
+  create-release:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: [build-macos, build-windows]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+    - name: Download macOS DMG
+      uses: actions/download-artifact@v4
+      with:
+        name: Pngyu-macOS
+        
+    - name: Download Windows ZIP
+      uses: actions/download-artifact@v4
+      with:
+        name: Pngyu-Windows
+        
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          Pngyu.dmg
+          Pngyu-Windows-x64.zip
+        draft: false
+        prerelease: false
