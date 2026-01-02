@@ -48,8 +48,8 @@ inline bool make_app_temporary_path()
 inline QByteArray png_file_to_bytearray( const QString &filename )
 {
   QFile f( filename );
-  f.open( QIODevice::ReadOnly );
-  return f.readAll();
+  const bool opened = f.open( QIODevice::ReadOnly );
+  return opened ? f.readAll() : QByteArray();
 }
 
 inline bool write_png_data( const QString &filename, const QByteArray png_data )
