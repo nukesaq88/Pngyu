@@ -821,6 +821,10 @@ void PngyuMainWindow::execute_compress_all( bool image_optim_enabled )
 
   } // end of file list loop
 
+  const int total_file_count = queue.size();
+
+  update_execution_progress( 0, total_file_count );
+
   const int n_thread = num_thread();
 
   QVector<ExecuteCompressWorkerThread*> workers;
@@ -836,44 +840,62 @@ void PngyuMainWindow::execute_compress_all( bool image_optim_enabled )
 
   QApplication::processEvents();
 
-  for( int i = 0; i < n_thread; ++i )
+  foreach( ExecuteCompressWorkerThread *worker, workers )
   {
-    workers[i]->start( QThread::HighPriority );
+    worker->start( QThread::HighPriority );
   }
 
   QApplication::processEvents();
 
-  for( int i = 0; i < n_thread; ++i )
+  while( true )
   {
-    ExecuteCompressWorkerThread *worker = workers[i];
-
-    while( ! worker->wait(30) )
+    bool all_finished = true;
+    foreach( ExecuteCompressWorkerThread *worker, workers )
     {
-      if( m_stop_request )
-      {
-        worker->stop_request();
-      }
       ui->spinner_exec->redraw();
       ui->spinner_exec->update();
       QApplication::processEvents();
+
+      if( ! worker->wait(30) )
+      {
+        all_finished = false;
+        break;
+      }
     }
+    if( all_finished )
+    {
+      break;
+    }
+
+    // send stop request to workers
+    if( m_stop_request )
+    {
+      foreach( ExecuteCompressWorkerThread *worker, workers )
+      {
+        worker->stop_request();
+      }
+    }
+
+    int completed_count = 0;
+    foreach( ExecuteCompressWorkerThread *worker, workers )
+    {
+      completed_count += worker->compress_results().size();
+    }
+
+    update_execution_progress( completed_count, total_file_count );
   }
 
 
   QList<pngyu::CompressResult> result_list;
 
-  for( int i = 0; i < n_thread; ++i )
+  foreach( ExecuteCompressWorkerThread *worker, workers )
   {
-    ExecuteCompressWorkerThread *worker = workers[i];
-
     result_list += worker->compress_results();
   }
 
-  for( int i = 0; i < n_thread; ++i )
+  foreach( ExecuteCompressWorkerThread *worker, workers )
   {
-    ExecuteCompressWorkerThread *worker = workers[i];
     delete worker;
-    workers[i] = 0;
   }
 
   workers.clear();
@@ -942,6 +964,7 @@ void PngyuMainWindow::set_busy_mode( const bool b )
   ui->pushButton_filelist_clear->setEnabled( (! b) && b_has_files );
   ui->toolButton_add_file->setEnabled( ! b );
   m_stop_request = false;
+  ui->pushButton_stop_exec->setEnabled( true );
   m_is_busy = b;
 }
 
@@ -961,6 +984,11 @@ void PngyuMainWindow::clear_compress_result()
     ui->tableWidget_filelist->setItem( row, pngyu::COLUMN_SAVED_SIZE, 0 );
   }
   ui->statusBar->showMessage( QString() );
+}
+
+void PngyuMainWindow::update_execution_progress( const int completed_count, const int total_count )
+{
+  ui->label_executing->setText( tr("Executing...(%1/%2)").arg(completed_count).arg(total_count) );
 }
 
 //////////////////////
@@ -1469,5 +1497,6 @@ void PngyuMainWindow::preferences_apply_pushed()
 void PngyuMainWindow::stop_request()
 {
   m_stop_request = true;
+  ui->pushButton_stop_exec->setEnabled( false );
 }
 

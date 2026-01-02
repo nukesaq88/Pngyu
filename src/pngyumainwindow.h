@@ -133,6 +133,8 @@ protected:
 
   bool is_other_output_directory_valid() const;
   
+  void update_execution_progress( const int completed_count, const int total_count );
+  
 private:
   Ui::PngyuMainWindow *ui;
   PngyuPreviewWindow *m_preview_window;
