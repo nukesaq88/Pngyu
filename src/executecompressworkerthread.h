@@ -20,10 +20,14 @@ public:
       const QString &pngquant_path,
       const pngyu::PngquantOption &option,
       const bool overwrite_enable,
-      const bool force_execute_if_negative );
+      const bool force_execute_if_negative,
+      const bool * const stop_request
+    );
 
   static pngyu::CompressResult execute_compress(
-      const pngyu::CompressQueueData &data );
+      const pngyu::CompressQueueData &data,
+      const bool * const stop_request
+    );
 
   static void show_compress_result( QTableWidget *table_widget, const int row, const pngyu::CompressResult &result );
 

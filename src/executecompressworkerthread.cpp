@@ -23,7 +23,8 @@ pngyu::CompressResult ExecuteCompressWorkerThread::execute_compress(
     const QString &pngquant_path,
     const pngyu::PngquantOption &option,
     const bool overwrite_enable,
-    const bool force_execute_if_negative )
+    const bool force_execute_if_negative,
+    const bool * const stop_request )
 {
   pngyu::CompressResult res;
   res.src_path = src_path;
@@ -56,10 +57,22 @@ pngyu::CompressResult ExecuteCompressWorkerThread::execute_compress(
       compress_thread.set_original_png_data( src_png_data );
       compress_thread.start();
       // waiting for compress finished
-      while( ! compress_thread.wait(50) )
+      bool canceled = false;
+      while( ! compress_thread.wait(100) )
       {
-        // avoid "aplication no response"
-        QApplication::processEvents();
+        if( stop_request && (*stop_request) )
+        {
+          canceled = true;
+          break;
+        }
+      }
+
+      // If canceled, terminate the thread and wait for it to finish
+      if( canceled )
+      {
+        compress_thread.terminate();
+        compress_thread.wait();
+        throw tr( "Canceled" );
       }
 
       // compres result check
@@ -104,7 +117,8 @@ pngyu::CompressResult ExecuteCompressWorkerThread::execute_compress(
 }
 
 pngyu::CompressResult ExecuteCompressWorkerThread::execute_compress(
-    const pngyu::CompressQueueData &data )
+    const pngyu::CompressQueueData &data,
+    const bool * const stop_request )
 {
   return execute_compress(
         data.src_path,
@@ -112,7 +126,8 @@ pngyu::CompressResult ExecuteCompressWorkerThread::execute_compress(
         data.pngquant_path,
         data.pngquant_option,
         data.overwrite_enabled,
-        data.force_execute_if_negative );
+        data.force_execute_if_negative,
+        stop_request );
 }
 
 void ExecuteCompressWorkerThread::show_compress_result( QTableWidget *table_widget, const int row, const pngyu::CompressResult &result )
@@ -214,7 +229,7 @@ void ExecuteCompressWorkerThread::run()
       }
       data = m_queue_ptr->dequeue();
     }
-    const pngyu::CompressResult &res = execute_compress( data );
+    const pngyu::CompressResult &res = execute_compress( data, &m_stop_request );
 
     show_compress_result( data.table_widget, data.table_row, res );
     m_result_list.push_back( res );
