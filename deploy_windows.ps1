@@ -103,11 +103,7 @@ Write-Host ""
 
 # Create ZIP archive
 Write-Host "Creating ZIP archive..." -ForegroundColor Cyan
-if ($env:VERSION_NO_DOTS -and $env:VERSION_NO_DOTS -ne "dev") {
-    $ZipPath = "build\Pngyu-Windows-x64-$($env:VERSION_NO_DOTS).zip"
-} else {
-    $ZipPath = "build\Pngyu-Windows-x64.zip"
-}
+$ZipPath = "build\Pngyu-Windows-x64.zip"
 if (Test-Path $ZipPath) {
     Remove-Item $ZipPath -Force
     Write-Host "Removed existing ZIP file" -ForegroundColor Yellow
