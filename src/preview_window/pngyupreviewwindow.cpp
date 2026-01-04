@@ -1,18 +1,20 @@
 #include "pngyupreviewwindow.h"
-#include "ui_pngyupreviewwindow.h"
 
 #include <QDebug>
 #include <QFile>
 #include <QPalette>
 
 #include "pngyu_util.h"
+#include "ui_pngyupreviewwindow.h"
 
-PngyuPreviewWindow::PngyuPreviewWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::PngyuPreviewWindow),
-      m_is_image_loaded(false), m_is_compress_finished(false) {
+PngyuPreviewWindow::PngyuPreviewWindow(QWidget* parent)
+    : QMainWindow(parent),
+      ui(new Ui::PngyuPreviewWindow),
+      m_is_image_loaded(false),
+      m_is_compress_finished(false) {
   ui->setupUi(this);
 
-  { // init image view
+  {  // init image view
     QPalette p = ui->imageview->palette();
     p.setBrush(QPalette::Base, QBrush(QColor("gray")));
     ui->imageview->setPalette(p);
@@ -45,12 +47,12 @@ PngyuPreviewWindow::PngyuPreviewWindow(QWidget *parent)
 
 PngyuPreviewWindow::~PngyuPreviewWindow() { delete ui; }
 
-void PngyuPreviewWindow::set_executable_pngquant_path(const QString &path) {
+void PngyuPreviewWindow::set_executable_pngquant_path(const QString& path) {
   m_pngquant_path = path;
   m_execute_compress_thread.set_executable_pngquant_path(path);
 }
 
-void PngyuPreviewWindow::set_png_file(const QString &filename) {
+void PngyuPreviewWindow::set_png_file(const QString& filename) {
   if (m_png_filename == filename) {
     return;
   }
@@ -76,7 +78,7 @@ void PngyuPreviewWindow::set_png_file(const QString &filename) {
 }
 
 void PngyuPreviewWindow::set_current_pngquant_option(
-    const pngyu::PngquantOption &option) {
+    const pngyu::PngquantOption& option) {
   if (m_pngquant_option == option) {
     return;
   }
@@ -105,7 +107,7 @@ void PngyuPreviewWindow::clear_compress_result() {
   ui->statusbar->showMessage(QString());
 }
 
-void PngyuPreviewWindow::set_current_preview_image(const QImage &image) {
+void PngyuPreviewWindow::set_current_preview_image(const QImage& image) {
   ui->imageview->setImage(image);
   ui->imageview->repaint();
 }
@@ -143,7 +145,7 @@ void PngyuPreviewWindow::execute_compress_start() {
 }
 
 void PngyuPreviewWindow::set_compress_result_failed(
-    const QString &error_message) {
+    const QString& error_message) {
   ui->spinner->setVisible(false);
   m_is_compress_finished = true;
   m_dst_image = m_src_image;
@@ -172,21 +174,21 @@ void PngyuPreviewWindow::update_preview() {
   }
 }
 
-void PngyuPreviewWindow::showEvent(QShowEvent *) {
+void PngyuPreviewWindow::showEvent(QShowEvent*) {
   if (!m_is_image_loaded) {
     load_png_file();
   }
   update_preview();
 }
 
-void PngyuPreviewWindow::closeEvent(QCloseEvent *) { emit closed(); }
+void PngyuPreviewWindow::closeEvent(QCloseEvent*) { emit closed(); }
 
 void PngyuPreviewWindow::show_original_toggled(bool) { update_preview(); }
 
 void PngyuPreviewWindow::compress_finished() {
   if (m_execute_compress_thread.is_compress_succeeded()) {
-    const QByteArray &src_data = m_execute_compress_thread.original_png_data();
-    const QByteArray &dst_data = m_execute_compress_thread.output_png_data();
+    const QByteArray& src_data = m_execute_compress_thread.original_png_data();
+    const QByteArray& dst_data = m_execute_compress_thread.output_png_data();
     const qint64 src_size = src_data.size();
     const qint64 dst_size = dst_data.size();
 

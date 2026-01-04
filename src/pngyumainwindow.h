@@ -19,23 +19,23 @@ class PngyuMainWindow;
 // Main window class of Pngyu application
 class PngyuMainWindow : public QMainWindow {
   Q_OBJECT
-public:
-  explicit PngyuMainWindow(QWidget *parent = 0);
+ public:
+  explicit PngyuMainWindow(QWidget* parent = 0);
   ~PngyuMainWindow();
 
-  QTableWidget *file_list_table_widget();
+  QTableWidget* file_list_table_widget();
 
   void file_list_clear();
 
-  QString make_output_file_path_string(const QString &input_file_path) const;
+  QString make_output_file_path_string(const QString& input_file_path) const;
 
-  pngyu::PngquantOption
-  make_pngquant_option(const QString &output_file_suffix) const;
+  pngyu::PngquantOption make_pngquant_option(
+      const QString& output_file_suffix) const;
 
-  void set_executable_pngquant_path(const QString &path);
+  void set_executable_pngquant_path(const QString& path);
   QString executable_pngquant_path() const;
 
-  void set_executable_image_optim_path(const QString &path);
+  void set_executable_image_optim_path(const QString& path);
   QString executable_image_optim_path() const;
 
   void set_current_compress_option_mode(const pngyu::CompressOptionMode mode);
@@ -50,13 +50,13 @@ public:
   void set_current_outoput_filename_mode(const pngyu::OutputFinenameMode mode);
   pngyu::OutputFinenameMode current_output_filename_mode() const;
 
-  void set_other_output_directory(const QString &other_output_directory);
+  void set_other_output_directory(const QString& other_output_directory);
   QString other_output_directory() const;
 
-  void set_output_filename_prefix(const QString &prefix);
+  void set_output_filename_prefix(const QString& prefix);
   QString output_filename_prefix() const;
 
-  void set_output_filename_suffix(const QString &suffix);
+  void set_output_filename_suffix(const QString& suffix);
   QString output_filename_suffix() const;
 
   void set_ncolor(const int n);
@@ -74,8 +74,8 @@ public:
   void set_compress_speed(const int speed);
   int compress_speed() const;
 
-  void
-  set_image_optim_integration_mode(const pngyu::ImageOptimIntegration mode);
+  void set_image_optim_integration_mode(
+      const pngyu::ImageOptimIntegration mode);
   pngyu::ImageOptimIntegration image_optim_integration_mode() const;
 
   void set_num_thread(const int num);
@@ -104,17 +104,17 @@ public:
 
   void clear_compress_result();
 
-  void append_file_info_list(const QList<QFileInfo> &info_list);
+  void append_file_info_list(const QList<QFileInfo>& info_list);
 
-protected:
-  virtual void dragEnterEvent(QDragEnterEvent *event);
-  virtual void dragLeaveEvent(QDragLeaveEvent *event);
-  virtual void dragMoveEvent(QDragMoveEvent *event);
-  virtual void dropEvent(QDropEvent *event);
+ protected:
+  virtual void dragEnterEvent(QDragEnterEvent* event);
+  virtual void dragLeaveEvent(QDragLeaveEvent* event);
+  virtual void dragMoveEvent(QDragMoveEvent* event);
+  virtual void dropEvent(QDropEvent* event);
 
-  virtual void moveEvent(QMoveEvent *event);
-  virtual void showEvent(QShowEvent *event);
-  virtual void closeEvent(QCloseEvent *event);
+  virtual void moveEvent(QMoveEvent* event);
+  virtual void showEvent(QShowEvent* event);
+  virtual void closeEvent(QCloseEvent* event);
 
   void read_settings();
   void write_settings();
@@ -126,7 +126,7 @@ protected:
 
   void update_file_table();
 
-  void append_file_info_recursive(const QFileInfo &file_info,
+  void append_file_info_recursive(const QFileInfo& file_info,
                                   const int recursive_directory_depth);
 
   bool is_other_output_directory_valid() const;
@@ -134,10 +134,10 @@ protected:
   void update_execution_progress(const int completed_count,
                                  const int total_count);
 
-private:
-  Ui::PngyuMainWindow *ui;
-  PngyuPreviewWindow *m_preview_window;
-  PngyuPreferencesDialog *m_preferences_dialog;
+ private:
+  Ui::PngyuMainWindow* ui;
+  PngyuPreviewWindow* m_preview_window;
+  PngyuPreferencesDialog* m_preferences_dialog;
   QString m_current_pngquant_path;
   QString m_current_imageoptim_path;
   QFileInfoList m_file_list;
@@ -151,7 +151,7 @@ private:
   bool m_save_compress_options_enabled;
   bool m_save_output_options_enabled;
 
-private slots:
+ private slots:
   void exec_pushed();
   void compress_option_changed();
   void other_output_directory_changed();
@@ -173,4 +173,4 @@ private slots:
   void stop_request();
 };
 
-#endif // PNGYUMAINWINDOW_H
+#endif  // PNGYUMAINWINDOW_H

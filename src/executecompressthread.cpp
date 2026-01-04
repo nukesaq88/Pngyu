@@ -6,7 +6,7 @@
 #include <QProcess>
 #include <QRegularExpression>
 
-ExecuteCompressThread::ExecuteCompressThread(QObject *parent)
+ExecuteCompressThread::ExecuteCompressThread(QObject* parent)
     : QThread(parent), m_stop_request(false) {
   clear_all();
 }
@@ -22,12 +22,12 @@ void ExecuteCompressThread::clear_all() {
   clear_result();
 }
 
-void ExecuteCompressThread::set_executable_pngquant_path(const QString &path) {
+void ExecuteCompressThread::set_executable_pngquant_path(const QString& path) {
   m_pngquant_path = path;
 }
 
 void ExecuteCompressThread::set_pngquant_option(
-    const pngyu::PngquantOption &option) {
+    const pngyu::PngquantOption& option) {
   m_pngquant_option = option;
 }
 
@@ -45,7 +45,7 @@ int ExecuteCompressThread::saved_size() const {
 
 QString ExecuteCompressThread::error_string() const { return m_error_string; }
 
-void ExecuteCompressThread::set_original_png_data(const QByteArray &data) {
+void ExecuteCompressThread::set_original_png_data(const QByteArray& data) {
   m_src_png_data = data;
 }
 
@@ -60,7 +60,7 @@ void ExecuteCompressThread::run() {
 
   clear_result();
 
-  const QString &command =
+  const QString& command =
       m_pngquant_option.make_pngquant_command_option_stdio_mode();
   // m_pngquant_path );
 
@@ -83,7 +83,7 @@ void ExecuteCompressThread::run() {
     process.start(m_pngquant_path,
                   command.trimmed().split(QRegularExpression("[ ]+")));
 
-    { // waiting for process started or timeout or stop request.
+    {  // waiting for process started or timeout or stop request.
       QElapsedTimer t;
       t.start();
       const int timeout_ms = m_pngquant_option.get_timeout_ms();
@@ -103,7 +103,7 @@ void ExecuteCompressThread::run() {
     process.write(m_src_png_data);
     process.closeWriteChannel();
 
-    { // waiting for process started or timeout or stop request.
+    {  // waiting for process started or timeout or stop request.
       QElapsedTimer t;
       t.start();
       const int timeout_ms = m_pngquant_option.get_timeout_ms();
@@ -130,7 +130,7 @@ void ExecuteCompressThread::run() {
     }
 
     m_dst_png_data = process.readAllStandardOutput();
-  } catch (const QString &e) {
+  } catch (const QString& e) {
     if (process.state() == QProcess::Running) {
       process.kill();
       process.waitForFinished(1000);

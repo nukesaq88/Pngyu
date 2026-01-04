@@ -5,25 +5,25 @@
 
 class BasicImageView : public QGraphicsView {
   Q_OBJECT
-public:
-  explicit BasicImageView(QWidget *parent = 0);
+ public:
+  explicit BasicImageView(QWidget* parent = 0);
 
-  void setImage(const QImage &image);
-  void setPixmap(const QPixmap &pixmap);
+  void setImage(const QImage& image);
+  void setPixmap(const QPixmap& pixmap);
 
-protected:
-  virtual void mouseMoveEvent(QMouseEvent *event);
-  virtual void drawBackground(QPainter *painter, const QRectF &rect);
-  virtual void wheelEvent(QWheelEvent *event);
+ protected:
+  virtual void mouseMoveEvent(QMouseEvent* event);
+  virtual void drawBackground(QPainter* painter, const QRectF& rect);
+  virtual void wheelEvent(QWheelEvent* event);
 
-private:
+ private:
   QPixmap m_pixmap;
   QPointF m_lastMovePoint;
 
-signals:
+ signals:
   //  void mouseWheelScrolled( int delta );
 
-public slots:
+ public slots:
 };
 
-#endif // BASICIMAGEVIEW_H
+#endif  // BASICIMAGEVIEW_H

@@ -1,21 +1,21 @@
-#include "pngyumainwindow.h"
 #include <QApplication>
-
 #include <QDebug>
 #include <QFileInfo>
 #include <QFileOpenEvent>
 
+#include "pngyumainwindow.h"
+
 class PngyuApplication : public QApplication {
-public:
-  PngyuApplication(int &argc, char **argv)
+ public:
+  PngyuApplication(int& argc, char** argv)
       : QApplication(argc, argv), m_pngyu_main(0) {}
 
-  void set_pngyu_main(PngyuMainWindow *p) { m_pngyu_main = p; }
+  void set_pngyu_main(PngyuMainWindow* p) { m_pngyu_main = p; }
 
-protected:
-  virtual bool event(QEvent *e) {
-    if (e->type() == QEvent::FileOpen) { // for MAC OS X Drag and Drop event
-      const QFileOpenEvent *const file_event = static_cast<QFileOpenEvent *>(e);
+ protected:
+  virtual bool event(QEvent* e) {
+    if (e->type() == QEvent::FileOpen) {  // for MAC OS X Drag and Drop event
+      const QFileOpenEvent* const file_event = static_cast<QFileOpenEvent*>(e);
       if (m_pngyu_main) {
         QList<QFileInfo> info_list;
         const QString file = file_event->file();
@@ -29,11 +29,11 @@ protected:
     return QApplication::event(e);
   }
 
-private:
-  PngyuMainWindow *m_pngyu_main;
+ private:
+  PngyuMainWindow* m_pngyu_main;
 };
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
   PngyuApplication a(argc, argv);
 
   // Set application information for QSettings

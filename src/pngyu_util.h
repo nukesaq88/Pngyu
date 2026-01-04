@@ -1,8 +1,6 @@
 #ifndef PNGYU_UTIL_H
 #define PNGYU_UTIL_H
 
-#include <cmath>
-
 #include <QApplication>
 #include <QByteArray>
 #include <QCursor>
@@ -15,6 +13,7 @@
 #include <QRegularExpression>
 #include <QStringList>
 #include <QWidget>
+#include <cmath>
 
 namespace pngyu {
 namespace util {
@@ -32,13 +31,13 @@ inline bool make_app_temporary_path() {
   return QDir().mkpath(app_temporay_path());
 }
 
-inline QByteArray png_file_to_bytearray(const QString &filename) {
+inline QByteArray png_file_to_bytearray(const QString& filename) {
   QFile f(filename);
   const bool opened = f.open(QIODevice::ReadOnly);
   return opened ? f.readAll() : QByteArray();
 }
 
-inline bool write_png_data(const QString &filename, const QByteArray png_data) {
+inline bool write_png_data(const QString& filename, const QByteArray png_data) {
   QFile f(filename);
   if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
     return false;
@@ -59,18 +58,18 @@ inline QString size_to_string_mb(const qint64 size) {
                              2);
 }
 
-inline bool has_png_extention(const QFileInfo &file) {
+inline bool has_png_extention(const QFileInfo& file) {
   return file.suffix().compare("png", Qt::CaseInsensitive) == 0;
 }
 
-inline bool can_read_png_file(const QFileInfo &file) {
+inline bool can_read_png_file(const QFileInfo& file) {
   QImageReader image_reader(file.absoluteFilePath(), "png");
   return image_reader.canRead();
 }
 
-inline QImage read_thumbnail_image(const QString &filename, const int size) {
+inline QImage read_thumbnail_image(const QString& filename, const int size) {
   QImageReader image_reader(filename);
-  const QSize &origin_size = image_reader.size();
+  const QSize& origin_size = image_reader.size();
   const double scale = static_cast<double>(size) /
                        std::max(origin_size.width(), origin_size.height());
   const QSize dst_size(scale * origin_size.width(),
@@ -79,14 +78,14 @@ inline QImage read_thumbnail_image(const QString &filename, const int size) {
   return image_reader.read();
 }
 
-inline bool is_under_mouse(const QWidget *const widget) {
+inline bool is_under_mouse(const QWidget* const widget) {
   return QRect(QPoint(), widget->size())
       .contains(widget->mapFromGlobal(QCursor::pos()));
 }
 
 inline void set_drop_enabled_palette(
-    QWidget *const widget, const bool enabled,
-    const QColor &enable_color = detail::DEFAULT_ENABLE_COLOR) {
+    QWidget* const widget, const bool enabled,
+    const QColor& enable_color = detail::DEFAULT_ENABLE_COLOR) {
   QPalette palette = widget->palette();
   if (enabled) {
     palette.setBrush(QPalette::Base, QBrush(enable_color));
@@ -97,13 +96,14 @@ inline void set_drop_enabled_palette(
 }
 
 inline void set_drop_here_stylesheet(
-    QWidget *const widget, const bool drag_hoverring,
-    const QColor &hoverring_color = detail::DEFAULT_ENABLE_COLOR) {
+    QWidget* const widget, const bool drag_hoverring,
+    const QColor& hoverring_color = detail::DEFAULT_ENABLE_COLOR) {
   //  widget->setStyleSheet();
-  QString stylesheet = "QWidget{"
-                       "background-image : url(:/background/drop_here.png);"
-                       "background-position: center ;"
-                       "background-repeat : repeat-none;";
+  QString stylesheet =
+      "QWidget{"
+      "background-image : url(:/background/drop_here.png);"
+      "background-position: center ;"
+      "background-repeat : repeat-none;";
   if (drag_hoverring) {
     stylesheet += "background-color : " + hoverring_color.name() + ";\n";
   } else {
@@ -114,46 +114,46 @@ inline void set_drop_here_stylesheet(
   widget->setStyleSheet(stylesheet);
 }
 
-inline const QPixmap &success_icon_pixmap() {
+inline const QPixmap& success_icon_pixmap() {
   static QPixmap p(":/icons/check.png");
   return p;
 }
 
-inline const QPixmap &failure_icon_pixmap() {
+inline const QPixmap& failure_icon_pixmap() {
   static QPixmap p(":/icons/stop.png");
   return p;
 }
 
-inline const QIcon &success_icon() {
+inline const QIcon& success_icon() {
   static QIcon i(success_icon_pixmap());
   return i;
 }
 
-inline const QIcon &failure_icon() {
+inline const QIcon& failure_icon() {
   static QIcon i(failure_icon_pixmap());
   return i;
 }
 
-inline bool open_with_mac_app(const QStringList &files,
+inline bool open_with_mac_app(const QStringList& files,
                               const QString app_path) {
   return QProcess::startDetached("/usr/bin/open",
                                  (QStringList() << "-a" << app_path) += files);
 }
 
-inline const QString &dot_path() {
+inline const QString& dot_path() {
   static QString p =
       QFileInfo(QApplication::applicationDirPath()).absoluteFilePath();
   return p;
 }
 
-inline const QString &dot_dot_path() {
+inline const QString& dot_dot_path() {
   static QString p = QFileInfo(dot_path() + "/..").absoluteFilePath();
   return p;
 }
 
-inline QString to_dot_path(const QString &path) {
-  const QString &dot = dot_path();
-  const QString &dot_dot = dot_dot_path();
+inline QString to_dot_path(const QString& path) {
+  const QString& dot = dot_path();
+  const QString& dot_dot = dot_dot_path();
 
   QString dot_path = QFileInfo(path).absoluteFilePath();
 
@@ -163,10 +163,10 @@ inline QString to_dot_path(const QString &path) {
   return dot_path;
 }
 
-inline QString from_dot_path(const QString &path) {
-  const QString &dot =
+inline QString from_dot_path(const QString& path) {
+  const QString& dot =
       QFileInfo(QApplication::applicationDirPath()).absoluteFilePath();
-  const QString &dot_dot = QFileInfo(dot_path() + "/..").absoluteFilePath();
+  const QString& dot_dot = QFileInfo(dot_path() + "/..").absoluteFilePath();
 
   QString abs_path = path;
   abs_path.replace("../", dot_dot + "/");
@@ -174,7 +174,7 @@ inline QString from_dot_path(const QString &path) {
   return abs_path;
 }
 
-} // namespace util
-} // namespace pngyu
+}  // namespace util
+}  // namespace pngyu
 
-#endif // PNGYU_UTIL_H
+#endif  // PNGYU_UTIL_H

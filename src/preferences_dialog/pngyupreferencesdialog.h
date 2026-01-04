@@ -13,8 +13,8 @@ class PngyuPreferencesDialog;
 class PngyuPreferencesDialog : public QDialog {
   Q_OBJECT
 
-public:
-  explicit PngyuPreferencesDialog(QWidget *parent = 0);
+ public:
+  explicit PngyuPreferencesDialog(QWidget* parent = 0);
   ~PngyuPreferencesDialog();
 
   bool is_apply_button_enabled() const;
@@ -26,12 +26,12 @@ public:
   void set_image_optim_integrate_mode(const pngyu::ImageOptimIntegration mode);
   pngyu::ImageOptimIntegration image_optim_integrate_mode();
 
-  void set_pngquant_paths(const QStringList &paths);
+  void set_pngquant_paths(const QStringList& paths);
 
-  void set_pngquant_path(const QString &path);
+  void set_pngquant_path(const QString& path);
   QString pngquant_path() const;
 
-  void set_image_optim_path(const QString &path);
+  void set_image_optim_path(const QString& path);
   QString image_optim_path() const;
 
   void set_force_execute_if_negative_enabled(const bool enable);
@@ -46,10 +46,10 @@ public:
   void set_save_output_options_enabled(const bool enable);
   bool is_save_output_options_enabled() const;
 
-private:
-  Ui::PngyuPreferencesDialog *ui;
+ private:
+  Ui::PngyuPreferencesDialog* ui;
 
-private slots:
+ private slots:
 
   void cancel_pushed();
   void ok_pushed();
@@ -64,8 +64,8 @@ private slots:
   void image_optim_location_changed();
   void open_image_optim_location_pushed();
 
-signals:
+ signals:
   void apply_pushed_signal();
 };
 
-#endif // PNGYUPREFERENCESDIALOG_H
+#endif  // PNGYUPREFERENCESDIALOG_H

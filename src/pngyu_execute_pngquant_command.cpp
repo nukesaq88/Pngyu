@@ -8,12 +8,12 @@
 
 namespace pngyu {
 
-QStringList find_executable_pngquant_from_dir(const QDir &dir) {
+QStringList find_executable_pngquant_from_dir(const QDir& dir) {
   QStringList found_paths;
   if (!dir.exists()) {
     return found_paths;
   }
-  for (const QFileInfo &child_file_info : dir.entryInfoList()) {
+  for (const QFileInfo& child_file_info : dir.entryInfoList()) {
     if (!child_file_info.baseName().contains(QRegularExpression(
             "pngquant", QRegularExpression::CaseInsensitiveOption)) ||
         !child_file_info.isExecutable()) {
@@ -26,12 +26,12 @@ QStringList find_executable_pngquant_from_dir(const QDir &dir) {
   return found_paths;
 }
 
-QString pngquant_version(const QString &pngquant_path) {
+QString pngquant_version(const QString& pngquant_path) {
   QProcess process;
   process.setProcessEnvironment(QProcessEnvironment::systemEnvironment());
   process.start(pngquant_path, QStringList() << "--version");
   process.waitForFinished();
-  const QString &version = process.readAllStandardOutput();
+  const QString& version = process.readAllStandardOutput();
   return version.trimmed();
 }
 
@@ -40,7 +40,7 @@ bool is_executable_pnqguant(const QFileInfo pngquant_path) {
       pngquant_path.isBundle()) {
     return false;
   }
-  const QString &version = pngquant_version(pngquant_path.absoluteFilePath());
+  const QString& version = pngquant_version(pngquant_path.absoluteFilePath());
   return !version.isEmpty();
 }
 
@@ -60,14 +60,14 @@ QStringList find_executable_pngquant() {
 #endif
 
   QStringList found_paths;
-  for (const QString &dir : search_dirs) {
+  for (const QString& dir : search_dirs) {
     found_paths.append(find_executable_pngquant_from_dir(QDir(dir)));
   }
 
   return found_paths;
 }
 
-QPair<bool, QString> execute_compress(const QString &pngquant_command) {
+QPair<bool, QString> execute_compress(const QString& pngquant_command) {
   typedef QPair<bool, QString> result_t;
 
   bool compress_succeed = true;
@@ -90,16 +90,15 @@ QPair<bool, QString> execute_compress(const QString &pngquant_command) {
           .arg(exit_code)
           .arg(QString(process.readAllStandardError()));
     }
-  } catch (const QString &e) {
+  } catch (const QString& e) {
     compress_succeed = false;
     error_string = e;
   }
   return result_t(compress_succeed, error_string);
 }
 
-QPair<QByteArray, QString>
-execute_compress_stdio_mode(const QString &pngquant_command,
-                            const QByteArray &src_png_data) {
+QPair<QByteArray, QString> execute_compress_stdio_mode(
+    const QString& pngquant_command, const QByteArray& src_png_data) {
   typedef QPair<QByteArray, QString> result_t;
 
   QByteArray dst_png_data;
@@ -128,11 +127,11 @@ execute_compress_stdio_mode(const QString &pngquant_command,
           .arg(QString(process.readAllStandardError()));
     }
     dst_png_data = process.readAllStandardOutput();
-  } catch (const QString &e) {
+  } catch (const QString& e) {
     dst_png_data.clear();
     error_string = e;
   }
   return result_t(dst_png_data, error_string);
 }
 
-} // namespace pngyu
+}  // namespace pngyu

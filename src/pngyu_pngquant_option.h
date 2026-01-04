@@ -7,15 +7,19 @@
 namespace pngyu {
 
 class PngquantOption {
-public:
+ public:
   PngquantOption()
-      : m_out_suffix(), m_ncolors(-1), m_speed(-1), m_force_overwrite(false),
-        m_ie6_alpha_support(false), m_disable_floyd_steinberg_dithering(false),
+      : m_out_suffix(),
+        m_ncolors(-1),
+        m_speed(-1),
+        m_force_overwrite(false),
+        m_ie6_alpha_support(false),
+        m_disable_floyd_steinberg_dithering(false),
         m_timeout_ms(20000) {}
 
   ~PngquantOption() {}
 
-  void set_out_suffix(const QString &suffix) { m_out_suffix = suffix; }
+  void set_out_suffix(const QString& suffix) { m_out_suffix = suffix; }
 
   QString get_out_suffix() const { return m_out_suffix; }
 
@@ -73,7 +77,7 @@ public:
     return command;
   }
 
-  QString make_pngquant_command(const QString &src_file_path) const {
+  QString make_pngquant_command(const QString& src_file_path) const {
     return to_pngquant_command_option() + src_file_path;
   }
 
@@ -81,12 +85,12 @@ public:
     return to_pngquant_command_option() + " -";
   }
 
-  friend inline bool operator==(const pngyu::PngquantOption &o1,
-                                const pngyu::PngquantOption &o2);
-  friend inline bool operator!=(const pngyu::PngquantOption &o1,
-                                const pngyu::PngquantOption &o2);
+  friend inline bool operator==(const pngyu::PngquantOption& o1,
+                                const pngyu::PngquantOption& o2);
+  friend inline bool operator!=(const pngyu::PngquantOption& o1,
+                                const pngyu::PngquantOption& o2);
 
-private:
+ private:
   QString m_out_suffix;
   int m_ncolors;
   int m_speed;
@@ -96,8 +100,8 @@ private:
   int m_timeout_ms;
 };
 
-inline bool operator!=(const pngyu::PngquantOption &o1,
-                       const pngyu::PngquantOption &o2) {
+inline bool operator!=(const pngyu::PngquantOption& o1,
+                       const pngyu::PngquantOption& o2) {
   return o1.m_out_suffix != o2.m_out_suffix || o1.m_ncolors != o2.m_ncolors ||
          o1.m_speed != o2.m_speed ||
          o1.m_force_overwrite != o2.m_force_overwrite ||
@@ -107,11 +111,11 @@ inline bool operator!=(const pngyu::PngquantOption &o1,
          o1.m_timeout_ms != o2.m_timeout_ms;
 }
 
-inline bool operator==(const pngyu::PngquantOption &o1,
-                       const pngyu::PngquantOption &o2) {
+inline bool operator==(const pngyu::PngquantOption& o1,
+                       const pngyu::PngquantOption& o2) {
   return !(o1 != o2);
 }
 
-} // namespace pngyu
+}  // namespace pngyu
 
-#endif // PNGYU_OPTION_H
+#endif  // PNGYU_OPTION_H

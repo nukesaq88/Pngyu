@@ -5,22 +5,21 @@
 
 namespace pngyu {
 class TableValueCompareItem : public QTableWidgetItem {
-
-public:
+ public:
   TableValueCompareItem(int type = Type) : QTableWidgetItem(type) {}
-  explicit TableValueCompareItem(const QString &text, int type = Type)
+  explicit TableValueCompareItem(const QString& text, int type = Type)
       : QTableWidgetItem(text, type) {}
-  explicit TableValueCompareItem(const QIcon &icon, const QString &text,
+  explicit TableValueCompareItem(const QIcon& icon, const QString& text,
                                  int type = Type)
       : QTableWidgetItem(icon, text, type) {}
-  TableValueCompareItem(const QTableWidgetItem &other)
+  TableValueCompareItem(const QTableWidgetItem& other)
       : QTableWidgetItem(other) {}
 
-  bool operator<(const QTableWidgetItem &other) const {
+  bool operator<(const QTableWidgetItem& other) const {
     return (this->data(1).toDouble() < other.data(1).toDouble());
   }
 };
 
-} // namespace pngyu
+}  // namespace pngyu
 
-#endif // PNGYU_CUSTOM_TABLEWIDGET_ITEM_H
+#endif  // PNGYU_CUSTOM_TABLEWIDGET_ITEM_H

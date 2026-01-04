@@ -52,7 +52,7 @@ enum TableColumn {
 };
 
 class CompressResult {
-public:
+ public:
   CompressResult() : result(false), error_message() {}
 
   bool result;
@@ -64,7 +64,7 @@ public:
 };
 
 class CompressQueueData {
-public:
+ public:
   CompressQueueData() : table_widget(0) {}
 
   QString src_path;
@@ -74,10 +74,10 @@ public:
   bool overwrite_enabled;
   bool force_execute_if_negative;
 
-  QTableWidget *table_widget;
+  QTableWidget* table_widget;
   int table_row;
 };
 
-} // namespace pngyu
+}  // namespace pngyu
 
-#endif // PNGYU_DIFINES_H
+#endif  // PNGYU_DIFINES_H

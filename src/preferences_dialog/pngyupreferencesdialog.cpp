@@ -1,15 +1,14 @@
 #include "pngyupreferencesdialog.h"
-#include "ui_pngyupreferencesdialog.h"
 
 #include <QDebug>
 #include <QFile>
 #include <QFileDialog>
 
-#include "pngyu_util.h"
-
 #include "pngyu_execute_pngquant_command.h"
+#include "pngyu_util.h"
+#include "ui_pngyupreferencesdialog.h"
 
-PngyuPreferencesDialog::PngyuPreferencesDialog(QWidget *parent)
+PngyuPreferencesDialog::PngyuPreferencesDialog(QWidget* parent)
     : QDialog(parent), ui(new Ui::PngyuPreferencesDialog) {
   ui->setupUi(this);
 
@@ -75,46 +74,46 @@ int PngyuPreferencesDialog::n_jobs() const {
 
 void PngyuPreferencesDialog::set_image_optim_integrate_mode(
     const pngyu::ImageOptimIntegration mode) {
-  QComboBox *combobox = ui->comboBox_imageoptim_integration;
+  QComboBox* combobox = ui->comboBox_imageoptim_integration;
   switch (mode) {
-  case pngyu::IMAGEOPTIM_ALWAYS_ENABLED: {
-    combobox->setCurrentIndex(1);
-    break;
-  }
-  case pngyu::IMAGEOPTIM_ALWAYS_DISABLED: {
-    combobox->setCurrentIndex(2);
-    break;
-  }
-  default: {
-    combobox->setCurrentIndex(0);
-  }
+    case pngyu::IMAGEOPTIM_ALWAYS_ENABLED: {
+      combobox->setCurrentIndex(1);
+      break;
+    }
+    case pngyu::IMAGEOPTIM_ALWAYS_DISABLED: {
+      combobox->setCurrentIndex(2);
+      break;
+    }
+    default: {
+      combobox->setCurrentIndex(0);
+    }
   }
 }
 
 pngyu::ImageOptimIntegration
 PngyuPreferencesDialog::image_optim_integrate_mode() {
   switch (ui->comboBox_imageoptim_integration->currentIndex()) {
-  case 1: {
-    return pngyu::IMAGEOPTIM_ALWAYS_ENABLED;
-  }
-  case 2: {
-    return pngyu::IMAGEOPTIM_ALWAYS_DISABLED;
-  }
-  default: {
-    return pngyu::IMAGEOPTIM_ASK_EVERY_TIME;
-  }
+    case 1: {
+      return pngyu::IMAGEOPTIM_ALWAYS_ENABLED;
+    }
+    case 2: {
+      return pngyu::IMAGEOPTIM_ALWAYS_DISABLED;
+    }
+    default: {
+      return pngyu::IMAGEOPTIM_ASK_EVERY_TIME;
+    }
   }
   return pngyu::IMAGEOPTIM_ASK_EVERY_TIME;
 }
 
-void PngyuPreferencesDialog::set_pngquant_paths(const QStringList &paths) {
+void PngyuPreferencesDialog::set_pngquant_paths(const QStringList& paths) {
   ui->comboBox_pngquant_path->clear();
-  for (const QString &path : paths) {
+  for (const QString& path : paths) {
     ui->comboBox_pngquant_path->addItem(pngyu::util::to_dot_path(path));
   }
 }
 
-void PngyuPreferencesDialog::set_pngquant_path(const QString &path) {
+void PngyuPreferencesDialog::set_pngquant_path(const QString& path) {
   ui->comboBox_pngquant_path->insertItem(0, pngyu::util::to_dot_path(path));
   ui->comboBox_pngquant_path->setCurrentIndex(0);
 }
@@ -123,7 +122,7 @@ QString PngyuPreferencesDialog::pngquant_path() const {
   return pngyu::util::from_dot_path(ui->comboBox_pngquant_path->currentText());
 }
 
-void PngyuPreferencesDialog::set_image_optim_path(const QString &path) {
+void PngyuPreferencesDialog::set_image_optim_path(const QString& path) {
   ui->lineEdit_imageoptim_location->setText(path);
 }
 
@@ -156,8 +155,8 @@ void PngyuPreferencesDialog::preference_changed() {
 }
 
 void PngyuPreferencesDialog::pngquant_location_changed() {
-  QComboBox *combo_box = ui->comboBox_pngquant_path;
-  const QString &path = pngyu::util::from_dot_path(combo_box->currentText());
+  QComboBox* combo_box = ui->comboBox_pngquant_path;
+  const QString& path = pngyu::util::from_dot_path(combo_box->currentText());
 
   QPalette palette = combo_box->palette();
   if (pngyu::is_executable_pnqguant(QFileInfo(path))) {
@@ -183,11 +182,11 @@ void PngyuPreferencesDialog::open_pngquant_location_pushed() {
 }
 
 void PngyuPreferencesDialog::image_optim_location_changed() {
-  QLineEdit *const line_edit = ui->lineEdit_imageoptim_location;
+  QLineEdit* const line_edit = ui->lineEdit_imageoptim_location;
   QPalette palette = line_edit->palette();
   if (QFile::exists(image_optim_path())) {
     palette.setBrush(QPalette::Text, QBrush());
-  } else { // if imageoptim path is invalid, change text color
+  } else {  // if imageoptim path is invalid, change text color
     palette.setBrush(QPalette::Text, QBrush(Qt::red));
   }
   line_edit->setPalette(palette);

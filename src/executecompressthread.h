@@ -9,18 +9,18 @@
 
 class ExecuteCompressThread : public QThread {
   Q_OBJECT
-public:
-  explicit ExecuteCompressThread(QObject *parent = 0);
+ public:
+  explicit ExecuteCompressThread(QObject* parent = 0);
 
   void clear_result();
 
   void clear_all();
 
-  void set_executable_pngquant_path(const QString &path);
+  void set_executable_pngquant_path(const QString& path);
 
-  void set_pngquant_option(const pngyu::PngquantOption &option);
+  void set_pngquant_option(const pngyu::PngquantOption& option);
 
-  void set_original_png_data(const QByteArray &data);
+  void set_original_png_data(const QByteArray& data);
   QByteArray original_png_data() const;
 
   bool is_compress_succeeded() const;
@@ -33,10 +33,10 @@ public:
 
   void stop_request();
 
-protected:
+ protected:
   virtual void run();
 
-private:
+ private:
   pngyu::PngquantOption m_pngquant_option;
   QString m_pngquant_path;
   QByteArray m_src_png_data;
@@ -44,9 +44,9 @@ private:
   QString m_error_string;
   bool m_stop_request;
 
-signals:
+ signals:
   void compress_finished();
-public slots:
+ public slots:
 };
 
-#endif // EXECUTECOMPRESSTHREAD_H
+#endif  // EXECUTECOMPRESSTHREAD_H

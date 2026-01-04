@@ -158,7 +158,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
           <string>Compress Stop</string>
          </property>
          <property name="icon">
-          <iconset resource="resource/resource.qrc">
+          <iconset resource="../resource/resource.qrc">
            <normaloff>:/icons/stop.png</normaloff>:/icons/stop.png</iconset>
          </property>
         </widget>
@@ -438,6 +438,12 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
                 </item>
                 <item>
                  <widget class="QLineEdit" name="lineEdit_output_directory">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>28</height>
+                   </size>
+                  </property>
                   <property name="toolTip">
                    <string>Input output directory or drop it here ...</string>
                   </property>
@@ -452,7 +458,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
                    <string/>
                   </property>
                   <property name="icon">
-                   <iconset resource="resource/resource.qrc">
+                   <iconset resource="../resource/resource.qrc">
                     <normaloff>:/icons/folder.png</normaloff>:/icons/folder.png</iconset>
                   </property>
                  </widget>
@@ -991,7 +997,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
           <string/>
          </property>
          <property name="icon">
-          <iconset resource="resource/resource.qrc">
+          <iconset resource="../resource/resource.qrc">
            <normaloff>:/icons/plus.png</normaloff>:/icons/plus.png</iconset>
          </property>
         </widget>
@@ -999,10 +1005,16 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
        <item row="3" column="4">
         <widget class="QPushButton" name="pushButton_filelist_clear">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>35</height>
+          </size>
          </property>
          <property name="toolTip">
           <string>Clear all files</string>
@@ -1011,7 +1023,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
           <string>Clear</string>
          </property>
          <property name="icon">
-          <iconset resource="resource/resource.qrc">
+          <iconset resource="../resource/resource.qrc">
            <normaloff>:/icons/clear.png</normaloff>:/icons/clear.png</iconset>
          </property>
         </widget>
@@ -1053,6 +1065,12 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>35</height>
+             </size>
+            </property>
             <property name="toolTip">
              <string>Stop searcing</string>
             </property>
@@ -1060,7 +1078,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
              <string>Stop</string>
             </property>
             <property name="icon">
-             <iconset resource="resource/resource.qrc">
+             <iconset resource="../resource/resource.qrc">
               <normaloff>:/icons/stop.png</normaloff>:/icons/stop.png</iconset>
             </property>
            </widget>
@@ -1181,7 +1199,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
   <tabstop>checkBox_overwrite</tabstop>
  </tabstops>
  <resources>
-  <include location="resource/resource.qrc"/>
+  <include location="../resource/resource.qrc"/>
  </resources>
  <connections/>
  <buttongroups>

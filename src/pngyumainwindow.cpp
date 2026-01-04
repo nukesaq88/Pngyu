@@ -1,56 +1,52 @@
 #include "pngyumainwindow.h"
-#include "ui_pngyumainwindow.h"
-
-#include <cmath>
 
 #include <QDebug>
 #include <QDialogButtonBox>
-#include <QProcess>
-#include <QTime>
-
+#include <QDir>
 #include <QDragEnterEvent>
 #include <QDragLeaveEvent>
 #include <QDragMoveEvent>
 #include <QDropEvent>
-
-#include <QMoveEvent>
-
-#include <QDir>
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QMimeData>
+#include <QMoveEvent>
+#include <QProcess>
 #include <QScreen>
 #include <QSettings>
 #include <QStandardPaths>
+#include <QTime>
 #include <QUrl>
-
-#include <QImageReader>
-#include <QMessageBox>
-
-#include "pngyuimageoptimintegrationquestiondialog.h"
-#include "pngyupreferencesdialog.h"
-#include "pngyupreviewwindow.h"
+#include <cmath>
 
 #include "executecompressworkerthread.h"
 #include "pngyu_custom_tablewidget_item.h"
 #include "pngyu_execute_pngquant_command.h"
 #include "pngyu_util.h"
+#include "pngyuimageoptimintegrationquestiondialog.h"
+#include "pngyupreferencesdialog.h"
+#include "pngyupreviewwindow.h"
+#include "ui_pngyumainwindow.h"
 
 namespace {
 const QString DEFAULT_IMAGE_OPTIM_PATH = "/Applications/ImageOptim.app";
 
-} // namespace
+}  // namespace
 
-PngyuMainWindow::PngyuMainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::PngyuMainWindow),
+PngyuMainWindow::PngyuMainWindow(QWidget* parent)
+    : QMainWindow(parent),
+      ui(new Ui::PngyuMainWindow),
       m_preview_window(new PngyuPreviewWindow(this)),
       m_preferences_dialog(new PngyuPreferencesDialog(this)),
       m_current_pngquant_path(),
       m_current_imageoptim_path(DEFAULT_IMAGE_OPTIM_PATH),
-      m_stop_request(false), m_is_busy(false),
-      m_temporary_custom_output_custom_on(false), m_num_thread(1),
+      m_stop_request(false),
+      m_is_busy(false),
+      m_temporary_custom_output_custom_on(false),
+      m_num_thread(1),
       m_image_optim_integration(pngyu::IMAGEOPTIM_ASK_EVERY_TIME),
-      m_force_execute_if_negative_enables(false), m_timeout_ms(20000),
+      m_force_execute_if_negative_enables(false),
+      m_timeout_ms(20000),
       m_save_compress_options_enabled(false),
       m_save_output_options_enabled(false) {
   ui->setupUi(this);
@@ -68,8 +64,8 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent)
   // Enable drag and drop
   setAcceptDrops(true);
 
-  { // init file list table widget
-    QTableWidget *table_widget = file_list_table_widget();
+  {  // init file list table widget
+    QTableWidget* table_widget = file_list_table_widget();
     table_widget->setColumnCount(pngyu::TABLE_COLUMN_COUNT);
     table_widget->setHorizontalHeaderItem(
         pngyu::COLUMN_BASENAME, new QTableWidgetItem(tr("File Name")));
@@ -90,8 +86,8 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent)
     pngyu::util::set_drop_here_stylesheet(table_widget->viewport(), false);
   }
 
-  { // init homepage label layout
-    QWidget *const spacer = new QWidget(this);
+  {  // init homepage label layout
+    QWidget* const spacer = new QWidget(this);
     spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
     ui->statusBar->addWidget(spacer, 5);
@@ -179,7 +175,7 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent)
 
   update_file_table();
 
-  { // set window size
+  {  // set window size
     const QRect screen_geometry = QGuiApplication::primaryScreen()->geometry();
     const QPoint center_pos = screen_geometry.center();
     const QSize window_size(500, 400);
@@ -188,8 +184,8 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent)
         window_size));
   }
 
-  { // find executable pngquant
-    const QStringList &executable_pngquant_list =
+  {  // find executable pngquant
+    const QStringList& executable_pngquant_list =
         pngyu::find_executable_pngquant();
     if (executable_pngquant_list.empty()) {
       set_busy_mode(true);
@@ -401,7 +397,7 @@ void PngyuMainWindow::save_last_used_options() {
   }
 }
 
-QTableWidget *PngyuMainWindow::file_list_table_widget() {
+QTableWidget* PngyuMainWindow::file_list_table_widget() {
   return ui->tableWidget_filelist;
 }
 
@@ -411,20 +407,20 @@ void PngyuMainWindow::file_list_clear() {
 }
 
 QString PngyuMainWindow::make_output_file_path_string(
-    const QString &input_file_path) const {
+    const QString& input_file_path) const {
   // if current option is invalid option
   // this function returns empty string
 
   const QFileInfo input_file_info(input_file_path);
 
-  const pngyu::OutputOptionMode &output_option_mode =
+  const pngyu::OutputOptionMode& output_option_mode =
       current_output_option_mode();
 
   if (output_option_mode == pngyu::OUTPUT_OPTION_OVERWITE_ORIGINAL) {
     return input_file_info.absoluteFilePath();
   } else if (output_option_mode == pngyu::OUTPUT_OPTION_CUSTOM) {
     QString output_dir_path;
-    { // meke output dir path string
+    {  // meke output dir path string
       const pngyu::OuputDirectoryMode output_dir_mode =
           current_output_directory_mode();
       const bool b_valid_dir = is_other_output_directory_valid();
@@ -444,16 +440,16 @@ QString PngyuMainWindow::make_output_file_path_string(
     }
 
     QString output_file_name;
-    { // make output file name string
+    {  // make output file name string
       const pngyu::OutputFinenameMode output_filename_mode =
           current_output_filename_mode();
       if (output_filename_mode == pngyu::OUTPUT_FILE_SAME_AS_ORIGINAL) {
         output_file_name = input_file_info.fileName();
       } else if (output_filename_mode == pngyu::OUTPUT_FILE_CUSTOM) {
-        const QString &prefix = output_filename_prefix();
-        const QString &suffix = output_filename_suffix();
+        const QString& prefix = output_filename_prefix();
+        const QString& suffix = output_filename_suffix();
 
-        const QString &base_name = input_file_info.completeBaseName();
+        const QString& base_name = input_file_info.completeBaseName();
         output_file_name = prefix + base_name + suffix;
       } else {
         return QString();
@@ -466,8 +462,8 @@ QString PngyuMainWindow::make_output_file_path_string(
   return QString();
 }
 
-pngyu::PngquantOption
-PngyuMainWindow::make_pngquant_option(const QString &output_file_suffix) const {
+pngyu::PngquantOption PngyuMainWindow::make_pngquant_option(
+    const QString& output_file_suffix) const {
   // make pngquant option from current compress option
 
   pngyu::PngquantOption option;
@@ -485,7 +481,7 @@ PngyuMainWindow::make_pngquant_option(const QString &output_file_suffix) const {
   return option;
 }
 
-void PngyuMainWindow::set_executable_pngquant_path(const QString &path) {
+void PngyuMainWindow::set_executable_pngquant_path(const QString& path) {
   m_current_pngquant_path = path;
   m_preview_window->set_executable_pngquant_path(path);
 }
@@ -494,7 +490,7 @@ QString PngyuMainWindow::executable_pngquant_path() const {
   return m_current_pngquant_path;
 }
 
-void PngyuMainWindow::set_executable_image_optim_path(const QString &path) {
+void PngyuMainWindow::set_executable_image_optim_path(const QString& path) {
   m_current_imageoptim_path = path;
 }
 
@@ -511,8 +507,8 @@ void PngyuMainWindow::set_current_compress_option_mode(
   }
 }
 
-pngyu::CompressOptionMode
-PngyuMainWindow::current_compress_option_mode() const {
+pngyu::CompressOptionMode PngyuMainWindow::current_compress_option_mode()
+    const {
   const bool default_checked =
       ui->toolButton_compress_option_default->isChecked();
   const bool custom_checked =
@@ -555,8 +551,8 @@ void PngyuMainWindow::set_current_output_directory_mode(
   }
 }
 
-pngyu::OuputDirectoryMode
-PngyuMainWindow::current_output_directory_mode() const {
+pngyu::OuputDirectoryMode PngyuMainWindow::current_output_directory_mode()
+    const {
   const bool same_checked = ui->radioButton_output_same_directory->isChecked();
   const bool other_checked =
       ui->radioButton_output_other_directory->isChecked();
@@ -577,8 +573,8 @@ void PngyuMainWindow::set_current_outoput_filename_mode(
   }
 }
 
-pngyu::OutputFinenameMode
-PngyuMainWindow::current_output_filename_mode() const {
+pngyu::OutputFinenameMode PngyuMainWindow::current_output_filename_mode()
+    const {
   const int index = ui->comboBox_output_filename_mode->currentIndex();
   if (index == 0) {
     return pngyu::OUTPUT_FILE_SAME_AS_ORIGINAL;
@@ -589,19 +585,19 @@ PngyuMainWindow::current_output_filename_mode() const {
 }
 
 void PngyuMainWindow::set_other_output_directory(
-    const QString &output_directory) {
+    const QString& output_directory) {
   ui->lineEdit_output_directory->setText(output_directory);
 }
 
 QString PngyuMainWindow::other_output_directory() const {
-  const QString &inputted_dir_path = ui->lineEdit_output_directory->text();
+  const QString& inputted_dir_path = ui->lineEdit_output_directory->text();
   if (inputted_dir_path.isEmpty()) {
     return QString();
   }
   return QDir(inputted_dir_path).absolutePath();
 }
 
-void PngyuMainWindow::set_output_filename_prefix(const QString &prefix) {
+void PngyuMainWindow::set_output_filename_prefix(const QString& prefix) {
   ui->lineEdit_output_file_prefix->setText(prefix);
 }
 
@@ -609,7 +605,7 @@ QString PngyuMainWindow::output_filename_prefix() const {
   return ui->lineEdit_output_file_prefix->text();
 }
 
-void PngyuMainWindow::set_output_filename_suffix(const QString &suffix) {
+void PngyuMainWindow::set_output_filename_suffix(const QString& suffix) {
   ui->lineEdit_output_file_suffix->setText(suffix);
 }
 
@@ -664,8 +660,8 @@ void PngyuMainWindow::set_image_optim_integration_mode(
 #endif
 }
 
-pngyu::ImageOptimIntegration
-PngyuMainWindow::image_optim_integration_mode() const {
+pngyu::ImageOptimIntegration PngyuMainWindow::image_optim_integration_mode()
+    const {
 #ifdef Q_OS_MACOS
   return m_image_optim_integration;
 #else
@@ -730,24 +726,24 @@ void PngyuMainWindow::execute_compress_all(bool image_optim_enabled) {
   const bool b_force_execute_if_negative =
       is_force_execute_if_negative_enabled();
 
-  const pngyu::PngquantOption &option = make_pngquant_option(QString());
-  const QString &pngquant_path = executable_pngquant_path();
+  const pngyu::PngquantOption& option = make_pngquant_option(QString());
+  const QString& pngquant_path = executable_pngquant_path();
 
   QQueue<pngyu::CompressQueueData> queue;
 
-  QTableWidget *table_widget = file_list_table_widget();
+  QTableWidget* table_widget = file_list_table_widget();
   const int row_count = table_widget->rowCount();
-  for (int row = 0; row < row_count; ++row) { // file list loop
+  for (int row = 0; row < row_count; ++row) {  // file list loop
 
-    const QTableWidgetItem *const absolute_path_item =
+    const QTableWidgetItem* const absolute_path_item =
         table_widget->item(row, pngyu::COLUMN_ABSOLUTE_PATH);
     if (!absolute_path_item) {
       qWarning() << "Item is null. row: " << row;
       continue;
     }
 
-    const QString &src_path = absolute_path_item->text();
-    const QString &dst_path = make_output_file_path_string(src_path);
+    const QString& src_path = absolute_path_item->text();
+    const QString& dst_path = make_output_file_path_string(src_path);
 
     pngyu::CompressQueueData data;
     data.src_path = src_path;
@@ -761,7 +757,7 @@ void PngyuMainWindow::execute_compress_all(bool image_optim_enabled) {
 
     queue.enqueue(data);
 
-  } // end of file list loop
+  }  // end of file list loop
 
   const int total_file_count = queue.size();
 
@@ -769,11 +765,11 @@ void PngyuMainWindow::execute_compress_all(bool image_optim_enabled) {
 
   const int n_thread = num_thread();
 
-  QVector<ExecuteCompressWorkerThread *> workers;
+  QVector<ExecuteCompressWorkerThread*> workers;
 
   QMutex mutex;
   for (int i = 0; i < n_thread; ++i) {
-    ExecuteCompressWorkerThread *worker = new ExecuteCompressWorkerThread();
+    ExecuteCompressWorkerThread* worker = new ExecuteCompressWorkerThread();
 
     worker->set_queue_ptr(&queue, &mutex);
     workers.push_back(worker);
@@ -781,7 +777,7 @@ void PngyuMainWindow::execute_compress_all(bool image_optim_enabled) {
 
   QApplication::processEvents();
 
-  for (ExecuteCompressWorkerThread *worker : workers) {
+  for (ExecuteCompressWorkerThread* worker : workers) {
     worker->start(QThread::HighPriority);
   }
 
@@ -789,7 +785,7 @@ void PngyuMainWindow::execute_compress_all(bool image_optim_enabled) {
 
   while (true) {
     bool all_finished = true;
-    for (ExecuteCompressWorkerThread *worker : workers) {
+    for (ExecuteCompressWorkerThread* worker : workers) {
       ui->spinner_exec->redraw();
       ui->spinner_exec->update();
       QApplication::processEvents();
@@ -805,13 +801,13 @@ void PngyuMainWindow::execute_compress_all(bool image_optim_enabled) {
 
     // send stop request to workers
     if (m_stop_request) {
-      for (ExecuteCompressWorkerThread *worker : workers) {
+      for (ExecuteCompressWorkerThread* worker : workers) {
         worker->stop_request();
       }
     }
 
     int completed_count = 0;
-    for (ExecuteCompressWorkerThread *worker : workers) {
+    for (ExecuteCompressWorkerThread* worker : workers) {
       completed_count += worker->compress_results().size();
     }
 
@@ -820,11 +816,11 @@ void PngyuMainWindow::execute_compress_all(bool image_optim_enabled) {
 
   QList<pngyu::CompressResult> result_list;
 
-  for (ExecuteCompressWorkerThread *worker : workers) {
+  for (ExecuteCompressWorkerThread* worker : workers) {
     result_list += worker->compress_results();
   }
 
-  for (ExecuteCompressWorkerThread *worker : workers) {
+  for (ExecuteCompressWorkerThread* worker : workers) {
     delete worker;
   }
 
@@ -835,7 +831,7 @@ void PngyuMainWindow::execute_compress_all(bool image_optim_enabled) {
   QStringList succeed_src_filepaths;
   QStringList succeed_dst_filepaths;
 
-  for (const pngyu::CompressResult &res : result_list) {
+  for (const pngyu::CompressResult& res : result_list) {
     if (res.result) {
       succeed_src_filepaths.push_back(res.src_path);
       succeed_dst_filepaths.push_back(res.dst_path);
@@ -843,7 +839,7 @@ void PngyuMainWindow::execute_compress_all(bool image_optim_enabled) {
     }
   }
 
-  { // show result status bar
+  {  // show result status bar
     const QString size_string =
         total_saved_size > 500 * 1024
             ? pngyu::util::size_to_string_mb(total_saved_size)
@@ -868,9 +864,9 @@ bool PngyuMainWindow::is_preview_window_visible() const {
 }
 
 QString PngyuMainWindow::current_selected_filename() const {
-  QTableWidget *const table_widget = ui->tableWidget_filelist;
+  QTableWidget* const table_widget = ui->tableWidget_filelist;
   const int current_row = table_widget->currentRow();
-  const QTableWidgetItem *const path_item =
+  const QTableWidgetItem* const path_item =
       table_widget->item(current_row, pngyu::COLUMN_ABSOLUTE_PATH);
   return path_item ? path_item->text() : QString();
 }
@@ -896,7 +892,7 @@ void PngyuMainWindow::set_busy_mode(const bool b) {
 bool PngyuMainWindow::is_busy() const { return m_is_busy; }
 
 void PngyuMainWindow::clear_compress_result() {
-  QTableWidget *table_widget = file_list_table_widget();
+  QTableWidget* table_widget = file_list_table_widget();
   const int row_count = table_widget->rowCount();
   for (int row = 0; row < row_count; ++row) {
     ui->tableWidget_filelist->setItem(row, pngyu::COLUMN_RESULT, 0);
@@ -916,7 +912,7 @@ void PngyuMainWindow::update_execution_progress(const int completed_count,
 // protected functions
 //////////////////////
 
-void PngyuMainWindow::dragEnterEvent(QDragEnterEvent *event) {
+void PngyuMainWindow::dragEnterEvent(QDragEnterEvent* event) {
   if (is_busy()) {
     return;
   }
@@ -926,13 +922,13 @@ void PngyuMainWindow::dragEnterEvent(QDragEnterEvent *event) {
   }
 }
 
-void PngyuMainWindow::dragLeaveEvent(QDragLeaveEvent *event) {
+void PngyuMainWindow::dragLeaveEvent(QDragLeaveEvent* event) {
   Q_UNUSED(event)
   if (is_busy()) {
     return;
   }
 
-  { // disable ui effects that while file dragging
+  {  // disable ui effects that while file dragging
     pngyu::util::set_drop_enabled_palette(ui->tableWidget_filelist->viewport(),
                                           false);
     pngyu::util::set_drop_here_stylesheet(ui->tableWidget_filelist->viewport(),
@@ -946,21 +942,21 @@ void PngyuMainWindow::dragLeaveEvent(QDragLeaveEvent *event) {
   }
 }
 
-void PngyuMainWindow::dragMoveEvent(QDragMoveEvent *event) {
+void PngyuMainWindow::dragMoveEvent(QDragMoveEvent* event) {
   Q_UNUSED(event)
   if (is_busy()) {
     return;
   }
 
-  { // enable file drogging ui effects
+  {  // enable file drogging ui effects
 
-    { // linedit
-      QLineEdit *const output_line_edit = ui->lineEdit_output_directory;
+    {  // linedit
+      QLineEdit* const output_line_edit = ui->lineEdit_output_directory;
       pngyu::util::set_drop_enabled_palette(
           output_line_edit, pngyu::util::is_under_mouse(output_line_edit));
     }
 
-    QWidget *const file_list_widget = ui->groupBox_filelist;
+    QWidget* const file_list_widget = ui->groupBox_filelist;
     pngyu::util::set_drop_here_stylesheet(
         ui->tableWidget_filelist->viewport(),
         pngyu::util::is_under_mouse(file_list_widget));
@@ -978,38 +974,38 @@ void PngyuMainWindow::dragMoveEvent(QDragMoveEvent *event) {
   }
 }
 
-void PngyuMainWindow::dropEvent(QDropEvent *event) {
+void PngyuMainWindow::dropEvent(QDropEvent* event) {
   if (is_busy()) {
     return;
   }
 
   // disable file drogging ui effects (1st
 
-  QLineEdit *const output_line_edit = ui->lineEdit_output_directory;
+  QLineEdit* const output_line_edit = ui->lineEdit_output_directory;
   const bool mouse_is_on_output = pngyu::util::is_under_mouse(output_line_edit);
   pngyu::util::set_drop_enabled_palette(output_line_edit, false);
 
-  QWidget *const file_list_widget = ui->groupBox_filelist;
+  QWidget* const file_list_widget = ui->groupBox_filelist;
   const bool mouse_is_on_file_list =
       pngyu::util::is_under_mouse(file_list_widget);
   pngyu::util::set_drop_here_stylesheet(ui->tableWidget_filelist->viewport(),
                                         false);
 
-  const QMimeData *const mimedata = event->mimeData();
+  const QMimeData* const mimedata = event->mimeData();
   if (!mimedata->hasUrls()) {
     return;
   }
 
-  const QList<QUrl> &url_list = mimedata->urls();
+  const QList<QUrl>& url_list = mimedata->urls();
 
-  if (mouse_is_on_output) { // set output directory path
+  if (mouse_is_on_output) {  // set output directory path
     if (url_list.size() == 1) {
       set_other_output_directory(url_list.first().toLocalFile());
       set_current_output_directory_mode(pngyu::OUTPUT_DIR_OTHER);
     }
-  } else if (mouse_is_on_file_list) { // append png files
+  } else if (mouse_is_on_file_list) {  // append png files
     QList<QFileInfo> file_list;
-    for (const QUrl &url : url_list) {
+    for (const QUrl& url : url_list) {
       file_list.push_back(QFileInfo(url.toLocalFile()));
     }
     append_file_info_list(file_list);
@@ -1022,42 +1018,42 @@ void PngyuMainWindow::dropEvent(QDropEvent *event) {
   }
 }
 
-void PngyuMainWindow::moveEvent(QMoveEvent *event) {
+void PngyuMainWindow::moveEvent(QMoveEvent* event) {
   QMainWindow::moveEvent(event);
 }
 
-void PngyuMainWindow::showEvent(QShowEvent *event) {
+void PngyuMainWindow::showEvent(QShowEvent* event) {
   QMainWindow::showEvent(event);
 }
 
-void PngyuMainWindow::closeEvent(QCloseEvent *event) {
+void PngyuMainWindow::closeEvent(QCloseEvent* event) {
   stop_request();
   QMainWindow::closeEvent(event);
 }
 
 void PngyuMainWindow::update_file_table() {
-  QTableWidget *const table_widget = file_list_table_widget();
+  QTableWidget* const table_widget = file_list_table_widget();
   // temporary disconnect
   disconnect(table_widget, SIGNAL(currentCellChanged(int, int, int, int)), this,
              SLOT(table_widget_current_changed()));
-  const QString &last_selected_filename = current_selected_filename();
-  table_widget->setRowCount(0); // reset file list table
+  const QString& last_selected_filename = current_selected_filename();
+  table_widget->setRowCount(0);  // reset file list table
   table_widget->setRowCount(m_file_list.size());
-  { // append files
+  {  // append files
     int row_index = 0;
-    for (const QFileInfo &file_info : m_file_list) {
-      QTableWidgetItem *const basename_item =
+    for (const QFileInfo& file_info : m_file_list) {
+      QTableWidgetItem* const basename_item =
           new QTableWidgetItem(file_info.baseName());
       basename_item->setToolTip(file_info.baseName());
       table_widget->setItem(row_index, pngyu::COLUMN_BASENAME, basename_item);
-      const QString &absolute_path = file_info.absoluteFilePath();
-      QTableWidgetItem *const abspath_item =
+      const QString& absolute_path = file_info.absoluteFilePath();
+      QTableWidgetItem* const abspath_item =
           new QTableWidgetItem(file_info.absoluteFilePath());
       abspath_item->setToolTip(absolute_path);
       table_widget->setItem(row_index, pngyu::COLUMN_ABSOLUTE_PATH,
                             abspath_item);
 
-      pngyu::TableValueCompareItem *const origin_size_item =
+      pngyu::TableValueCompareItem* const origin_size_item =
           new pngyu::TableValueCompareItem(
               pngyu::util::size_to_string_kb(file_info.size()));
       origin_size_item->setData(1, static_cast<double>(file_info.size()));
@@ -1078,7 +1074,7 @@ void PngyuMainWindow::update_file_table() {
   table_widget_current_changed();
 }
 
-void PngyuMainWindow::append_file_info_list(const QList<QFileInfo> &info_list) {
+void PngyuMainWindow::append_file_info_list(const QList<QFileInfo>& info_list) {
   if (is_busy()) {
     return;
   }
@@ -1087,7 +1083,7 @@ void PngyuMainWindow::append_file_info_list(const QList<QFileInfo> &info_list) {
   set_busy_mode(true);
 
   ui->widget_file_appending->setVisible(true);
-  for (const QFileInfo &info : info_list) {
+  for (const QFileInfo& info : info_list) {
     append_file_info_recursive(info, 0);
   }
   update_file_table();
@@ -1096,7 +1092,7 @@ void PngyuMainWindow::append_file_info_list(const QList<QFileInfo> &info_list) {
 }
 
 void PngyuMainWindow::append_file_info_recursive(
-    const QFileInfo &file_info, const int recursive_directory_depth) {
+    const QFileInfo& file_info, const int recursive_directory_depth) {
   // internal implementation of "append_file_info_list"
 
   QApplication::processEvents();
@@ -1104,15 +1100,15 @@ void PngyuMainWindow::append_file_info_recursive(
     return;
   }
   if (file_info
-          .isFile()) { // if file_info is file, png check and add to file_list
+          .isFile()) {  // if file_info is file, png check and add to file_list
     const bool is_png = pngyu::util::has_png_extention(file_info);
     if (is_png && !m_file_list.contains(file_info)) {
       m_file_list.push_back(file_info);
     }
-  } else if (file_info.isDir()) { // if file_info is dir, call this function
-                                  // recursively by each contents.
+  } else if (file_info.isDir()) {  // if file_info is dir, call this function
+    // recursively by each contents.
     const QDir dir(file_info.absoluteFilePath());
-    for (const QFileInfo &child_file_info :
+    for (const QFileInfo& child_file_info :
          dir.entryInfoList(QDir::NoDotAndDotDot | QDir::AllEntries)) {
       append_file_info_recursive(child_file_info,
                                  recursive_directory_depth + 1);
@@ -1121,7 +1117,7 @@ void PngyuMainWindow::append_file_info_recursive(
 }
 
 bool PngyuMainWindow::is_other_output_directory_valid() const {
-  QLineEdit *const line_edit = ui->lineEdit_output_directory;
+  QLineEdit* const line_edit = ui->lineEdit_output_directory;
   const QFileInfo output_directory(line_edit->text());
   const bool valid_directory =
       output_directory.isDir() && output_directory.exists();
@@ -1143,7 +1139,7 @@ void PngyuMainWindow::exec_pushed() {
   bool b_yes_pushed = false;
   if (image_optim_integration_mode() == pngyu::IMAGEOPTIM_ASK_EVERY_TIME &&
       QFile::exists(
-          executable_image_optim_path())) { // confirm optimize with ImageOptim
+          executable_image_optim_path())) {  // confirm optimize with ImageOptim
     PngyuImageOptimIntegrationQuestionDialog dlg;
     const int res = dlg.exec();
     b_yes_pushed = (res == QDialog::Accepted);
@@ -1175,18 +1171,18 @@ void PngyuMainWindow::compress_option_changed() {
 }
 
 void PngyuMainWindow::other_output_directory_changed() {
-  QLineEdit *const line_edit = ui->lineEdit_output_directory;
+  QLineEdit* const line_edit = ui->lineEdit_output_directory;
   QPalette palette = line_edit->palette();
   if (is_other_output_directory_valid() || other_output_directory().isEmpty()) {
     palette.setBrush(QPalette::Text, QBrush());
-  } else { // if output directory is invalid, change text color
+  } else {  // if output directory is invalid, change text color
     palette.setBrush(QPalette::Text, QBrush(Qt::red));
   }
   line_edit->setPalette(palette);
 }
 
 void PngyuMainWindow::open_output_directory_pushed() {
-  const QString &current_dir = other_output_directory();
+  const QString& current_dir = other_output_directory();
 
   const QString default_dir =
       QFile::exists(current_dir) ? current_dir : QDir::homePath();
@@ -1217,10 +1213,10 @@ void PngyuMainWindow::output_directory_mode_changed() {
                                                    pngyu::OUTPUT_DIR_OTHER);
   ui->lineEdit_output_directory->setEnabled(mode == pngyu::OUTPUT_DIR_OTHER);
   QPalette p = ui->lineEdit_output_directory->palette();
-  p.setBrush(QPalette::Base, mode == pngyu::OUTPUT_DIR_OTHER
-                                 ? QPalette().brush(QPalette::Base)
-                                 : // QBrush(Qt::lightGray) );
-                                 QPalette().brush(QPalette::Window));
+  p.setBrush(QPalette::Base,
+             mode == pngyu::OUTPUT_DIR_OTHER ? QPalette().brush(QPalette::Base)
+                                             :  // QBrush(Qt::lightGray) );
+                 QPalette().brush(QPalette::Window));
   ui->lineEdit_output_directory->setPalette(p);
 }
 
@@ -1266,30 +1262,30 @@ void PngyuMainWindow::ncolor_slider_changed() {
   const int slider_value = ui->horizontalSlider_colors->value();
   int ncolor = 256;
   switch (slider_value) {
-  case 0:
-    ncolor = 2;
-    break;
-  case 1:
-    ncolor = 4;
-    break;
-  case 2:
-    ncolor = 8;
-    break;
-  case 3:
-    ncolor = 16;
-    break;
-  case 4:
-    ncolor = 32;
-    break;
-  case 5:
-    ncolor = 64;
-    break;
-  case 6:
-    ncolor = 128;
-    break;
-  case 7:
-    ncolor = 256;
-    break;
+    case 0:
+      ncolor = 2;
+      break;
+    case 1:
+      ncolor = 4;
+      break;
+    case 2:
+      ncolor = 8;
+      break;
+    case 3:
+      ncolor = 16;
+      break;
+    case 4:
+      ncolor = 32;
+      break;
+    case 5:
+      ncolor = 64;
+      break;
+    case 6:
+      ncolor = 128;
+      break;
+    case 7:
+      ncolor = 256;
+      break;
   }
   set_ncolor(ncolor);
 }
@@ -1300,11 +1296,10 @@ void PngyuMainWindow::table_widget_current_changed() {
   m_preview_window->set_png_file(current_path);
 
   if (!current_path.isEmpty()) {
-
-    { // set icon to preview window button
+    {  // set icon to preview window button
       ui->pushButton_preview->setEnabled(true);
-      const QSize &icon_size = ui->pushButton_preview->iconSize();
-      const QImage &icon_image =
+      const QSize& icon_size = ui->pushButton_preview->iconSize();
+      const QImage& icon_image =
           pngyu::util::read_thumbnail_image(current_path, icon_size.width());
 
       ui->pushButton_preview->setIcon(QPixmap::fromImage(icon_image));
@@ -1332,7 +1327,7 @@ void PngyuMainWindow::add_file_button_pushed() {
   }
 
   QList<QFileInfo> fileinfo_list;
-  for (const QString &path : filepath_list) {
+  for (const QString& path : filepath_list) {
     fileinfo_list.push_back(QFileInfo(path));
   }
 
@@ -1340,7 +1335,6 @@ void PngyuMainWindow::add_file_button_pushed() {
 }
 
 void PngyuMainWindow::menu_preferences_pushed() {
-
   m_preferences_dialog->set_n_jobs(num_thread());
   m_preferences_dialog->set_image_optim_integrate_mode(
       image_optim_integration_mode());

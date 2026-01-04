@@ -1,8 +1,9 @@
 #include "pngyuimageoptimintegrationquestiondialog.h"
+
 #include "ui_pngyuimageoptimintegrationquestiondialog.h"
 
 PngyuImageOptimIntegrationQuestionDialog::
-    PngyuImageOptimIntegrationQuestionDialog(QWidget *parent)
+    PngyuImageOptimIntegrationQuestionDialog(QWidget* parent)
     : QDialog(parent), ui(new Ui::PngyuImageOptimIntegrationQuestionDialog) {
   ui->setupUi(this);
 }
