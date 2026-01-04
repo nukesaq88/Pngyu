@@ -21,26 +21,27 @@ jobs:
         host: 'mac'
         target: 'desktop'
         arch: 'clang_64'
-        modules: 'qt5compat'
+        
+    - name: Install CMake
+      uses: jwlawson/actions-setup-cmake@v2
+      with:
+        cmake-version: 'latest'
         
     - name: Build
       run: |
-        mkdir -p build/Desktop-Release
-        cd build/Desktop-Release
-        qmake ../../Pngyu.pro CONFIG+=release
-        make
-        ls -la
+        chmod +x scripts/build_mac.sh
+        ./scripts/build_mac.sh
         
     - name: Deploy
       run: |
-        chmod +x deploy_mac.sh
-        ./deploy_mac.sh
+        chmod +x scripts/deploy_mac.sh
+        ./scripts/deploy_mac.sh
         
     - name: Upload DMG
       uses: actions/upload-artifact@v4
       with:
         name: Pngyu-macOS
-        path: build/Desktop-Release/Pngyu.dmg
+        path: build/Release/Pngyu.dmg
         
   build-windows:
     runs-on: windows-latest
@@ -56,21 +57,21 @@ jobs:
         host: 'windows'
         target: 'desktop'
         arch: 'win64_msvc2022_64'
-        modules: 'qt5compat'
+        
+    - name: Install CMake
+      uses: jwlawson/actions-setup-cmake@v2
+      with:
+        cmake-version: 'latest'
         
     - name: Build
-      shell: cmd
+      shell: powershell
       run: |
-        call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
-        mkdir build\Desktop-Release
-        cd build\Desktop-Release
-        qmake ..\..\Pngyu.pro CONFIG+=release
-        nmake
+        .\scripts\build_win.ps1
         
     - name: Deploy
       shell: powershell
       run: |
-        .\deploy_windows.ps1
+        .\scripts\deploy_win.ps1
         
     - name: Upload ZIP
       uses: actions/upload-artifact@v4

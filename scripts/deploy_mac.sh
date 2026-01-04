@@ -1,14 +1,22 @@
 #!/bin/bash
 # Deploy script for distribution
-# Run this after building in Qt Creator
+# Run this after building with CMake
 
 set -e
 
-BUILD_DIR="build/Desktop-Release"
+# Get the directory where this script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
+
+# Use environment variable if set, otherwise use default
+BUILD_DIR="${BUILD_DIR:-$PROJECT_ROOT/build/Release}"
 
 if [ ! -d "$BUILD_DIR/Pngyu.app" ]; then
     echo "Error: Pngyu.app not found in $BUILD_DIR"
-    echo "Please build the project in Qt Creator first (Release mode)"
+    echo "Please build the project first:"
+    echo "  mkdir -p build/Release && cd build/Release"
+    echo "  cmake ../.. -DCMAKE_BUILD_TYPE=Release"
+    echo "  cmake --build ."
     exit 1
 fi
 
