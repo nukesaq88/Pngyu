@@ -94,11 +94,13 @@ elseif(WIN32)
         resource/resource.rc
     )
     
-    # Copy pngquant binary next to executable
+    # Copy pngquant binary to pngquant subdirectory
     add_custom_command(TARGET Pngyu POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory
+            $<TARGET_FILE_DIR:Pngyu>/pngquant
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
             ${CMAKE_SOURCE_DIR}/pngquant_bin/win/pngquant.exe
-            $<TARGET_FILE_DIR:Pngyu>/pngquant.exe
+            $<TARGET_FILE_DIR:Pngyu>/pngquant/pngquant.exe
     )
 else()
     add_executable(Pngyu
