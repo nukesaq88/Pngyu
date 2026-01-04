@@ -898,6 +898,7 @@ void PngyuMainWindow::clear_compress_result() {
     ui->tableWidget_filelist->setItem(row, pngyu::COLUMN_RESULT, 0);
     ui->tableWidget_filelist->setItem(row, pngyu::COLUMN_OUTPUT_SIZE, 0);
     ui->tableWidget_filelist->setItem(row, pngyu::COLUMN_SAVED_SIZE, 0);
+    ui->tableWidget_filelist->setItem(row, pngyu::COLUMN_SAVED_SIZE_RATE, 0);
   }
   ui->statusBar->showMessage(QString());
 }
