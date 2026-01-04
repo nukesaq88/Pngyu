@@ -48,7 +48,7 @@ try {
     
 } catch {
     Write-Host ""
-    Write-Host "Error: $_" -ForegroundColor Red
+    Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red
     Pop-Location
     exit 1
 }
