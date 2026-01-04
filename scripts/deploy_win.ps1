@@ -86,10 +86,12 @@ Write-Host ""
 # Copy pngquant executable (already built with CMake)
 Write-Host "Copying pngquant executable..." -ForegroundColor Cyan
 $PngquantSrc = Join-Path $BuildDir "pngquant.exe"
+$PngquantDir = Join-Path $DeployDir "pngquant"
 
 if (Test-Path $PngquantSrc) {
-    Copy-Item $PngquantSrc $DeployDir -Force
-    Write-Host "Copied: pngquant.exe -> $DeployDir" -ForegroundColor Green
+    New-Item -ItemType Directory -Path $PngquantDir -Force | Out-Null
+    Copy-Item $PngquantSrc (Join-Path $PngquantDir "pngquant.exe") -Force
+    Write-Host "Copied: pngquant.exe -> $PngquantDir" -ForegroundColor Green
 } else {
     Write-Host "Warning: pngquant.exe not found at $PngquantSrc" -ForegroundColor Yellow
     Write-Host "The executable should have been copied during build." -ForegroundColor Yellow
