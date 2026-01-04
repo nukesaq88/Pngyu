@@ -1,11 +1,16 @@
 # Deploy script for Windows distribution
-# Run this after building in Qt Creator (Release mode)
+# Run this after building with CMake (Release mode)
+
+# Get the directory where this script is located
+$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$ProjectRoot = Split-Path -Parent $ScriptDir
 
 Write-Host "Starting deployment..." -ForegroundColor Green
 Write-Host ""
 
 # Use environment variable if set, otherwise use default
-$BuildDir = if ($env:BUILD_DIR) { $env:BUILD_DIR } else { "build\Desktop-Release\release" }
+$DefaultBuildDir = Join-Path $ProjectRoot "build\Release\Release"
+$BuildDir = if ($env:BUILD_DIR) { $env:BUILD_DIR } else { $DefaultBuildDir }
 $AppName = "Pngyu.exe"
 $AppPath = Join-Path $BuildDir $AppName
 
@@ -19,7 +24,10 @@ Write-Host ""
 # Check if the executable exists
 if (-not (Test-Path $AppPath)) {
     Write-Host "Error: $AppName not found in $BuildDir" -ForegroundColor Red
-    Write-Host "Please build the project in Qt Creator first (Release mode)" -ForegroundColor Yellow
+    Write-Host "Please build the project first:" -ForegroundColor Yellow
+    Write-Host "  mkdir build\Release && cd build\Release" -ForegroundColor Yellow
+    Write-Host "  cmake ../.." -ForegroundColor Yellow
+    Write-Host "  cmake --build . --config Release" -ForegroundColor Yellow
     Write-Host ""
     Write-Host "Current directory: $PWD"
     
@@ -75,16 +83,17 @@ try {
 
 Write-Host ""
 
-# Copy pngquant executable
+# Copy pngquant executable (already built with CMake)
 Write-Host "Copying pngquant executable..." -ForegroundColor Cyan
-$PngquantSrc = "pngquant_bin\win\pngquant.exe"
-$PngquantDir = Join-Path $DeployDir "pngquant"
-$PngquantDest = Join-Path $PngquantDir "pngquant.exe"
+$PngquantSrc = Join-Path $BuildDir "pngquant.exe"
 
 if (Test-Path $PngquantSrc) {
-    New-Item -ItemType Directory -Path $PngquantDir -Force | Out-Null
-    Copy-Item $PngquantSrc $PngquantDest -Force
-    Write-Host "Copied: $PngquantSrc -> $PngquantDest" -ForegroundColor Green
+    Copy-Item $PngquantSrc $DeployDir -Force
+    Write-Host "Copied: pngquant.exe -> $DeployDir" -ForegroundColor Green
+} else {
+    Write-Host "Warning: pngquant.exe not found at $PngquantSrc" -ForegroundColor Yellow
+    Write-Host "The executable should have been copied during build." -ForegroundColor Yellow
+}
 } else {
     Write-Host "Warning: pngquant not found at $PngquantSrc" -ForegroundColor Yellow
 }

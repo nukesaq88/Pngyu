@@ -11,6 +11,8 @@ moc_predefs.h
 .qmake.stash
 Makefile
 
+.qtcreator/
+
 # Build directories
 build/
 build-*/
