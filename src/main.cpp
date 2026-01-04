@@ -35,11 +35,11 @@ private:
 
 int main(int argc, char *argv[]) {
   PngyuApplication a(argc, argv);
-  
+
   // Set application information for QSettings
   QCoreApplication::setOrganizationName("Pngyu");
   QCoreApplication::setApplicationName("Pngyu");
-  
+
   PngyuMainWindow w;
   a.set_pngyu_main(&w);
   w.show();

@@ -13,7 +13,7 @@ QStringList find_executable_pngquant_from_dir(const QDir &dir) {
   if (!dir.exists()) {
     return found_paths;
   }
-  foreach (const QFileInfo &child_file_info, dir.entryInfoList()) {
+  for (const QFileInfo &child_file_info : dir.entryInfoList()) {
     if (!child_file_info.baseName().contains(QRegularExpression(
             "pngquant", QRegularExpression::CaseInsensitiveOption)) ||
         !child_file_info.isExecutable()) {
@@ -60,7 +60,7 @@ QStringList find_executable_pngquant() {
 #endif
 
   QStringList found_paths;
-  foreach (const QString &dir, search_dirs) {
+  for (const QString &dir : search_dirs) {
     found_paths.append(find_executable_pngquant_from_dir(QDir(dir)));
   }
 

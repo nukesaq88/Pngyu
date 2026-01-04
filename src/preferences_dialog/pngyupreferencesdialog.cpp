@@ -9,48 +9,6 @@
 
 #include "pngyu_execute_pngquant_command.h"
 
-// namespace
-//{
-
-// const QString& dot_path()
-//{
-//   static QString p = QFileInfo( QApplication::applicationDirPath()
-//   ).absoluteFilePath(); return p;
-// }
-
-// const QString& dot_dot_path()
-//{
-//   static QString p = QFileInfo( dot_path() + "/.." ).absoluteFilePath();
-//   return p;
-// }
-
-// QString to_dot_path( const QString &path )
-//{
-//   const QString &dot = dot_path();
-//   const QString &dot_dot = dot_dot_path();
-
-//  QString dot_path = QFileInfo( path ).absoluteFilePath();
-
-//  dot_path.replace( dot, "." );
-//  dot_path.replace( dot_dot, ".." );
-
-//  return dot_path;
-//}
-
-// QString from_dot_path( const QString &path )
-//{
-//   const QString dot = QFileInfo( QApplication::applicationDirPath()
-//   ).absoluteFilePath(); const QString dot_dot = QFileInfo( dot_path() + "/.."
-//   ).absoluteFilePath();
-
-//  QString abs_path = path;
-//  abs_path.replace( "../", dot_dot + "/" );
-//  abs_path.replace( "./", dot + "/" );
-//  return abs_path;
-//}
-
-//}
-
 PngyuPreferencesDialog::PngyuPreferencesDialog(QWidget *parent)
     : QDialog(parent), ui(new Ui::PngyuPreferencesDialog) {
   ui->setupUi(this);
@@ -151,7 +109,7 @@ PngyuPreferencesDialog::image_optim_integrate_mode() {
 
 void PngyuPreferencesDialog::set_pngquant_paths(const QStringList &paths) {
   ui->comboBox_pngquant_path->clear();
-  foreach (const QString &path, paths) {
+  for (const QString &path : paths) {
     ui->comboBox_pngquant_path->addItem(pngyu::util::to_dot_path(path));
   }
 }

@@ -58,7 +58,6 @@ void BasicImageView::drawBackground(QPainter *painter, const QRectF &rect) {
   painter->fillRect(rectf, backgroundBrush());
 
   painter->fillRect(rectf, QBrush(m_pixmap));
-  // QGraphicsView::drawBackground( painter, rect.intersect( sceneRect() ) );
 }
 
 void BasicImageView::wheelEvent(QWheelEvent *event) {

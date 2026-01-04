@@ -136,25 +136,8 @@ inline const QIcon &failure_icon() {
 
 inline bool open_with_mac_app(const QStringList &files,
                               const QString app_path) {
-  //  QStringList args;
-  //  args.push_back( "-c" ); // python option
-  //  { // make python script
-  //    QString script;
-  //    script += "# -*- coding: utf-8-mac -*-\n"
-  //              "import AppKit\n"
-  //              "w = AppKit.NSWorkspace.sharedWorkspace()\n";
-  //    foreach( const QString &filepath, files )
-  //    {
-  //      script += QString("w.openFile_withApplication_(u'%1', '%2')\n" ).arg(
-  //      filepath, app_path );
-  //    }
-  //    args.push_back( script );
-  //  }
-  //  return QProcess::execute( "/usr/bin/pythonw", args );
   return QProcess::startDetached("/usr/bin/open",
                                  (QStringList() << "-a" << app_path) += files);
-  // return QProcess::startDetached( app_path, files );
-  // return QProcess::execute( app_path, files );
 }
 
 inline const QString &dot_path() {

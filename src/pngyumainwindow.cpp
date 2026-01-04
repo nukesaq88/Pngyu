@@ -117,8 +117,6 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent)
 
   connect(ui->radioButton_output_same_directory, SIGNAL(toggled(bool)), this,
           SLOT(output_directory_mode_changed()));
-  //  connect( ui->radioButton_output_other_directory, SIGNAL(toggled(bool)),
-  //           this, SLOT(output_directory_mode_changed()) );
 
   connect(ui->toolButton_compress_option_default, SIGNAL(toggled(bool)), this,
           SLOT(compress_option_mode_changed()));
@@ -214,14 +212,15 @@ QString PngyuMainWindow::get_settings_file_path() const {
   // Use standard application data location
   // Windows: %APPDATA%/Pngyu/Pngyu.ini
   // macOS: ~/Library/Application Support/Pngyu/Pngyu.ini
-  QString configDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-  
+  QString configDir =
+      QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+
   // Create directory if it doesn't exist
   QDir dir;
   if (!dir.exists(configDir)) {
     dir.mkpath(configDir);
   }
-  
+
   return configDir + "/" + QCoreApplication::applicationName() + ".ini";
 }
 
@@ -782,7 +781,7 @@ void PngyuMainWindow::execute_compress_all(bool image_optim_enabled) {
 
   QApplication::processEvents();
 
-  foreach (ExecuteCompressWorkerThread *worker, workers) {
+  for (ExecuteCompressWorkerThread *worker : workers) {
     worker->start(QThread::HighPriority);
   }
 
@@ -790,7 +789,7 @@ void PngyuMainWindow::execute_compress_all(bool image_optim_enabled) {
 
   while (true) {
     bool all_finished = true;
-    foreach (ExecuteCompressWorkerThread *worker, workers) {
+    for (ExecuteCompressWorkerThread *worker : workers) {
       ui->spinner_exec->redraw();
       ui->spinner_exec->update();
       QApplication::processEvents();
@@ -806,13 +805,13 @@ void PngyuMainWindow::execute_compress_all(bool image_optim_enabled) {
 
     // send stop request to workers
     if (m_stop_request) {
-      foreach (ExecuteCompressWorkerThread *worker, workers) {
+      for (ExecuteCompressWorkerThread *worker : workers) {
         worker->stop_request();
       }
     }
 
     int completed_count = 0;
-    foreach (ExecuteCompressWorkerThread *worker, workers) {
+    for (ExecuteCompressWorkerThread *worker : workers) {
       completed_count += worker->compress_results().size();
     }
 
@@ -821,11 +820,11 @@ void PngyuMainWindow::execute_compress_all(bool image_optim_enabled) {
 
   QList<pngyu::CompressResult> result_list;
 
-  foreach (ExecuteCompressWorkerThread *worker, workers) {
+  for (ExecuteCompressWorkerThread *worker : workers) {
     result_list += worker->compress_results();
   }
 
-  foreach (ExecuteCompressWorkerThread *worker, workers) {
+  for (ExecuteCompressWorkerThread *worker : workers) {
     delete worker;
   }
 
@@ -836,7 +835,7 @@ void PngyuMainWindow::execute_compress_all(bool image_optim_enabled) {
   QStringList succeed_src_filepaths;
   QStringList succeed_dst_filepaths;
 
-  foreach (const pngyu::CompressResult &res, result_list) {
+  for (const pngyu::CompressResult &res : result_list) {
     if (res.result) {
       succeed_src_filepaths.push_back(res.src_path);
       succeed_dst_filepaths.push_back(res.dst_path);
@@ -1010,7 +1009,7 @@ void PngyuMainWindow::dropEvent(QDropEvent *event) {
     }
   } else if (mouse_is_on_file_list) { // append png files
     QList<QFileInfo> file_list;
-    foreach (const QUrl &url, url_list) {
+    for (const QUrl &url : url_list) {
       file_list.push_back(QFileInfo(url.toLocalFile()));
     }
     append_file_info_list(file_list);
@@ -1046,7 +1045,7 @@ void PngyuMainWindow::update_file_table() {
   table_widget->setRowCount(m_file_list.size());
   { // append files
     int row_index = 0;
-    foreach (const QFileInfo &file_info, m_file_list) {
+    for (const QFileInfo &file_info : m_file_list) {
       QTableWidgetItem *const basename_item =
           new QTableWidgetItem(file_info.baseName());
       basename_item->setToolTip(file_info.baseName());
@@ -1088,7 +1087,7 @@ void PngyuMainWindow::append_file_info_list(const QList<QFileInfo> &info_list) {
   set_busy_mode(true);
 
   ui->widget_file_appending->setVisible(true);
-  foreach (const QFileInfo &info, info_list) {
+  for (const QFileInfo &info : info_list) {
     append_file_info_recursive(info, 0);
   }
   update_file_table();
@@ -1113,8 +1112,8 @@ void PngyuMainWindow::append_file_info_recursive(
   } else if (file_info.isDir()) { // if file_info is dir, call this function
                                   // recursively by each contents.
     const QDir dir(file_info.absoluteFilePath());
-    foreach (const QFileInfo &child_file_info,
-             dir.entryInfoList(QDir::NoDotAndDotDot | QDir::AllEntries)) {
+    for (const QFileInfo &child_file_info :
+         dir.entryInfoList(QDir::NoDotAndDotDot | QDir::AllEntries)) {
       append_file_info_recursive(child_file_info,
                                  recursive_directory_depth + 1);
     }
@@ -1333,7 +1332,7 @@ void PngyuMainWindow::add_file_button_pushed() {
   }
 
   QList<QFileInfo> fileinfo_list;
-  foreach (const QString &path, filepath_list) {
+  for (const QString &path : filepath_list) {
     fileinfo_list.push_back(QFileInfo(path));
   }
 
