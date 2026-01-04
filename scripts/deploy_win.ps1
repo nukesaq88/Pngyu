@@ -94,9 +94,6 @@ if (Test-Path $PngquantSrc) {
     Write-Host "Warning: pngquant.exe not found at $PngquantSrc" -ForegroundColor Yellow
     Write-Host "The executable should have been copied during build." -ForegroundColor Yellow
 }
-} else {
-    Write-Host "Warning: pngquant not found at $PngquantSrc" -ForegroundColor Yellow
-}
 
 Write-Host ""
 Write-Host "Deployment completed successfully!" -ForegroundColor Green
