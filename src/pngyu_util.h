@@ -13,7 +13,6 @@
 #include <QRegularExpression>
 #include <QStringList>
 #include <QWidget>
-#include <cmath>
 
 namespace pngyu {
 namespace util {

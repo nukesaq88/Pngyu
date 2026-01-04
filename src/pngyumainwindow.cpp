@@ -9,6 +9,7 @@
 #include <QDropEvent>
 #include <QFileDialog>
 #include <QFileInfo>
+#include <QMessageBox>
 #include <QMimeData>
 #include <QMoveEvent>
 #include <QProcess>
@@ -17,7 +18,6 @@
 #include <QStandardPaths>
 #include <QTime>
 #include <QUrl>
-#include <cmath>
 
 #include "executecompressworkerthread.h"
 #include "pngyu_custom_tablewidget_item.h"
