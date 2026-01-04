@@ -24,7 +24,7 @@ try {
     # Configure with CMake
     Write-Host ""
     Write-Host "Configuring CMake..." -ForegroundColor Cyan
-    cmake $ProjectRoot.
+    cmake $ProjectRoot
     
     if ($LASTEXITCODE -ne 0) {
         throw "CMake configuration failed"
@@ -48,7 +48,8 @@ try {
     
 } catch {
     Write-Host ""
-    Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red
+    $ErrorMsg = $_.Exception.Message
+    Write-Host "Error: $ErrorMsg" -ForegroundColor Red
     Pop-Location
     exit 1
 }
