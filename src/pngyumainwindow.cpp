@@ -48,7 +48,6 @@ PngyuMainWindow::PngyuMainWindow(QWidget *parent)
       m_current_imageoptim_path(DEFAULT_IMAGE_OPTIM_PATH),
       m_stop_request(false), m_is_busy(false),
       m_temporary_custom_output_custom_on(false), m_num_thread(1),
-      m_image_optim_enabled(false),
       m_image_optim_integration(pngyu::IMAGEOPTIM_ASK_EVERY_TIME),
       m_force_execute_if_negative_enables(false), m_timeout_ms(20000),
       m_save_compress_options_enabled(false),
@@ -655,7 +654,7 @@ void PngyuMainWindow::set_image_optim_integration_mode(
 #ifdef Q_OS_MACOS
   m_image_optim_integration = mode;
 #else
-  m_image_optim_enabled = pngyu::IMAGEOPTIM_ALWAYS_DISABLED;
+  m_image_optim_integration = pngyu::IMAGEOPTIM_ALWAYS_DISABLED;
 #endif
 }
 

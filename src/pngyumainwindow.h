@@ -145,7 +145,6 @@ private:
   bool m_is_busy;
   bool m_temporary_custom_output_custom_on;
   int m_num_thread;
-  bool m_image_optim_enabled;
   pngyu::ImageOptimIntegration m_image_optim_integration;
   bool m_force_execute_if_negative_enables;
   int m_timeout_ms;
