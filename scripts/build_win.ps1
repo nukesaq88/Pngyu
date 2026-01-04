@@ -40,7 +40,7 @@ try {
     }
 
     Write-Host ""
-    Write-Host "✓ Build complete!" -ForegroundColor Green
+    Write-Host "Build complete!" -ForegroundColor Green
     Write-Host "Application: $BuildDir\$BuildType\Pngyu.exe" -ForegroundColor Cyan
     Write-Host ""
     Write-Host "To create a distributable package, run:" -ForegroundColor Yellow
