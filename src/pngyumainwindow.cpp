@@ -21,6 +21,7 @@
 #include <QMimeData>
 #include <QScreen>
 #include <QSettings>
+#include <QStandardPaths>
 #include <QUrl>
 
 #include <QImageReader>
@@ -210,12 +211,18 @@ PngyuMainWindow::~PngyuMainWindow() {
 }
 
 QString PngyuMainWindow::get_settings_file_path() const {
-  // make application ini file path
-  const QString &app_path = QApplication::applicationFilePath();
-  QString fn = app_path;
-  fn.chop(QFileInfo(app_path).suffix().length());
-  fn = fn + (fn.endsWith(".") ? "" : ".") + QString("ini");
-  return fn;
+  // Use standard application data location
+  // Windows: %APPDATA%/Pngyu/Pngyu.ini
+  // macOS: ~/Library/Application Support/Pngyu/Pngyu.ini
+  QString configDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+  
+  // Create directory if it doesn't exist
+  QDir dir;
+  if (!dir.exists(configDir)) {
+    dir.mkpath(configDir);
+  }
+  
+  return configDir + "/" + QCoreApplication::applicationName() + ".ini";
 }
 
 void PngyuMainWindow::read_settings() {
