@@ -1,9 +1,11 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(Pngyu VERSION 1.0 LANGUAGES CXX)
+project(Pngyu VERSION 1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -11,14 +13,6 @@ set(CMAKE_AUTOUIC ON)
 
 # Find Qt6 packages
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
-
-# Set UI file directory for proper generation
-set(CMAKE_AUTOUIC_SEARCH_PATHS
-    ${CMAKE_SOURCE_DIR}/src
-    ${CMAKE_SOURCE_DIR}/src/preview_window
-    ${CMAKE_SOURCE_DIR}/src/preferences_dialog
-    ${CMAKE_SOURCE_DIR}/src/imageoptim_integration_question_dialog
-)
 
 # Include directories
 include_directories(
@@ -115,19 +109,3 @@ target_link_libraries(Pngyu PRIVATE
     Qt6::Gui
     Qt6::Widgets
 )
-
-# Installation
-if(APPLE)
-    install(TARGETS Pngyu
-        BUNDLE DESTINATION .
-        RUNTIME DESTINATION bin
-    )
-elseif(WIN32)
-    install(TARGETS Pngyu
-        RUNTIME DESTINATION bin
-    )
-else()
-    install(TARGETS Pngyu
-        RUNTIME DESTINATION bin
-    )
-endif()
