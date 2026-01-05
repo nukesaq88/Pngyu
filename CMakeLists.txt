@@ -68,7 +68,7 @@ if(APPLE)
     set(MACOSX_BUNDLE_ICON_FILE icon.icns)
     set(MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/resource/Info.plist)
     
-    add_executable(Pngyu MACOSX_BUNDLE
+    qt_add_executable(Pngyu MACOSX_BUNDLE
         ${PROJECT_SOURCES}
         ${PROJECT_RESOURCES}
         resource/icon.icns
@@ -88,7 +88,7 @@ if(APPLE)
         COMMAND chmod +x $<TARGET_BUNDLE_CONTENT_DIR:Pngyu>/Resources/pngquant
     )
 elseif(WIN32)
-    add_executable(Pngyu WIN32
+    qt_add_executable(Pngyu WIN32
         ${PROJECT_SOURCES}
         ${PROJECT_RESOURCES}
         resource/resource.rc
@@ -103,7 +103,7 @@ elseif(WIN32)
             $<TARGET_FILE_DIR:Pngyu>/pngquant/pngquant.exe
     )
 else()
-    add_executable(Pngyu
+    qt_add_executable(Pngyu
         ${PROJECT_SOURCES}
         ${PROJECT_RESOURCES}
     )
@@ -114,12 +114,6 @@ target_link_libraries(Pngyu PRIVATE
     Qt6::Core
     Qt6::Gui
     Qt6::Widgets
-)
-
-# Set target properties
-set_target_properties(Pngyu PROPERTIES
-    WIN32_EXECUTABLE TRUE
-    MACOSX_BUNDLE TRUE
 )
 
 # Installation
