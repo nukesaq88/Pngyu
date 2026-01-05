@@ -93,7 +93,7 @@ class PngyuMainWindow : public QMainWindow {
   void set_save_output_options_enabled(const bool b);
   bool is_save_output_options_enabled() const;
 
-  void execute_compress_all(bool image_optim_enabled);
+  void execute_compress_all(const bool image_optim_enabled);
 
   bool is_preview_window_visible() const;
 

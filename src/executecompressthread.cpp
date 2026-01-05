@@ -40,7 +40,7 @@ QByteArray ExecuteCompressThread::output_png_data() const {
 }
 
 int ExecuteCompressThread::saved_size() const {
-  return m_src_png_data.size() - m_dst_png_data.size();
+  return static_cast<int>(m_src_png_data.size() - m_dst_png_data.size());
 }
 
 QString ExecuteCompressThread::error_string() const { return m_error_string; }

@@ -708,7 +708,7 @@ bool PngyuMainWindow::is_save_output_options_enabled() const {
   return m_save_output_options_enabled;
 }
 
-void PngyuMainWindow::execute_compress_all(bool image_optim_enabled) {
+void PngyuMainWindow::execute_compress_all(const bool image_optim_enabled) {
   if (is_busy()) {
     return;
   }
@@ -759,7 +759,7 @@ void PngyuMainWindow::execute_compress_all(bool image_optim_enabled) {
 
   }  // end of file list loop
 
-  const int total_file_count = queue.size();
+  const int total_file_count = static_cast<int>(queue.size());
 
   update_execution_progress(0, total_file_count);
 
@@ -1039,7 +1039,7 @@ void PngyuMainWindow::update_file_table() {
              SLOT(table_widget_current_changed()));
   const QString& last_selected_filename = current_selected_filename();
   table_widget->setRowCount(0);  // reset file list table
-  table_widget->setRowCount(m_file_list.size());
+  table_widget->setRowCount(static_cast<int>(m_file_list.size()));
   {  // append files
     int row_index = 0;
     for (const QFileInfo& file_info : m_file_list) {

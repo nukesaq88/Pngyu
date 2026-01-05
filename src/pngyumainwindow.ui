@@ -618,6 +618,19 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
        <property name="spacing">
         <number>4</number>
        </property>
+       <item row="2" column="2">
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
        <item row="5" column="0" rowspan="2" colspan="5">
         <widget class="QWidget" name="widget_compress_option_custom_options" native="true">
          <property name="sizePolicy">
@@ -830,6 +843,46 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
          </layout>
         </widget>
        </item>
+       <item row="2" column="3">
+        <widget class="QPushButton" name="pushButton_preview">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>160</width>
+           <height>35</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Preview</string>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>20</width>
+           <height>20</height>
+          </size>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" colspan="5">
+        <widget class="QWidget" name="widget_compress_option_row_1" native="true">
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <property name="spacing">
+           <number>4</number>
+          </property>
+          <property name="margin" stdset="0">
+           <number>0</number>
+          </property>
+         </layout>
+        </widget>
+       </item>
        <item row="2" column="0" rowspan="2">
         <widget class="QWidget" name="widget_compress_option_mode" native="true">
          <property name="sizePolicy">
@@ -903,59 +956,6 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
            </widget>
           </item>
          </layout>
-        </widget>
-       </item>
-       <item row="2" column="2">
-        <spacer name="horizontalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Orientation::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>0</width>
-           <height>0</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="0" column="0" colspan="5">
-        <widget class="QWidget" name="widget_compress_option_row_1" native="true">
-         <layout class="QHBoxLayout" name="horizontalLayout">
-          <property name="spacing">
-           <number>4</number>
-          </property>
-          <property name="margin" stdset="0">
-           <number>0</number>
-          </property>
-         </layout>
-        </widget>
-       </item>
-       <item row="2" column="3">
-        <widget class="QPushButton" name="pushButton_preview">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>160</width>
-           <height>35</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Preview</string>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>20</width>
-           <height>20</height>
-          </size>
-         </property>
-         <property name="checkable">
-          <bool>true</bool>
-         </property>
         </widget>
        </item>
       </layout>
@@ -1204,7 +1204,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
  <connections/>
  <buttongroups>
   <buttongroup name="buttonGroup_compress_option_mode"/>
-  <buttongroup name="buttonGroup_output_directory_mode"/>
   <buttongroup name="buttonGroup_output_option_mode"/>
+  <buttongroup name="buttonGroup_output_directory_mode"/>
  </buttongroups>
 </ui>

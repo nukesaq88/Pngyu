@@ -16,17 +16,10 @@ BasicImageView::BasicImageView(QWidget* parent) : QGraphicsView(parent) {
   // Always show scrollbars
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-
-  // Force scrollbars to always be visible on macOS
-  horizontalScrollBar()->setStyleSheet(
-      "QScrollBar:horizontal { height: 15px; }");
-  verticalScrollBar()->setStyleSheet("QScrollBar:vertical { width: 15px; }");
 }
 
 void BasicImageView::setImage(const QImage& image) {
-  m_pixmap = QPixmap::fromImage(image);
-  setSceneRect(QRectF(image.rect()));
-  viewport()->repaint();
+  setPixmap(QPixmap::fromImage(image));
 }
 
 void BasicImageView::setPixmap(const QPixmap& pixmap) {
@@ -38,14 +31,14 @@ void BasicImageView::setPixmap(const QPixmap& pixmap) {
 void BasicImageView::mouseMoveEvent(QMouseEvent* event) {
   const QPointF pos = event->pos();
 
-  if (event->buttons() == Qt::MiddleButton) {
+  if (event->buttons() == Qt::LeftButton) {
     const QPointF delta = pos - m_lastMovePoint;
 
     QScrollBar* h_bar = horizontalScrollBar();
     QScrollBar* v_bar = verticalScrollBar();
 
-    h_bar->setValue(h_bar->value() - delta.x());
-    v_bar->setValue(v_bar->value() - delta.y());
+    h_bar->setValue(static_cast<int>(h_bar->value() - delta.x()));
+    v_bar->setValue(static_cast<int>(v_bar->value() - delta.y()));
   }
   m_lastMovePoint = pos;
   QGraphicsView::mouseMoveEvent(event);

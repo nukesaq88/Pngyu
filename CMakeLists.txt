@@ -7,6 +7,25 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# Compiler warnings
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
+    add_compile_options(
+        -Wall
+        -Wextra
+        -Wpedantic
+        -Wshadow
+        -Wnon-virtual-dtor
+        -Wold-style-cast
+        -Wcast-align
+        -Wunused
+        -Woverloaded-virtual
+        -Wconversion
+        -Wsign-conversion
+    )
+elseif(MSVC)
+    add_compile_options(/W4)
+endif()
+
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)

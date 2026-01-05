@@ -132,7 +132,7 @@ void ExecuteCompressWorkerThread::show_compress_result(
 
     pngyu::TableValueCompareItem* const saving_size_item =
         new pngyu::TableValueCompareItem(
-            pngyu::util::size_to_string_kb(saving_size));
+            pngyu::util::size_to_string_kb(static_cast<qint64>(saving_size)));
     saving_size_item->setData(1, static_cast<double>(saving_size));
 
     pngyu::TableValueCompareItem* const saving_rate_item =

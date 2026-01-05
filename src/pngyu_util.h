@@ -71,8 +71,8 @@ inline QImage read_thumbnail_image(const QString& filename, const int size) {
   const QSize& origin_size = image_reader.size();
   const double scale = static_cast<double>(size) /
                        std::max(origin_size.width(), origin_size.height());
-  const QSize dst_size(scale * origin_size.width(),
-                       scale * origin_size.height());
+  const QSize dst_size(static_cast<int>(scale * origin_size.width()),
+                       static_cast<int>(scale * origin_size.height()));
   image_reader.setScaledSize(dst_size);
   return image_reader.read();
 }
