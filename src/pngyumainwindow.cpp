@@ -175,15 +175,6 @@ PngyuMainWindow::PngyuMainWindow(QWidget* parent)
 
   update_file_table();
 
-  {  // set window size
-    const QRect screen_geometry = QGuiApplication::primaryScreen()->geometry();
-    const QPoint center_pos = screen_geometry.center();
-    const QSize window_size(500, 400);
-    setGeometry(QRect(
-        center_pos - QPoint(window_size.width() / 2, window_size.height() / 2),
-        window_size));
-  }
-
   {  // find executable pngquant
     const QStringList& executable_pngquant_list =
         pngyu::find_executable_pngquant();
@@ -261,6 +252,20 @@ void PngyuMainWindow::read_settings() {
   set_save_output_options_enabled(save_output_options);
 
   settings.endGroup();
+
+  // Load window size
+  settings.beginGroup("window");
+  const int width = settings.value("width", 500).toInt();
+  const int height = settings.value("height", 400).toInt();
+  settings.endGroup();
+
+  // Apply window size
+  const QRect screen_geometry = QGuiApplication::primaryScreen()->geometry();
+  const QPoint center_pos = screen_geometry.center();
+  const QSize window_size(width, height);
+  setGeometry(QRect(
+      center_pos - QPoint(window_size.width() / 2, window_size.height() / 2),
+      window_size));
 
   // Load last used options if enabled
   load_last_used_options();
@@ -362,6 +367,12 @@ void PngyuMainWindow::write_settings() {
                     is_save_compress_options_enabled());
   settings.setValue("save_output_options", is_save_output_options_enabled());
 
+  settings.endGroup();
+
+  // Save window size
+  settings.beginGroup("window");
+  settings.setValue("width", width());
+  settings.setValue("height", height());
   settings.endGroup();
 }
 
