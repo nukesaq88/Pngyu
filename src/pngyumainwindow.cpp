@@ -906,10 +906,11 @@ void PngyuMainWindow::clear_compress_result() {
   QTableWidget* table_widget = file_list_table_widget();
   const int row_count = table_widget->rowCount();
   for (int row = 0; row < row_count; ++row) {
-    ui->tableWidget_filelist->setItem(row, pngyu::COLUMN_RESULT, 0);
-    ui->tableWidget_filelist->setItem(row, pngyu::COLUMN_OUTPUT_SIZE, 0);
-    ui->tableWidget_filelist->setItem(row, pngyu::COLUMN_SAVED_SIZE, 0);
-    ui->tableWidget_filelist->setItem(row, pngyu::COLUMN_SAVED_SIZE_RATE, 0);
+    ui->tableWidget_filelist->setItem(row, pngyu::COLUMN_RESULT, nullptr);
+    ui->tableWidget_filelist->setItem(row, pngyu::COLUMN_OUTPUT_SIZE, nullptr);
+    ui->tableWidget_filelist->setItem(row, pngyu::COLUMN_SAVED_SIZE, nullptr);
+    ui->tableWidget_filelist->setItem(row, pngyu::COLUMN_SAVED_SIZE_RATE,
+                                      nullptr);
   }
   ui->statusBar->showMessage(QString());
 }
