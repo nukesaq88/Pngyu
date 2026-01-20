@@ -35,8 +35,9 @@ find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets LinguistTools)
 
 # Translation files
 set(TS_FILES
-    translations/pngyu_ja.ts
-    translations/pngyu_en.ts
+    translations/ja.ts
+    translations/en.ts
+    translations/zh.ts
 )
 
 # Generate .qm files from .ts files and embed them as resources

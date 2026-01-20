@@ -292,62 +292,62 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.cpp" line="72"/>
+        <location filename="../src/pngyumainwindow.cpp" line="71"/>
         <source>File Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.cpp" line="74"/>
+        <location filename="../src/pngyumainwindow.cpp" line="73"/>
         <source>Path</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.cpp" line="76"/>
+        <location filename="../src/pngyumainwindow.cpp" line="75"/>
         <source>Result</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.cpp" line="78"/>
+        <location filename="../src/pngyumainwindow.cpp" line="77"/>
         <source>Size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.cpp" line="80"/>
+        <location filename="../src/pngyumainwindow.cpp" line="79"/>
         <source>Compressed Size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.cpp" line="82"/>
+        <location filename="../src/pngyumainwindow.cpp" line="81"/>
         <source>Saved Size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.cpp" line="85"/>
+        <location filename="../src/pngyumainwindow.cpp" line="84"/>
         <source>Saved Size(%)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.cpp" line="184"/>
+        <location filename="../src/pngyumainwindow.cpp" line="183"/>
         <source>Executable pngquant not found.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.cpp" line="861"/>
+        <location filename="../src/pngyumainwindow.cpp" line="860"/>
         <source>Total %1 saved.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.cpp" line="924"/>
+        <location filename="../src/pngyumainwindow.cpp" line="923"/>
         <source>Executing...(%1/%2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.cpp" line="1406"/>
+        <location filename="../src/pngyumainwindow.cpp" line="1404"/>
         <source>Language Changed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.cpp" line="1407"/>
+        <location filename="../src/pngyumainwindow.cpp" line="1405"/>
         <source>Please restart the application for the language change to take effect.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -440,27 +440,32 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/preferences_dialog/pngyupreferencesdialog.ui" line="278"/>
+        <location filename="../src/preferences_dialog/pngyupreferencesdialog.ui" line="269"/>
+        <source>简体中文</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/preferences_dialog/pngyupreferencesdialog.ui" line="283"/>
         <source>ImageOptim integration</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/preferences_dialog/pngyupreferencesdialog.ui" line="287"/>
+        <location filename="../src/preferences_dialog/pngyupreferencesdialog.ui" line="292"/>
         <source>Location</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/preferences_dialog/pngyupreferencesdialog.ui" line="309"/>
+        <location filename="../src/preferences_dialog/pngyupreferencesdialog.ui" line="314"/>
         <source>Ask every time</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/preferences_dialog/pngyupreferencesdialog.ui" line="314"/>
+        <location filename="../src/preferences_dialog/pngyupreferencesdialog.ui" line="319"/>
         <source>Always enabled</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/preferences_dialog/pngyupreferencesdialog.ui" line="319"/>
+        <location filename="../src/preferences_dialog/pngyupreferencesdialog.ui" line="324"/>
         <source>Always disabled</source>
         <translation type="unfinished"></translation>
     </message>
@@ -533,35 +538,35 @@
     <name>QObject</name>
     <message>
         <location filename="../src/pngyu_execute_pngquant_command.cpp" line="82"/>
-        <location filename="../src/pngyu_execute_pngquant_command.cpp" line="85"/>
-        <location filename="../src/pngyu_execute_pngquant_command.cpp" line="89"/>
-        <location filename="../src/pngyu_execute_pngquant_command.cpp" line="109"/>
-        <location filename="../src/pngyu_execute_pngquant_command.cpp" line="117"/>
-        <location filename="../src/pngyu_execute_pngquant_command.cpp" line="122"/>
-        <location filename="../src/pngyu_execute_pngquant_command.cpp" line="126"/>
+        <location filename="../src/pngyu_execute_pngquant_command.cpp" line="86"/>
+        <location filename="../src/pngyu_execute_pngquant_command.cpp" line="90"/>
+        <location filename="../src/pngyu_execute_pngquant_command.cpp" line="110"/>
+        <location filename="../src/pngyu_execute_pngquant_command.cpp" line="119"/>
+        <location filename="../src/pngyu_execute_pngquant_command.cpp" line="125"/>
+        <location filename="../src/pngyu_execute_pngquant_command.cpp" line="129"/>
         <source>Error: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/pngyu_execute_pngquant_command.cpp" line="82"/>
-        <location filename="../src/pngyu_execute_pngquant_command.cpp" line="117"/>
+        <location filename="../src/pngyu_execute_pngquant_command.cpp" line="83"/>
+        <location filename="../src/pngyu_execute_pngquant_command.cpp" line="120"/>
         <source>Process cannot be started.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/pngyu_execute_pngquant_command.cpp" line="85"/>
-        <location filename="../src/pngyu_execute_pngquant_command.cpp" line="122"/>
+        <location filename="../src/pngyu_execute_pngquant_command.cpp" line="86"/>
+        <location filename="../src/pngyu_execute_pngquant_command.cpp" line="125"/>
         <source>Process timeout.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/pngyu_execute_pngquant_command.cpp" line="90"/>
-        <location filename="../src/pngyu_execute_pngquant_command.cpp" line="127"/>
+        <location filename="../src/pngyu_execute_pngquant_command.cpp" line="91"/>
+        <location filename="../src/pngyu_execute_pngquant_command.cpp" line="130"/>
         <source>Code %1 - %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/pngyu_execute_pngquant_command.cpp" line="109"/>
+        <location filename="../src/pngyu_execute_pngquant_command.cpp" line="111"/>
         <source>Original data is empty.</source>
         <translation type="unfinished"></translation>
     </message>

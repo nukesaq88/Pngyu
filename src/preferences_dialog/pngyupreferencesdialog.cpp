@@ -235,6 +235,8 @@ void PngyuPreferencesDialog::set_language(const QString& language) {
   m_initial_language = language;  // Save initial value for change detection
   if (language == "ja") {
     ui->comboBox_language->setCurrentIndex(2);
+  } else if (language == "zh") {
+    ui->comboBox_language->setCurrentIndex(3);
   } else if (language == "en") {
     ui->comboBox_language->setCurrentIndex(1);
   } else {
@@ -248,6 +250,8 @@ QString PngyuPreferencesDialog::language() const {
       return "en";
     case 2:
       return "ja";
+    case 3:
+      return "zh";
     default:
       return "auto";  // System default
   }

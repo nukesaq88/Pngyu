@@ -39,8 +39,9 @@ CMake will automatically compile `.ts` files into `.qm` binary files during the 
 
 ## Supported Languages
 
-- Japanese (ja): `pngyu_ja.ts`
-- English (en): `pngyu_en.ts`
+- Japanese (ja): `pngyu_ja.ts` - ✅ 104/105 translations complete
+- English (en): `pngyu_en.ts` - English source strings (no translation needed)
+- Simplified Chinese (zh): `pngyu_zh.ts` - ⚠️ Translation needed
 
 ## File Types
 

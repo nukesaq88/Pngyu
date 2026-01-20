@@ -66,12 +66,12 @@ int main(int argc, char* argv[]) {
   QTranslator appTranslator;
   if (language == "auto") {
     // For auto mode, use system locale
-    if (appTranslator.load(locale, "pngyu", "_", ":/translations")) {
+    if (appTranslator.load(locale, "", "_", ":/translations")) {
       a.installTranslator(&appTranslator);
     }
   } else {
     // For explicit language, load by language code directly
-    if (appTranslator.load(":/translations/pngyu_" + language)) {
+    if (appTranslator.load(":/translations/" + language)) {
       a.installTranslator(&appTranslator);
     }
   }

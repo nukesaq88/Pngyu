@@ -13,8 +13,9 @@ fi
 
 echo "Updating translation files..."
 lupdate "$PROJECT_ROOT/src" \
-    -ts "$PROJECT_ROOT/translations/pngyu_ja.ts" \
-        "$PROJECT_ROOT/translations/pngyu_en.ts"
+    -ts "$PROJECT_ROOT/translations/ja.ts" \
+        "$PROJECT_ROOT/translations/en.ts" \
+        "$PROJECT_ROOT/translations/zh.ts"
 
 echo ""
 echo "✓ Translation files updated!"
@@ -25,7 +26,7 @@ echo "To edit translations, use Qt Linguist:"
 LUPDATE_PATH=$(which lupdate)
 QT_BIN_DIR=$(dirname "$LUPDATE_PATH")
 if [ -d "$QT_BIN_DIR/Linguist.app" ]; then
-    echo "  open \"$QT_BIN_DIR/Linguist.app\" translations/pngyu_ja.ts"
+    echo "  open \"$QT_BIN_DIR/Linguist.app\" translations/ja.ts"
 else
     echo "  # Open Qt Linguist and load translations/pngyu_ja.ts"
 fi
