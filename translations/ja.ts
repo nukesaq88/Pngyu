@@ -120,174 +120,179 @@
         <translation>圧縮中...</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="223"/>
+        <location filename="../src/pngyumainwindow.ui" line="228"/>
         <source>Output Option</source>
         <translation>出力オプション</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="272"/>
+        <location filename="../src/pngyumainwindow.ui" line="277"/>
         <source>Output Filename</source>
         <translation>出力ファイル名</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="290"/>
+        <location filename="../src/pngyumainwindow.ui" line="295"/>
         <source>Output filename mode</source>
         <translation>出力ファイル名モード</translation>
     </message>
     <message>
         <location filename="../src/pngyumainwindow.ui" line="299"/>
+        <source>[Original].png</source>
+        <translation>[元のファイル名].png</translation>
+    </message>
+    <message>
+        <location filename="../src/pngyumainwindow.ui" line="304"/>
         <source>Custom Filename</source>
         <translation>カスタムファイル名</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="313"/>
+        <location filename="../src/pngyumainwindow.ui" line="318"/>
         <source>Filename:</source>
         <translation>ファイル名:</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="338"/>
+        <location filename="../src/pngyumainwindow.ui" line="343"/>
         <source>Input custom filename prefix</source>
         <translation>カスタムファイル名プレフィックスを入力</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="348"/>
+        <location filename="../src/pngyumainwindow.ui" line="353"/>
         <source>+ [Original Name] +</source>
         <translation>+ [元のファイル名] +</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="355"/>
+        <location filename="../src/pngyumainwindow.ui" line="360"/>
         <source>Input custom filename suffix</source>
         <translation>カスタムファイル名サフィックスを入力</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="392"/>
+        <location filename="../src/pngyumainwindow.ui" line="397"/>
         <source>Overwrite</source>
         <translation>上書き</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="402"/>
+        <location filename="../src/pngyumainwindow.ui" line="407"/>
         <source>Output Directory</source>
         <translation>出力ディレクトリ</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="429"/>
+        <location filename="../src/pngyumainwindow.ui" line="434"/>
         <source>Save to a specified directory</source>
         <translation>指定したディレクトリに保存</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="432"/>
+        <location filename="../src/pngyumainwindow.ui" line="437"/>
         <source>Other Directory</source>
         <translation>別ディレクトリ</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="448"/>
-        <location filename="../src/pngyumainwindow.ui" line="451"/>
+        <location filename="../src/pngyumainwindow.ui" line="453"/>
+        <location filename="../src/pngyumainwindow.ui" line="456"/>
         <source>Input output directory or drop it here ...</source>
         <translation>出力ディレクトリを入力またはドロップ...</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="478"/>
+        <location filename="../src/pngyumainwindow.ui" line="483"/>
         <source>Save to the same directory as the original file</source>
         <translation>元のファイルと同じディレクトリに保存</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="481"/>
+        <location filename="../src/pngyumainwindow.ui" line="486"/>
         <source>Same Directory</source>
         <translation>同じディレクトリ</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="532"/>
-        <location filename="../src/pngyumainwindow.ui" line="921"/>
+        <location filename="../src/pngyumainwindow.ui" line="537"/>
+        <location filename="../src/pngyumainwindow.ui" line="931"/>
         <source>Custom</source>
         <translation>カスタム</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="556"/>
+        <location filename="../src/pngyumainwindow.ui" line="561"/>
         <source>Overwrite the original</source>
         <translation>元ファイルを上書き</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="603"/>
+        <location filename="../src/pngyumainwindow.ui" line="613"/>
         <source>Compress Option</source>
         <translation>圧縮オプション</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="711"/>
+        <location filename="../src/pngyumainwindow.ui" line="721"/>
         <source>Colors</source>
         <translation>色数</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="736"/>
+        <location filename="../src/pngyumainwindow.ui" line="746"/>
         <source>High Quality</source>
         <translation>高品質</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="765"/>
+        <location filename="../src/pngyumainwindow.ui" line="775"/>
         <source>High Speed</source>
         <translation>高速</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="802"/>
+        <location filename="../src/pngyumainwindow.ui" line="812"/>
         <source>IE6 alpha support</source>
         <translation>IE6アルファサポート</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="830"/>
+        <location filename="../src/pngyumainwindow.ui" line="840"/>
         <source>Dithered</source>
         <translation>ディザリング</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="861"/>
+        <location filename="../src/pngyumainwindow.ui" line="871"/>
         <source>Preview</source>
         <translation>プレビュー</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="945"/>
+        <location filename="../src/pngyumainwindow.ui" line="955"/>
         <source>Default</source>
         <translation>デフォルト</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="967"/>
+        <location filename="../src/pngyumainwindow.ui" line="982"/>
         <source>Files</source>
         <translation>ファイル</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="1020"/>
+        <location filename="../src/pngyumainwindow.ui" line="1035"/>
         <source>Clear all files</source>
         <translation>すべてのファイルをクリア</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="1023"/>
+        <location filename="../src/pngyumainwindow.ui" line="1038"/>
         <source>Clear</source>
         <translation>クリア</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="1056"/>
+        <location filename="../src/pngyumainwindow.ui" line="1071"/>
         <source>Adding files...</source>
         <translation>ファイル追加中...</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="1075"/>
+        <location filename="../src/pngyumainwindow.ui" line="1090"/>
         <source>Stop searching</source>
         <translation>検索を中止</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="1078"/>
+        <location filename="../src/pngyumainwindow.ui" line="1093"/>
         <source>Stop</source>
         <translation>中止</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="1146"/>
+        <location filename="../src/pngyumainwindow.ui" line="1161"/>
         <source>File</source>
         <translation>ファイル</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="1164"/>
+        <location filename="../src/pngyumainwindow.ui" line="1179"/>
         <source>Preferences</source>
         <translation>環境設定</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="1169"/>
+        <location filename="../src/pngyumainwindow.ui" line="1184"/>
         <source>Quit</source>
         <translation>終了</translation>
     </message>
@@ -412,12 +417,12 @@
     <message>
         <location filename="../src/preferences_dialog/pngyupreferencesdialog.ui" line="173"/>
         <source>Remember last compress options</source>
-        <translation>最後の圧縮オプションを記憶</translation>
+        <translation>最後に実行した圧縮オプションを記憶</translation>
     </message>
     <message>
         <location filename="../src/preferences_dialog/pngyupreferencesdialog.ui" line="227"/>
         <source>Remember last output options</source>
-        <translation>最後の出力オプションを記憶</translation>
+        <translation>最後に実行した出力オプションを記憶</translation>
     </message>
     <message>
         <location filename="../src/preferences_dialog/pngyupreferencesdialog.ui" line="240"/>
@@ -442,7 +447,7 @@
     <message>
         <location filename="../src/preferences_dialog/pngyupreferencesdialog.ui" line="269"/>
         <source>简体中文</source>
-        <translation type="unfinished"></translation>
+        <translation>簡体中文</translation>
     </message>
     <message>
         <location filename="../src/preferences_dialog/pngyupreferencesdialog.ui" line="283"/>

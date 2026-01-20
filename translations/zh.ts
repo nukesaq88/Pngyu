@@ -120,174 +120,179 @@
         <translation>压缩中...</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="223"/>
+        <location filename="../src/pngyumainwindow.ui" line="228"/>
         <source>Output Option</source>
         <translation>输出选项</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="272"/>
+        <location filename="../src/pngyumainwindow.ui" line="277"/>
         <source>Output Filename</source>
         <translation>输出文件名</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="290"/>
+        <location filename="../src/pngyumainwindow.ui" line="295"/>
         <source>Output filename mode</source>
         <translation>输出文件名模式</translation>
     </message>
     <message>
         <location filename="../src/pngyumainwindow.ui" line="299"/>
+        <source>[Original].png</source>
+        <translation>[原始文件名].png</translation>
+    </message>
+    <message>
+        <location filename="../src/pngyumainwindow.ui" line="304"/>
         <source>Custom Filename</source>
         <translation>自定义文件名</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="313"/>
+        <location filename="../src/pngyumainwindow.ui" line="318"/>
         <source>Filename:</source>
         <translation>文件名：</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="338"/>
+        <location filename="../src/pngyumainwindow.ui" line="343"/>
         <source>Input custom filename prefix</source>
         <translation>输入自定义文件名前缀</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="348"/>
+        <location filename="../src/pngyumainwindow.ui" line="353"/>
         <source>+ [Original Name] +</source>
         <translation>+ [原始名称] +</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="355"/>
+        <location filename="../src/pngyumainwindow.ui" line="360"/>
         <source>Input custom filename suffix</source>
         <translation>输入自定义文件名后缀</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="392"/>
+        <location filename="../src/pngyumainwindow.ui" line="397"/>
         <source>Overwrite</source>
         <translation>覆盖</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="402"/>
+        <location filename="../src/pngyumainwindow.ui" line="407"/>
         <source>Output Directory</source>
         <translation>输出目录</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="429"/>
+        <location filename="../src/pngyumainwindow.ui" line="434"/>
         <source>Save to a specified directory</source>
         <translation>保存到指定目录</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="432"/>
+        <location filename="../src/pngyumainwindow.ui" line="437"/>
         <source>Other Directory</source>
         <translation>其他目录</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="448"/>
-        <location filename="../src/pngyumainwindow.ui" line="451"/>
+        <location filename="../src/pngyumainwindow.ui" line="453"/>
+        <location filename="../src/pngyumainwindow.ui" line="456"/>
         <source>Input output directory or drop it here ...</source>
         <translation>输入输出目录或拖放到此处...</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="478"/>
+        <location filename="../src/pngyumainwindow.ui" line="483"/>
         <source>Save to the same directory as the original file</source>
         <translation>保存到与原始文件相同的目录</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="481"/>
+        <location filename="../src/pngyumainwindow.ui" line="486"/>
         <source>Same Directory</source>
         <translation>相同目录</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="532"/>
-        <location filename="../src/pngyumainwindow.ui" line="921"/>
+        <location filename="../src/pngyumainwindow.ui" line="537"/>
+        <location filename="../src/pngyumainwindow.ui" line="931"/>
         <source>Custom</source>
         <translation>自定义</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="556"/>
+        <location filename="../src/pngyumainwindow.ui" line="561"/>
         <source>Overwrite the original</source>
         <translation>覆盖原始文件</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="603"/>
+        <location filename="../src/pngyumainwindow.ui" line="613"/>
         <source>Compress Option</source>
         <translation>压缩选项</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="711"/>
+        <location filename="../src/pngyumainwindow.ui" line="721"/>
         <source>Colors</source>
         <translation>颜色数</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="736"/>
+        <location filename="../src/pngyumainwindow.ui" line="746"/>
         <source>High Quality</source>
         <translation>高质量</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="765"/>
+        <location filename="../src/pngyumainwindow.ui" line="775"/>
         <source>High Speed</source>
         <translation>高速度</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="802"/>
+        <location filename="../src/pngyumainwindow.ui" line="812"/>
         <source>IE6 alpha support</source>
         <translation>IE6 透明度支持</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="830"/>
+        <location filename="../src/pngyumainwindow.ui" line="840"/>
         <source>Dithered</source>
         <translation>抖动</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="861"/>
+        <location filename="../src/pngyumainwindow.ui" line="871"/>
         <source>Preview</source>
         <translation>预览</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="945"/>
+        <location filename="../src/pngyumainwindow.ui" line="955"/>
         <source>Default</source>
         <translation>默认</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="967"/>
+        <location filename="../src/pngyumainwindow.ui" line="982"/>
         <source>Files</source>
         <translation>文件</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="1020"/>
+        <location filename="../src/pngyumainwindow.ui" line="1035"/>
         <source>Clear all files</source>
         <translation>清除所有文件</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="1023"/>
+        <location filename="../src/pngyumainwindow.ui" line="1038"/>
         <source>Clear</source>
         <translation>清除</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="1056"/>
+        <location filename="../src/pngyumainwindow.ui" line="1071"/>
         <source>Adding files...</source>
         <translation>添加文件中...</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="1075"/>
+        <location filename="../src/pngyumainwindow.ui" line="1090"/>
         <source>Stop searching</source>
         <translation>停止搜索</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="1078"/>
+        <location filename="../src/pngyumainwindow.ui" line="1093"/>
         <source>Stop</source>
         <translation>停止</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="1146"/>
+        <location filename="../src/pngyumainwindow.ui" line="1161"/>
         <source>File</source>
         <translation>文件</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="1164"/>
+        <location filename="../src/pngyumainwindow.ui" line="1179"/>
         <source>Preferences</source>
         <translation>偏好设置</translation>
     </message>
     <message>
-        <location filename="../src/pngyumainwindow.ui" line="1169"/>
+        <location filename="../src/pngyumainwindow.ui" line="1184"/>
         <source>Quit</source>
         <translation>退出</translation>
     </message>

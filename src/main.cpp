@@ -2,9 +2,11 @@
 #include <QDebug>
 #include <QFileInfo>
 #include <QFileOpenEvent>
+#include <QFont>
 #include <QLibraryInfo>
 #include <QLocale>
 #include <QSettings>
+#include <QStyleHints>
 #include <QTranslator>
 
 #include "pngyumainwindow.h"
@@ -21,10 +23,7 @@ class PngyuApplication : public QApplication {
     if (e->type() == QEvent::FileOpen) {  // for MAC OS X Drag and Drop event
       const QFileOpenEvent* const file_event = static_cast<QFileOpenEvent*>(e);
       if (m_pngyu_main) {
-        QList<QFileInfo> info_list;
-        const QString file = file_event->file();
-        info_list.push_back(QFileInfo(file_event->file()));
-        m_pngyu_main->append_file_info_list(info_list);
+        m_pngyu_main->append_file_info_list({QFileInfo(file_event->file())});
         return true;
       } else {
         return QApplication::event(e);
@@ -66,7 +65,8 @@ int main(int argc, char* argv[]) {
   QTranslator appTranslator;
   if (language == "auto") {
     // For auto mode, use system locale
-    if (appTranslator.load(locale, "", "_", ":/translations")) {
+    // QTranslator will try: en_US, en, ja_JP, ja, zh_CN, zh, etc.
+    if (appTranslator.load(locale, ":/translations")) {
       a.installTranslator(&appTranslator);
     }
   } else {
@@ -79,6 +79,21 @@ int main(int argc, char* argv[]) {
   PngyuMainWindow w;
   a.set_pngyu_main(&w);
   w.show();
+
+  // Hack: Fix color scheme issue in CI build
+  QPalette pal = qApp->palette();
+  if (QGuiApplication::styleHints()->colorScheme() == Qt::ColorScheme::Light) {
+    pal.setColor(QPalette::Window, QColor(255, 255, 255));
+  } else {
+    pal.setColor(QPalette::Window, QColor(30, 30, 30));
+  }
+  qApp->setPalette(pal);
+
+  qDebug() << "Locale:" << locale.name();
+  qDebug() << "Style:" << a.style()->objectName();
+  qDebug() << "Palette window:" << qApp->palette().color(QPalette::Window);
+  qDebug() << "Palette base:" << qApp->palette().color(QPalette::Base);
+  qDebug() << "Color scheme:" << QGuiApplication::styleHints()->colorScheme();
 
   const QStringList argments = a.arguments();
   QFileInfoList file_list;

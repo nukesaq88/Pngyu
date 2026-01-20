@@ -844,7 +844,7 @@ void PngyuMainWindow::execute_compress_all(const bool image_optim_enabled) {
   QStringList succeed_src_filepaths;
   QStringList succeed_dst_filepaths;
 
-  for (const pngyu::CompressResult& res : result_list) {
+  for (const pngyu::CompressResult& res : std::as_const(result_list)) {
     if (res.result) {
       succeed_src_filepaths.push_back(res.src_path);
       succeed_dst_filepaths.push_back(res.dst_path);
@@ -1056,7 +1056,7 @@ void PngyuMainWindow::update_file_table() {
   table_widget->setRowCount(static_cast<int>(m_file_list.size()));
   {  // append files
     int row_index = 0;
-    for (const QFileInfo& file_info : m_file_list) {
+    for (const QFileInfo& file_info : std::as_const(m_file_list)) {
       QTableWidgetItem* const basename_item =
           new QTableWidgetItem(file_info.baseName());
       basename_item->setToolTip(file_info.baseName());

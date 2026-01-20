@@ -72,6 +72,10 @@ This will bundle Qt DLLs and create an archive.
 
 The deployment scripts work with both command-line and Qt Creator builds, as long as the build directory is `build/Release` (configurable via `BUILD_DIR` environment variable).
 
+## Internationalization (i18n)
+
+Pngyu supports multiple languages. For information about translations and contributing new languages, see [translations/README.md](translations/README.md).
+
 ## License
 
 Pngyu itself is distributed under the BSD license.

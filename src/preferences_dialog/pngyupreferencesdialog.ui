@@ -206,7 +206,7 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset>
+               <iconset resource="../../resource/resource.qrc">
                 <normaloff>:/icons/folder.png</normaloff>:/icons/folder.png</iconset>
               </property>
              </widget>
@@ -302,7 +302,7 @@
             <string/>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="../../resource/resource.qrc">
              <normaloff>:/icons/folder.png</normaloff>:/icons/folder.png</iconset>
            </property>
           </widget>
@@ -354,8 +354,25 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>comboBox_language</tabstop>
+  <tabstop>spinBox_n_jobs</tabstop>
+  <tabstop>spinBox_timeout</tabstop>
+  <tabstop>comboBox_pngquant_path</tabstop>
+  <tabstop>toolButton_open_pngquant_location</tabstop>
+  <tabstop>checkBox_force_execute</tabstop>
+  <tabstop>checkBox_save_compress_options</tabstop>
+  <tabstop>checkBox_save_output_options</tabstop>
+  <tabstop>comboBox_imageoptim_integration</tabstop>
+  <tabstop>lineEdit_imageoptim_location</tabstop>
+  <tabstop>toolButton_open_imageoptim_location</tabstop>
+  <tabstop>pushButton_apply</tabstop>
+  <tabstop>pushButton_cancel</tabstop>
+  <tabstop>pushButton_close</tabstop>
+  <tabstop>pushButton_ok</tabstop>
+ </tabstops>
  <resources>
-  <include location="../resource/resource.qrc"/>
+  <include location="../../resource/resource.qrc"/>
  </resources>
  <connections/>
 </ui>

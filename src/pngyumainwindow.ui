@@ -219,6 +219,11 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
     </item>
     <item row="5" column="0" colspan="5">
      <widget class="QGroupBox" name="groupBox_output_option">
+      <property name="font">
+       <font>
+        <pointsize>13</pointsize>
+       </font>
+      </property>
       <property name="title">
        <string>Output Option</string>
       </property>
@@ -291,7 +296,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
                </property>
                <item>
                 <property name="text">
-                 <string notr="true">[Original].png</string>
+                 <string>[Original].png</string>
                 </property>
                </item>
                <item>
@@ -598,6 +603,11 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>13</pointsize>
+       </font>
       </property>
       <property name="title">
        <string>Compress Option</string>
@@ -963,6 +973,11 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
     </item>
     <item row="4" column="0" colspan="5">
      <widget class="QGroupBox" name="groupBox_filelist">
+      <property name="font">
+       <font>
+        <pointsize>13</pointsize>
+       </font>
+      </property>
       <property name="title">
        <string>Files</string>
       </property>
@@ -1207,7 +1222,7 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
  <connections/>
  <buttongroups>
   <buttongroup name="buttonGroup_output_directory_mode"/>
-  <buttongroup name="buttonGroup_compress_option_mode"/>
   <buttongroup name="buttonGroup_output_option_mode"/>
+  <buttongroup name="buttonGroup_compress_option_mode"/>
  </buttongroups>
 </ui>

@@ -39,9 +39,9 @@ CMake will automatically compile `.ts` files into `.qm` binary files during the 
 
 ## Supported Languages
 
-- Japanese (ja): `pngyu_ja.ts` - ✅ 104/105 translations complete
-- English (en): `pngyu_en.ts` - English source strings (no translation needed)
-- Simplified Chinese (zh): `pngyu_zh.ts` - ⚠️ Translation needed
+- English (en): `en.ts` - English source strings (no translation needed)
+- Japanese (ja): `ja.ts`
+- Simplified Chinese (zh): `zh.ts` 
 
 ## File Types
 
@@ -76,15 +76,15 @@ CMake will automatically compile `.ts` files into `.qm` binary files during the 
 1. Add new `.ts` file to `CMakeLists.txt`:
    ```cmake
    set(TS_FILES
-       translations/pngyu_ja.ts
-       translations/pngyu_en.ts
-       translations/pngyu_zh.ts  # Example: Chinese
+       translations/ja.ts
+       translations/en.ts
+       translations/zh.ts  # Example: Chinese
    )
    ```
 
 2. Add corresponding `.qm` file to `resource/resource.qrc`:
    ```xml
-   <file>../translations/pngyu_zh.qm</file>
+   <file>../translations/zh.qm</file>
    ```
 
 3. Run update script to create the new `.ts` file
