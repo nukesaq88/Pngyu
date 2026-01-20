@@ -79,16 +79,17 @@ QPair<bool, QString> execute_compress(const QString& pngquant_command) {
     process.start(pngquant_command);
 
     if (!process.waitForStarted()) {
-      throw QString("Error: Process cannot started");
+      throw QObject::tr("Error: %1").arg(QObject::tr("Process cannot be started."));
     }
     if (!process.waitForFinished(30000)) {
-      throw QString("Error: Process timeout");
+      throw QObject::tr("Error: %1").arg(QObject::tr("Process timeout."));
     }
     const int exit_code = process.exitCode();
     if (process.exitCode() != 0) {
-      throw QString("Error code : %1\nCause : %2")
-          .arg(exit_code)
-          .arg(QString(process.readAllStandardError()));
+      throw QObject::tr("Error: %1")
+          .arg(QObject::tr("Code %1 - %2")
+                   .arg(exit_code)
+                   .arg(QString(process.readAllStandardError().trimmed())));
     }
   } catch (const QString& e) {
     compress_succeed = false;
@@ -105,7 +106,7 @@ QPair<QByteArray, QString> execute_compress_stdio_mode(
   QString error_string;
   try {
     if (src_png_data.isEmpty()) {
-      throw QString("Error: Original data is empty");
+      throw QObject::tr("Error: %1").arg(QObject::tr("Original data is empty."));
     }
 
     QProcess process;
@@ -113,18 +114,19 @@ QPair<QByteArray, QString> execute_compress_stdio_mode(
     process.start(pngquant_command);
 
     if (!process.waitForStarted()) {
-      throw QString("Error: Process cannot started");
+      throw QObject::tr("Error: %1").arg(QObject::tr("Process cannot be started."));
     }
     process.write(src_png_data);
     process.closeWriteChannel();
     if (!process.waitForFinished()) {
-      throw QString("Error: Process timeout");
+      throw QObject::tr("Error: %1").arg(QObject::tr("Process timeout."));
     }
     const int exit_code = process.exitCode();
     if (process.exitCode() != 0) {
-      throw QString("Error code : %1\nCause : %2")
-          .arg(exit_code)
-          .arg(QString(process.readAllStandardError()));
+      throw QObject::tr("Error: %1")
+          .arg(QObject::tr("Code %1 - %2")
+                   .arg(exit_code)
+                   .arg(QString(process.readAllStandardError().trimmed())));
     }
     dst_png_data = process.readAllStandardOutput();
   } catch (const QString& e) {

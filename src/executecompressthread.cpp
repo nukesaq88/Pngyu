@@ -73,11 +73,12 @@ void ExecuteCompressThread::run() {
 
   try {
     if (!QFile::exists(m_pngquant_path)) {
-      throw tr("Error: pngquant path not found : ") + m_pngquant_path;
+      throw tr("Error: %1")
+          .arg(tr("Pngquant was not found. %1").arg(m_pngquant_path));
     }
 
     if (m_src_png_data.isEmpty()) {
-      throw tr("Error: Original data is empty");
+      throw tr("Error: %1").arg(tr("Original data is empty."));
     }
 
     process.start(m_pngquant_path,
@@ -90,11 +91,11 @@ void ExecuteCompressThread::run() {
       while (!process.waitForStarted(30)) {
         if (m_stop_request) {
           b_stop_request_called = true;
-          throw tr("Error: stop request");
+          throw tr("Error: %1").arg(tr("Cancelled."));
         }
 
         if (t.elapsed() > timeout_ms) {
-          throw tr("Error: Process cannot started");
+          throw tr("Error: %1").arg(tr("Process cannot be started."));
         }
       }
     }
@@ -110,23 +111,24 @@ void ExecuteCompressThread::run() {
       while (!process.waitForFinished(30)) {
         if (m_stop_request) {
           b_stop_request_called = true;
-          throw tr("Error: stop request");
+          throw tr("Error: %1").arg(tr("Cancelled."));
         }
 
         if (t.elapsed() > timeout_ms) {
-          throw tr("Error: Process timeout");
+          throw tr("Error: %1").arg(tr("Process timeout."));
         }
       }
     }
     if (m_stop_request) {
-      throw tr("Error: stop request");
+      throw tr("Error: %1").arg(tr("Cancelled."));
     }
 
     const int exit_code = process.exitCode();
     if (exit_code != 0) {
-      throw tr("Error code : %1\nCause : %2")
-          .arg(exit_code)
-          .arg(QString(process.readAllStandardError()));
+      throw tr("Error: %1")
+          .arg(tr("Code %1 - %2")
+                   .arg(exit_code)
+                   .arg(QString(process.readAllStandardError().trimmed())));
     }
 
     m_dst_png_data = process.readAllStandardOutput();

@@ -180,7 +180,7 @@ PngyuMainWindow::PngyuMainWindow(QWidget* parent)
         pngyu::find_executable_pngquant();
     if (executable_pngquant_list.empty()) {
       set_busy_mode(true);
-      ui->statusBar->showMessage(tr("Executable pngquant not found"));
+      ui->statusBar->showMessage(tr("Executable pngquant not found."));
     } else {
       set_executable_pngquant_path(executable_pngquant_list.first());
     }
@@ -855,7 +855,7 @@ void PngyuMainWindow::execute_compress_all(const bool image_optim_enabled) {
         total_saved_size > 500 * 1024
             ? pngyu::util::size_to_string_mb(total_saved_size)
             : pngyu::util::size_to_string_kb(total_saved_size);
-    ui->statusBar->showMessage(tr("Total %1 saved").arg(size_string));
+    ui->statusBar->showMessage(tr("Total %1 saved.").arg(size_string));
   }
 
   if (image_optim_enabled) {

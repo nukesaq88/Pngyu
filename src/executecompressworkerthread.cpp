@@ -22,12 +22,13 @@ pngyu::CompressResult ExecuteCompressWorkerThread::execute_compress(
 
   try {
     if (dst_path.isEmpty()) {
-      throw tr("Error: Output option is invalid");
+      throw tr("Error: %1").arg(tr("Output option is invalid."));
     }
 
     const bool dst_path_exists = QFile::exists(dst_path);
     if (dst_path_exists && !overwrite_enable) {
-      throw tr("Error: \"%1\" is already exists").arg(dst_path);
+      throw tr("Error: %1")
+          .arg(tr("Output file already exists.") + " " + (dst_path));
     }
 
     const QByteArray& src_png_data =
@@ -73,13 +74,13 @@ pngyu::CompressResult ExecuteCompressWorkerThread::execute_compress(
     if (dst_path_exists) {
       // remove old file
       if (!QFile::remove(dst_path)) {
-        throw tr("Error: Couldn't overwrite");
+        throw tr("Error: %1").arg(tr("Couldn't overwrite existing file."));
       }
     }
 
     // copy result file to dst_path
     if (!pngyu::util::write_png_data(dst_path, dst_png_data)) {
-      throw tr("Error: Couldn't save output file");
+      throw tr("Error: %1").arg(tr("Couldn't save output file."));
     }
 
     res.result = true;
