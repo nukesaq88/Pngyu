@@ -79,7 +79,6 @@ set(PROJECT_RESOURCES
 # Create executable
 if(APPLE)
     set(MACOSX_BUNDLE_ICON_FILE icon.icns)
-    set(MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/resource/Info.plist)
     
     qt_add_executable(Pngyu MACOSX_BUNDLE
         ${PROJECT_SOURCES}
@@ -89,6 +88,11 @@ if(APPLE)
     
     set_source_files_properties(resource/icon.icns PROPERTIES
         MACOSX_PACKAGE_LOCATION "Resources"
+    )
+    
+    # Set custom Info.plist
+    set_target_properties(Pngyu PROPERTIES
+        MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/resource/Info.plist
     )
     
     # Copy pngquant binary to app bundle
