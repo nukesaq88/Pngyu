@@ -31,7 +31,19 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 # Find Qt6 packages
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets LinguistTools)
+
+# Translation files
+set(TS_FILES
+    translations/pngyu_ja.ts
+    translations/pngyu_en.ts
+)
+
+# Generate .qm files from .ts files and embed them as resources
+qt_add_translations(Pngyu
+    TS_FILES ${TS_FILES}
+    RESOURCE_PREFIX "/translations"
+)
 
 # Include directories
 include_directories(

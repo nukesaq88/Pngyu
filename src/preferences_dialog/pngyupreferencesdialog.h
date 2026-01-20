@@ -46,8 +46,14 @@ class PngyuPreferencesDialog : public QDialog {
   void set_save_output_options_enabled(const bool enable);
   bool is_save_output_options_enabled() const;
 
+  void set_language(const QString& language);
+  QString language() const;
+  bool is_language_changed() const;
+
  private:
   Ui::PngyuPreferencesDialog* ui;
+  QString
+      m_initial_language;  // Track initial language value for change detection
 
  private slots:
 

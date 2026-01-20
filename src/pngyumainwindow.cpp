@@ -195,7 +195,7 @@ PngyuMainWindow::~PngyuMainWindow() {
   delete ui;
 }
 
-QString PngyuMainWindow::get_settings_file_path() const {
+QString PngyuMainWindow::get_settings_file_path() {
   // Use standard application data location
   // Windows: %APPDATA%/Pngyu/Pngyu.ini
   // macOS: ~/Library/Application Support/Pngyu/Pngyu.ini
@@ -250,6 +250,8 @@ void PngyuMainWindow::read_settings() {
   const bool save_output_options =
       settings.value("save_output_options", false).toBool();
   set_save_output_options_enabled(save_output_options);
+
+  // Note: Language setting is loaded in main.cpp before app starts
 
   settings.endGroup();
 
@@ -1362,6 +1364,13 @@ void PngyuMainWindow::menu_preferences_pushed() {
   m_preferences_dialog->set_save_output_options_enabled(
       is_save_output_options_enabled());
 
+  // Load language setting
+  QSettings settings(get_settings_file_path(), QSettings::IniFormat);
+  settings.beginGroup("options");
+  const QString language = settings.value("language", "auto").toString();
+  settings.endGroup();
+  m_preferences_dialog->set_language(language);
+
   m_preferences_dialog->set_apply_button_enabled(false);
 
   m_preferences_dialog->show();
@@ -1382,6 +1391,20 @@ void PngyuMainWindow::preferences_apply_pushed() {
       m_preferences_dialog->is_save_compress_options_enabled());
   set_save_output_options_enabled(
       m_preferences_dialog->is_save_output_options_enabled());
+
+  // Save language setting
+  const QString language = m_preferences_dialog->language();
+  QSettings settings(get_settings_file_path(), QSettings::IniFormat);
+  settings.beginGroup("options");
+  settings.setValue("language", language);
+  settings.endGroup();
+
+  // Show message only if language was actually changed
+  if (m_preferences_dialog->is_language_changed()) {
+    QMessageBox::information(this, tr("Language Changed"),
+                             tr("Please restart the application for the "
+                                "language change to take effect."));
+  }
 }
 
 void PngyuMainWindow::stop_request() {

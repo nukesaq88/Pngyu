@@ -27,3 +27,6 @@ build-*/
 *~
 *.swp
 *.swo
+
+# Translation binary files (generated from .ts)
+*.qm

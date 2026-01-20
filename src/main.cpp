@@ -2,6 +2,10 @@
 #include <QDebug>
 #include <QFileInfo>
 #include <QFileOpenEvent>
+#include <QLibraryInfo>
+#include <QLocale>
+#include <QSettings>
+#include <QTranslator>
 
 #include "pngyumainwindow.h"
 
@@ -39,6 +43,38 @@ int main(int argc, char* argv[]) {
   // Set application information for QSettings
   QCoreApplication::setOrganizationName("Pngyu");
   QCoreApplication::setApplicationName("Pngyu");
+
+  // Load language setting
+  QSettings settings(PngyuMainWindow::get_settings_file_path(),
+                     QSettings::IniFormat);
+  settings.beginGroup("options");
+  const QString language = settings.value("language", "auto").toString();
+  settings.endGroup();
+
+  // Determine locale to use
+  const QLocale locale =
+      (language == "auto") ? QLocale::system() : QLocale(language);
+
+  // Load Qt translations
+  QTranslator qtTranslator;
+  if (qtTranslator.load(locale, "qt", "_",
+                        QLibraryInfo::path(QLibraryInfo::TranslationsPath))) {
+    a.installTranslator(&qtTranslator);
+  }
+
+  // Load app translations
+  QTranslator appTranslator;
+  if (language == "auto") {
+    // For auto mode, use system locale
+    if (appTranslator.load(locale, "pngyu", "_", ":/translations")) {
+      a.installTranslator(&appTranslator);
+    }
+  } else {
+    // For explicit language, load by language code directly
+    if (appTranslator.load(":/translations/pngyu_" + language)) {
+      a.installTranslator(&appTranslator);
+    }
+  }
 
   PngyuMainWindow w;
   a.set_pngyu_main(&w);

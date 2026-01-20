@@ -74,7 +74,7 @@ void ExecuteCompressThread::run() {
   try {
     if (!QFile::exists(m_pngquant_path)) {
       throw tr("Error: %1")
-          .arg(tr("Pngquant was not found. %1").arg(m_pngquant_path));
+          .arg(tr("Pngquant was not found.") + " " + (m_pngquant_path));
     }
 
     if (m_src_png_data.isEmpty()) {

@@ -79,7 +79,8 @@ QPair<bool, QString> execute_compress(const QString& pngquant_command) {
     process.start(pngquant_command);
 
     if (!process.waitForStarted()) {
-      throw QObject::tr("Error: %1").arg(QObject::tr("Process cannot be started."));
+      throw QObject::tr("Error: %1")
+          .arg(QObject::tr("Process cannot be started."));
     }
     if (!process.waitForFinished(30000)) {
       throw QObject::tr("Error: %1").arg(QObject::tr("Process timeout."));
@@ -106,7 +107,8 @@ QPair<QByteArray, QString> execute_compress_stdio_mode(
   QString error_string;
   try {
     if (src_png_data.isEmpty()) {
-      throw QObject::tr("Error: %1").arg(QObject::tr("Original data is empty."));
+      throw QObject::tr("Error: %1")
+          .arg(QObject::tr("Original data is empty."));
     }
 
     QProcess process;
@@ -114,7 +116,8 @@ QPair<QByteArray, QString> execute_compress_stdio_mode(
     process.start(pngquant_command);
 
     if (!process.waitForStarted()) {
-      throw QObject::tr("Error: %1").arg(QObject::tr("Process cannot be started."));
+      throw QObject::tr("Error: %1")
+          .arg(QObject::tr("Process cannot be started."));
     }
     process.write(src_png_data);
     process.closeWriteChannel();
