@@ -1103,6 +1103,9 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
          <property name="sortingEnabled">
           <bool>true</bool>
          </property>
+         <attribute name="horizontalHeaderDefaultSectionSize">
+          <number>120</number>
+         </attribute>
          <attribute name="verticalHeaderVisible">
           <bool>false</bool>
          </attribute>
@@ -1203,8 +1206,8 @@ QToolButton#toolButton_output_option_overwrite_original::pressed
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_compress_option_mode"/>
-  <buttongroup name="buttonGroup_output_option_mode"/>
   <buttongroup name="buttonGroup_output_directory_mode"/>
+  <buttongroup name="buttonGroup_output_option_mode"/>
+  <buttongroup name="buttonGroup_compress_option_mode"/>
  </buttongroups>
 </ui>
