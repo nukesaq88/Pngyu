@@ -37,6 +37,14 @@ class PngyuApplication : public QApplication {
 };
 
 int main(int argc, char* argv[]) {
+#ifdef Q_OS_WIN
+  // Allocate console for debug output on Windows
+  if (AttachConsole(ATTACH_PARENT_PROCESS) || AllocConsole()) {
+    freopen("CONOUT$", "w", stdout);
+    freopen("CONOUT$", "w", stderr);
+  }
+#endif
+
   PngyuApplication a(argc, argv);
 
   // Set application information for QSettings

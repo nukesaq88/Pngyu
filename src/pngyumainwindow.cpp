@@ -114,10 +114,10 @@ PngyuMainWindow::PngyuMainWindow(QWidget* parent)
   connect(ui->radioButton_output_same_directory, SIGNAL(toggled(bool)), this,
           SLOT(output_directory_mode_changed()));
 
-  connect(ui->toolButton_compress_option_default, SIGNAL(toggled(bool)), this,
+  connect(ui->pushButton_compress_option_default, SIGNAL(toggled(bool)), this,
           SLOT(compress_option_mode_changed()));
 
-  connect(ui->toolButton_output_option_overwrite_original,
+  connect(ui->pushButton_output_option_overwrite_original,
           SIGNAL(toggled(bool)), this, SLOT(output_option_mode_changed()));
 
   connect(ui->comboBox_output_filename_mode, SIGNAL(currentIndexChanged(int)),
@@ -145,7 +145,7 @@ PngyuMainWindow::PngyuMainWindow(QWidget* parent)
           SLOT(compress_option_changed()));
   connect(ui->checkBox_dithered, SIGNAL(stateChanged(int)), this,
           SLOT(compress_option_changed()));
-  connect(ui->toolButton_compress_option_default, SIGNAL(toggled(bool)), this,
+  connect(ui->pushButton_compress_option_default, SIGNAL(toggled(bool)), this,
           SLOT(compress_option_changed()));
   ///
 
@@ -514,18 +514,18 @@ QString PngyuMainWindow::executable_image_optim_path() const {
 void PngyuMainWindow::set_current_compress_option_mode(
     const pngyu::CompressOptionMode mode) {
   if (mode == pngyu::COMPRESS_OPTION_DEFAULT) {
-    ui->toolButton_compress_option_default->setChecked(true);
+    ui->pushButton_compress_option_default->setChecked(true);
   } else if (mode == pngyu::COMPRESS_OPTION_CUSTOM) {
-    ui->toolButton_compress_option_custom->setChecked(true);
+    ui->pushButton_compress_option_custom->setChecked(true);
   }
 }
 
 pngyu::CompressOptionMode PngyuMainWindow::current_compress_option_mode()
     const {
   const bool default_checked =
-      ui->toolButton_compress_option_default->isChecked();
+      ui->pushButton_compress_option_default->isChecked();
   const bool custom_checked =
-      ui->toolButton_compress_option_custom->isChecked();
+      ui->pushButton_compress_option_custom->isChecked();
   if (default_checked && !custom_checked) {
     return pngyu::COMPRESS_OPTION_DEFAULT;
   } else if (!default_checked && custom_checked) {
@@ -537,16 +537,16 @@ pngyu::CompressOptionMode PngyuMainWindow::current_compress_option_mode()
 void PngyuMainWindow::set_current_output_option_mode(
     const pngyu::OutputOptionMode mode) {
   if (mode == pngyu::OUTPUT_OPTION_OVERWITE_ORIGINAL) {
-    ui->toolButton_output_option_overwrite_original->setChecked(true);
+    ui->pushButton_output_option_overwrite_original->setChecked(true);
   } else if (mode == pngyu::OUTPUT_OPTION_CUSTOM) {
-    ui->toolButton_output_option_custom->setChecked(true);
+    ui->pushButton_output_option_custom->setChecked(true);
   }
 }
 
 pngyu::OutputOptionMode PngyuMainWindow::current_output_option_mode() const {
   const bool overwrite_origin_checked =
-      ui->toolButton_output_option_overwrite_original->isChecked();
-  const bool custom_checked = ui->toolButton_output_option_custom->isChecked();
+      ui->pushButton_output_option_overwrite_original->isChecked();
+  const bool custom_checked = ui->pushButton_output_option_custom->isChecked();
   if (overwrite_origin_checked && !custom_checked) {
     return pngyu::OUTPUT_OPTION_OVERWITE_ORIGINAL;
   } else if (!overwrite_origin_checked && custom_checked) {
@@ -978,7 +978,7 @@ void PngyuMainWindow::dragMoveEvent(QDragMoveEvent* event) {
 
     // if dragg mouse is on output custom button open custom menu
     if (current_output_option_mode() != pngyu::OUTPUT_OPTION_CUSTOM &&
-        pngyu::util::is_under_mouse(ui->toolButton_output_option_custom)) {
+        pngyu::util::is_under_mouse(ui->pushButton_output_option_custom)) {
       m_temporary_custom_output_custom_on = true;
       set_current_output_option_mode(pngyu::OUTPUT_OPTION_CUSTOM);
     } else if (m_temporary_custom_output_custom_on &&
