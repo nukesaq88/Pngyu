@@ -114,10 +114,10 @@ PngyuMainWindow::PngyuMainWindow(QWidget* parent)
   connect(ui->radioButton_output_same_directory, SIGNAL(toggled(bool)), this,
           SLOT(output_directory_mode_changed()));
 
-  connect(ui->toolButton_compress_option_default, SIGNAL(toggled(bool)), this,
+  connect(ui->pushButton_compress_option_default, SIGNAL(toggled(bool)), this,
           SLOT(compress_option_mode_changed()));
 
-  connect(ui->toolButton_output_option_overwrite_original,
+  connect(ui->pushButton_output_option_overwrite_original,
           SIGNAL(toggled(bool)), this, SLOT(output_option_mode_changed()));
 
   connect(ui->comboBox_output_filename_mode, SIGNAL(currentIndexChanged(int)),
@@ -145,7 +145,7 @@ PngyuMainWindow::PngyuMainWindow(QWidget* parent)
           SLOT(compress_option_changed()));
   connect(ui->checkBox_dithered, SIGNAL(stateChanged(int)), this,
           SLOT(compress_option_changed()));
-  connect(ui->toolButton_compress_option_default, SIGNAL(toggled(bool)), this,
+  connect(ui->pushButton_compress_option_default, SIGNAL(toggled(bool)), this,
           SLOT(compress_option_changed()));
   ///
 
@@ -180,7 +180,7 @@ PngyuMainWindow::PngyuMainWindow(QWidget* parent)
         pngyu::find_executable_pngquant();
     if (executable_pngquant_list.empty()) {
       set_busy_mode(true);
-      ui->statusBar->showMessage(tr("Executable pngquant not found"));
+      ui->statusBar->showMessage(tr("Executable pngquant not found."));
     } else {
       set_executable_pngquant_path(executable_pngquant_list.first());
     }
@@ -195,7 +195,7 @@ PngyuMainWindow::~PngyuMainWindow() {
   delete ui;
 }
 
-QString PngyuMainWindow::get_settings_file_path() const {
+QString PngyuMainWindow::get_settings_file_path() {
   // Use standard application data location
   // Windows: %APPDATA%/Pngyu/Pngyu.ini
   // macOS: ~/Library/Application Support/Pngyu/Pngyu.ini
@@ -250,6 +250,8 @@ void PngyuMainWindow::read_settings() {
   const bool save_output_options =
       settings.value("save_output_options", false).toBool();
   set_save_output_options_enabled(save_output_options);
+
+  // Note: Language setting is loaded in main.cpp before app starts
 
   settings.endGroup();
 
@@ -512,18 +514,18 @@ QString PngyuMainWindow::executable_image_optim_path() const {
 void PngyuMainWindow::set_current_compress_option_mode(
     const pngyu::CompressOptionMode mode) {
   if (mode == pngyu::COMPRESS_OPTION_DEFAULT) {
-    ui->toolButton_compress_option_default->setChecked(true);
+    ui->pushButton_compress_option_default->setChecked(true);
   } else if (mode == pngyu::COMPRESS_OPTION_CUSTOM) {
-    ui->toolButton_compress_option_custom->setChecked(true);
+    ui->pushButton_compress_option_custom->setChecked(true);
   }
 }
 
 pngyu::CompressOptionMode PngyuMainWindow::current_compress_option_mode()
     const {
   const bool default_checked =
-      ui->toolButton_compress_option_default->isChecked();
+      ui->pushButton_compress_option_default->isChecked();
   const bool custom_checked =
-      ui->toolButton_compress_option_custom->isChecked();
+      ui->pushButton_compress_option_custom->isChecked();
   if (default_checked && !custom_checked) {
     return pngyu::COMPRESS_OPTION_DEFAULT;
   } else if (!default_checked && custom_checked) {
@@ -535,16 +537,16 @@ pngyu::CompressOptionMode PngyuMainWindow::current_compress_option_mode()
 void PngyuMainWindow::set_current_output_option_mode(
     const pngyu::OutputOptionMode mode) {
   if (mode == pngyu::OUTPUT_OPTION_OVERWITE_ORIGINAL) {
-    ui->toolButton_output_option_overwrite_original->setChecked(true);
+    ui->pushButton_output_option_overwrite_original->setChecked(true);
   } else if (mode == pngyu::OUTPUT_OPTION_CUSTOM) {
-    ui->toolButton_output_option_custom->setChecked(true);
+    ui->pushButton_output_option_custom->setChecked(true);
   }
 }
 
 pngyu::OutputOptionMode PngyuMainWindow::current_output_option_mode() const {
   const bool overwrite_origin_checked =
-      ui->toolButton_output_option_overwrite_original->isChecked();
-  const bool custom_checked = ui->toolButton_output_option_custom->isChecked();
+      ui->pushButton_output_option_overwrite_original->isChecked();
+  const bool custom_checked = ui->pushButton_output_option_custom->isChecked();
   if (overwrite_origin_checked && !custom_checked) {
     return pngyu::OUTPUT_OPTION_OVERWITE_ORIGINAL;
   } else if (!overwrite_origin_checked && custom_checked) {
@@ -667,6 +669,7 @@ void PngyuMainWindow::set_image_optim_integration_mode(
 #ifdef Q_OS_MACOS
   m_image_optim_integration = mode;
 #else
+  Q_UNUSED(mode);
   m_image_optim_integration = pngyu::IMAGEOPTIM_ALWAYS_DISABLED;
 #endif
 }
@@ -756,17 +759,17 @@ void PngyuMainWindow::execute_compress_all(const bool image_optim_enabled) {
     const QString& src_path = absolute_path_item->text();
     const QString& dst_path = make_output_file_path_string(src_path);
 
-    pngyu::CompressQueueData data;
-    data.src_path = src_path;
-    data.dst_path = dst_path;
-    data.pngquant_path = pngquant_path;
-    data.pngquant_option = option;
-    data.overwrite_enabled = b_overwrite_enable;
-    data.force_execute_if_negative = b_force_execute_if_negative;
-    data.table_widget = table_widget;
-    data.table_row = row;
+    pngyu::CompressQueueData queue_data;
+    queue_data.src_path = src_path;
+    queue_data.dst_path = dst_path;
+    queue_data.pngquant_path = pngquant_path;
+    queue_data.pngquant_option = option;
+    queue_data.overwrite_enabled = b_overwrite_enable;
+    queue_data.force_execute_if_negative = b_force_execute_if_negative;
+    queue_data.table_widget = table_widget;
+    queue_data.table_row = row;
 
-    queue.enqueue(data);
+    queue.enqueue(queue_data);
 
   }  // end of file list loop
 
@@ -842,7 +845,7 @@ void PngyuMainWindow::execute_compress_all(const bool image_optim_enabled) {
   QStringList succeed_src_filepaths;
   QStringList succeed_dst_filepaths;
 
-  for (const pngyu::CompressResult& res : result_list) {
+  for (const pngyu::CompressResult& res : std::as_const(result_list)) {
     if (res.result) {
       succeed_src_filepaths.push_back(res.src_path);
       succeed_dst_filepaths.push_back(res.dst_path);
@@ -855,7 +858,7 @@ void PngyuMainWindow::execute_compress_all(const bool image_optim_enabled) {
         total_saved_size > 500 * 1024
             ? pngyu::util::size_to_string_mb(total_saved_size)
             : pngyu::util::size_to_string_kb(total_saved_size);
-    ui->statusBar->showMessage(tr("Total %1 saved").arg(size_string));
+    ui->statusBar->showMessage(tr("Total %1 saved.").arg(size_string));
   }
 
   if (image_optim_enabled) {
@@ -976,7 +979,7 @@ void PngyuMainWindow::dragMoveEvent(QDragMoveEvent* event) {
 
     // if dragg mouse is on output custom button open custom menu
     if (current_output_option_mode() != pngyu::OUTPUT_OPTION_CUSTOM &&
-        pngyu::util::is_under_mouse(ui->toolButton_output_option_custom)) {
+        pngyu::util::is_under_mouse(ui->pushButton_output_option_custom)) {
       m_temporary_custom_output_custom_on = true;
       set_current_output_option_mode(pngyu::OUTPUT_OPTION_CUSTOM);
     } else if (m_temporary_custom_output_custom_on &&
@@ -1054,7 +1057,7 @@ void PngyuMainWindow::update_file_table() {
   table_widget->setRowCount(static_cast<int>(m_file_list.size()));
   {  // append files
     int row_index = 0;
-    for (const QFileInfo& file_info : m_file_list) {
+    for (const QFileInfo& file_info : std::as_const(m_file_list)) {
       QTableWidgetItem* const basename_item =
           new QTableWidgetItem(file_info.baseName());
       basename_item->setToolTip(file_info.baseName());
@@ -1362,6 +1365,13 @@ void PngyuMainWindow::menu_preferences_pushed() {
   m_preferences_dialog->set_save_output_options_enabled(
       is_save_output_options_enabled());
 
+  // Load language setting
+  QSettings settings(get_settings_file_path(), QSettings::IniFormat);
+  settings.beginGroup("options");
+  const QString language = settings.value("language", "auto").toString();
+  settings.endGroup();
+  m_preferences_dialog->set_language(language);
+
   m_preferences_dialog->set_apply_button_enabled(false);
 
   m_preferences_dialog->show();
@@ -1382,6 +1392,20 @@ void PngyuMainWindow::preferences_apply_pushed() {
       m_preferences_dialog->is_save_compress_options_enabled());
   set_save_output_options_enabled(
       m_preferences_dialog->is_save_output_options_enabled());
+
+  // Save language setting
+  const QString language = m_preferences_dialog->language();
+  QSettings settings(get_settings_file_path(), QSettings::IniFormat);
+  settings.beginGroup("options");
+  settings.setValue("language", language);
+  settings.endGroup();
+
+  // Show message only if language was actually changed
+  if (m_preferences_dialog->is_language_changed()) {
+    QMessageBox::information(this, tr("Language Changed"),
+                             tr("Please restart the application for the "
+                                "language change to take effect."));
+  }
 }
 
 void PngyuMainWindow::stop_request() {

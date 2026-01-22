@@ -52,6 +52,8 @@ PngyuPreferencesDialog::PngyuPreferencesDialog(QWidget* parent)
           SLOT(preference_changed()));
   connect(ui->checkBox_save_output_options, SIGNAL(toggled(bool)), this,
           SLOT(preference_changed()));
+  connect(ui->comboBox_language, SIGNAL(currentIndexChanged(int)), this,
+          SLOT(preference_changed()));
 }
 
 PngyuPreferencesDialog::~PngyuPreferencesDialog() { delete ui; }
@@ -227,4 +229,34 @@ void PngyuPreferencesDialog::set_save_output_options_enabled(
 
 bool PngyuPreferencesDialog::is_save_output_options_enabled() const {
   return ui->checkBox_save_output_options->isChecked();
+}
+
+void PngyuPreferencesDialog::set_language(const QString& language) {
+  m_initial_language = language;  // Save initial value for change detection
+  if (language == "ja") {
+    ui->comboBox_language->setCurrentIndex(2);
+  } else if (language == "zh") {
+    ui->comboBox_language->setCurrentIndex(3);
+  } else if (language == "en") {
+    ui->comboBox_language->setCurrentIndex(1);
+  } else {
+    ui->comboBox_language->setCurrentIndex(0);  // System default
+  }
+}
+
+QString PngyuPreferencesDialog::language() const {
+  switch (ui->comboBox_language->currentIndex()) {
+    case 1:
+      return "en";
+    case 2:
+      return "ja";
+    case 3:
+      return "zh";
+    default:
+      return "auto";  // System default
+  }
+}
+
+bool PngyuPreferencesDialog::is_language_changed() const {
+  return language() != m_initial_language;
 }

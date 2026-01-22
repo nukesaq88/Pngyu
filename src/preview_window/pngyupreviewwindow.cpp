@@ -127,12 +127,14 @@ void PngyuPreviewWindow::execute_compress_start() {
   }
 
   if (m_pngquant_path.isEmpty()) {
-    set_compress_result_failed(tr("Error : Pngquant was not found."));
+    set_compress_result_failed(
+        tr("Error: %1").arg(tr("Pngquant was not found.")));
     return;
   }
 
   if (!QFile::exists(m_png_filename)) {
-    set_compress_result_failed(tr("Error : Original file doesn't exists."));
+    set_compress_result_failed(
+        tr("Error: %1").arg(tr("Original file doesn't exist.")));
     return;
   }
 
@@ -195,14 +197,17 @@ void PngyuPreviewWindow::compress_finished() {
     const double saved_rate =
         static_cast<double>(src_size - dst_size) / (src_size);
 
-    QString result_test =
-        tr("Original Size : ") + pngyu::util::size_to_string_kb(src_size) +
-        " " + tr("Output Size : ") +
-        pngyu::util::size_to_string_kb(dst_size).rightJustified(8, ' ') + " " +
-        tr("Saved : ") +
-        QString::number(static_cast<int>(saved_rate * 100))
-            .rightJustified(3, ' ') +
-        "% " + QString("");
+    const QString result_test =
+        tr("Original Size: %1").arg(pngyu::util::size_to_string_kb(src_size)) +
+        " " +
+        tr("Output Size: %1")
+            .arg(pngyu::util::size_to_string_kb(dst_size).rightJustified(8,
+                                                                         ' ')) +
+        " " +
+        tr("Saved: %1")
+            .arg(QString::number(static_cast<int>(saved_rate * 100))
+                     .rightJustified(3, ' ') +
+                 "%");
 
     ui->statusbar->showMessage(result_test);
     m_is_compress_finished = true;

@@ -106,6 +106,8 @@ class PngyuMainWindow : public QMainWindow {
 
   void append_file_info_list(const QList<QFileInfo>& info_list);
 
+  static QString get_settings_file_path();
+
  protected:
   virtual void dragEnterEvent(QDragEnterEvent* event);
   virtual void dragLeaveEvent(QDragLeaveEvent* event);
@@ -121,8 +123,6 @@ class PngyuMainWindow : public QMainWindow {
 
   void save_last_used_options();
   void load_last_used_options();
-
-  QString get_settings_file_path() const;
 
   void update_file_table();
 
