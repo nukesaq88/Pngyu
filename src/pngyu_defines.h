@@ -8,7 +8,7 @@
 
 namespace pngyu {
 
-enum Version { VERSION_MAJOR = 1, VERSION_MINOR = 0, VERSION_REVISION = 4 };
+enum Version { VERSION_MAJOR = 1, VERSION_MINOR = 0, VERSION_REVISION = 5 };
 
 enum CompressOptionMode {
   COMPRESS_OPTION_UNKNOWN = -1,
