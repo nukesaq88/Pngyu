@@ -68,25 +68,37 @@ int main(int argc, char* argv[]) {
   const QLocale locale =
       (language == "auto") ? QLocale::system() : QLocale(language);
 
+  qDebug() << "Language setting:" << language;
+  qDebug() << "Locale:" << locale.name();
+
   // Load Qt translations
   QTranslator qtTranslator;
   if (qtTranslator.load(locale, "qt", "_",
                         QLibraryInfo::path(QLibraryInfo::TranslationsPath))) {
     a.installTranslator(&qtTranslator);
+    qDebug() << "Qt translations loaded";
   }
 
   // Load app translations
   QTranslator appTranslator;
   if (language == "auto") {
-    // For auto mode, use system locale
-    // QTranslator will try: en_US, en, ja_JP, ja, zh_CN, zh, etc.
-    if (appTranslator.load(locale, ":/translations")) {
+    // For auto mode, extract language code from locale (ja_JP -> ja)
+    const QString localeStr = locale.name().section('_', 0, 0);
+    qDebug() << "Trying to load translation:" << localeStr;
+    if (appTranslator.load(":/translations/" + localeStr)) {
       a.installTranslator(&appTranslator);
+      qDebug() << "App translation loaded:" << localeStr;
+    } else {
+      qDebug() << "Failed to load translation:" << localeStr;
     }
   } else {
     // For explicit language, load by language code directly
+    qDebug() << "Trying to load translation:" << language;
     if (appTranslator.load(":/translations/" + language)) {
       a.installTranslator(&appTranslator);
+      qDebug() << "App translation loaded:" << language;
+    } else {
+      qDebug() << "Failed to load translation:" << language;
     }
   }
 
