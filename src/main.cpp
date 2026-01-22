@@ -9,6 +9,11 @@
 #include <QStyleHints>
 #include <QTranslator>
 
+#ifdef Q_OS_WIN
+#include <windows.h>
+#include <cstdio>
+#endif
+
 #include "pngyumainwindow.h"
 
 class PngyuApplication : public QApplication {
