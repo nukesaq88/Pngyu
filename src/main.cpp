@@ -45,8 +45,9 @@ int main(int argc, char* argv[]) {
 #ifdef Q_OS_WIN
   // Allocate console for debug output on Windows
   if (AttachConsole(ATTACH_PARENT_PROCESS) || AllocConsole()) {
-    freopen("CONOUT$", "w", stdout);
-    freopen("CONOUT$", "w", stderr);
+    FILE* dummy;
+    freopen_s(&dummy, "CONOUT$", "w", stdout);
+    freopen_s(&dummy, "CONOUT$", "w", stderr);
   }
 #endif
 

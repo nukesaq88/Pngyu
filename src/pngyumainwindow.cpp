@@ -669,6 +669,7 @@ void PngyuMainWindow::set_image_optim_integration_mode(
 #ifdef Q_OS_MACOS
   m_image_optim_integration = mode;
 #else
+  Q_UNUSED(mode);
   m_image_optim_integration = pngyu::IMAGEOPTIM_ALWAYS_DISABLED;
 #endif
 }
@@ -758,17 +759,17 @@ void PngyuMainWindow::execute_compress_all(const bool image_optim_enabled) {
     const QString& src_path = absolute_path_item->text();
     const QString& dst_path = make_output_file_path_string(src_path);
 
-    pngyu::CompressQueueData data;
-    data.src_path = src_path;
-    data.dst_path = dst_path;
-    data.pngquant_path = pngquant_path;
-    data.pngquant_option = option;
-    data.overwrite_enabled = b_overwrite_enable;
-    data.force_execute_if_negative = b_force_execute_if_negative;
-    data.table_widget = table_widget;
-    data.table_row = row;
+    pngyu::CompressQueueData queue_data;
+    queue_data.src_path = src_path;
+    queue_data.dst_path = dst_path;
+    queue_data.pngquant_path = pngquant_path;
+    queue_data.pngquant_option = option;
+    queue_data.overwrite_enabled = b_overwrite_enable;
+    queue_data.force_execute_if_negative = b_force_execute_if_negative;
+    queue_data.table_widget = table_widget;
+    queue_data.table_row = row;
 
-    queue.enqueue(data);
+    queue.enqueue(queue_data);
 
   }  // end of file list loop
 
