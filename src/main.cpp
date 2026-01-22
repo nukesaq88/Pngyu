@@ -1,5 +1,4 @@
 #include <QApplication>
-#include <QDebug>
 #include <QFileInfo>
 #include <QFileOpenEvent>
 #include <QFont>
@@ -8,11 +7,6 @@
 #include <QSettings>
 #include <QStyleHints>
 #include <QTranslator>
-
-#ifdef Q_OS_WIN
-#include <windows.h>
-#include <cstdio>
-#endif
 
 #include "pngyumainwindow.h"
 
@@ -42,15 +36,6 @@ class PngyuApplication : public QApplication {
 };
 
 int main(int argc, char* argv[]) {
-#ifdef Q_OS_WIN
-  // Allocate console for debug output on Windows
-  if (AttachConsole(ATTACH_PARENT_PROCESS) || AllocConsole()) {
-    FILE* dummy;
-    freopen_s(&dummy, "CONOUT$", "w", stdout);
-    freopen_s(&dummy, "CONOUT$", "w", stderr);
-  }
-#endif
-
   PngyuApplication a(argc, argv);
 
   // Set application information for QSettings
@@ -68,15 +53,11 @@ int main(int argc, char* argv[]) {
   const QLocale locale =
       (language == "auto") ? QLocale::system() : QLocale(language);
 
-  qDebug() << "Language setting:" << language;
-  qDebug() << "Locale:" << locale.name();
-
   // Load Qt translations
   QTranslator qtTranslator;
   if (qtTranslator.load(locale, "qt", "_",
                         QLibraryInfo::path(QLibraryInfo::TranslationsPath))) {
     a.installTranslator(&qtTranslator);
-    qDebug() << "Qt translations loaded";
   }
 
   // Load app translations
@@ -84,21 +65,13 @@ int main(int argc, char* argv[]) {
   if (language == "auto") {
     // For auto mode, extract language code from locale (ja_JP -> ja)
     const QString localeStr = locale.name().section('_', 0, 0);
-    qDebug() << "Trying to load translation:" << localeStr;
     if (appTranslator.load(":/translations/" + localeStr)) {
       a.installTranslator(&appTranslator);
-      qDebug() << "App translation loaded:" << localeStr;
-    } else {
-      qDebug() << "Failed to load translation:" << localeStr;
     }
   } else {
     // For explicit language, load by language code directly
-    qDebug() << "Trying to load translation:" << language;
     if (appTranslator.load(":/translations/" + language)) {
       a.installTranslator(&appTranslator);
-      qDebug() << "App translation loaded:" << language;
-    } else {
-      qDebug() << "Failed to load translation:" << language;
     }
   }
 
@@ -114,12 +87,6 @@ int main(int argc, char* argv[]) {
     pal.setColor(QPalette::Window, QColor(30, 30, 30));
   }
   qApp->setPalette(pal);
-
-  qDebug() << "Locale:" << locale.name();
-  qDebug() << "Style:" << a.style()->objectName();
-  qDebug() << "Palette window:" << qApp->palette().color(QPalette::Window);
-  qDebug() << "Palette base:" << qApp->palette().color(QPalette::Base);
-  qDebug() << "Color scheme:" << QGuiApplication::styleHints()->colorScheme();
 
   const QStringList argments = a.arguments();
   QFileInfoList file_list;
