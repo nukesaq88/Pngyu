@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pngyu - PNG Image Compression Tool</title>
+  <title>Pngyu - PNG图像压缩工具</title>
   <script src="https://cdn.tailwindcss.com"></script>
   
   <!-- Google tag (gtag.js) -->
@@ -25,11 +25,11 @@
           <span class="text-2xl font-bold text-slate-800">Pngyu</span>
         </div>
         <div class="flex items-center space-x-2">
-          <span class="text-slate-900 font-semibold text-sm">English</span>
+          <a href="index.html" class="text-slate-600 hover:text-slate-900 transition text-sm">English</a>
           <span class="text-slate-400">|</span>
           <a href="ja.html" class="text-slate-600 hover:text-slate-900 transition text-sm">日本語</a>
           <span class="text-slate-400">|</span>
-          <a href="zh.html" class="text-slate-600 hover:text-slate-900 transition text-sm">中文</a>
+          <span class="text-slate-900 font-semibold text-sm">中文</span>
         </div>
       </div>
     </div>
@@ -38,29 +38,29 @@
   <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
     <div class="text-center mb-12">
       <h1 class="text-5xl font-bold text-slate-900 mb-4">Pngyu</h1>
-      <p class="text-xl text-slate-600 mb-8">Simple PNG Image Compression Tool</p>
+      <p class="text-xl text-slate-600 mb-8">简单的PNG图像压缩工具</p>
       
     </div>
 
     <div class="max-w-4xl mx-auto mb-12">
-      <img src="imgs/ss01.png" alt="Pngyu Screenshot" class="w-full rounded-2xl shadow-2xl">
+      <img src="imgs/ss01.png" alt="Pngyu截图" class="w-full rounded-2xl shadow-2xl">
     </div>
 
     <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-md p-8 mb-8">
       <p class="text-slate-700 leading-relaxed mb-4">
-        <strong class="text-slate-900">Pngyu</strong> is a simple PNG image compression tool that allows you to batch compress multiple PNG files with just a few mouse operations, achieving significant file size reduction.
+        <strong class="text-slate-900">Pngyu</strong>是一款简单的PNG图像压缩工具，只需简单的鼠标操作即可批量压缩多个PNG文件，实现显著的文件大小减少。
       </p>
       <p class="text-slate-700 leading-relaxed mb-4">
-        Pngyu uses <a href="http://pngquant.org/" class="text-blue-600 hover:text-blue-700 underline">pngquant</a> as its compression engine, which is also used by <a href="http://pngmini.com/" class="text-blue-600 hover:text-blue-700 underline">ImageAlpha</a> and <a href="http://tinypng.org/" class="text-blue-600 hover:text-blue-700 underline">TinyPNG</a>.
+        Pngyu使用<a href="http://pngquant.org/" class="text-blue-600 hover:text-blue-700 underline">pngquant</a>作为压缩引擎，该引擎也被<a href="http://pngmini.com/" class="text-blue-600 hover:text-blue-700 underline">ImageAlpha</a>和<a href="http://tinypng.org/" class="text-blue-600 hover:text-blue-700 underline">TinyPNG</a>使用。
       </p>
       <p class="text-slate-700 leading-relaxed mb-4">
-        Pngquant achieves compression by converting 24bit/32bit full-color PNG files to 8bit indexed color using an excellent color reduction algorithm.
+        pngquant使用优秀的减色算法将24bit/32bit全彩色PNG文件转换为8bit索引色，从而实现压缩。
       </p>
       <div class="bg-amber-50 border-l-4 border-amber-400 p-4 rounded">
         <p class="text-sm text-amber-800">
-          <strong>※ Note:</strong> Compression involves color reduction processing, so it is impossible to restore the original image after compression.<br>
-          Please make a backup in advance when compressing important files.<br>
-          We accept no responsibility for any damage resulting from the use of this software.
+          <strong>※注意：</strong>压缩涉及减色处理，因此压缩后无法恢复原始图像。<br>
+          压缩重要文件时请提前备份。<br>
+          对于使用本软件所造成的任何损害，我们概不负责。
         </p>
       </div>
     </div>
@@ -68,7 +68,7 @@
 
   <section id="Download" class="bg-white py-12">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Download</h2>
+      <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">下载</h2>
       
       <div class="grid md:grid-cols-2 gap-6 mb-6">
         <a href="https://github.com/nukesaq88/Pngyu/releases/download/v1.0.5/Pngyu-mac-1.0.5.dmg" 
@@ -77,7 +77,7 @@
           <svg class="w-12 h-12 mx-auto mb-3" fill="currentColor" viewBox="0 0 24 24">
             <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
           </svg>
-          <div class="text-xl mb-2">macOS</div>
+          <div class="text-xl mb-2">macOS版</div>
           <div class="text-sm opacity-90">Version 1.0.5</div>
         </a>
         
@@ -87,57 +87,57 @@
           <svg class="w-12 h-12 mx-auto mb-3" fill="currentColor" viewBox="0 0 24 24">
             <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/>
           </svg>
-          <div class="text-xl mb-2">Windows</div>
+          <div class="text-xl mb-2">Windows版</div>
           <div class="text-sm opacity-90">Version 1.0.5</div>
         </a>
       </div>
       
       <div class="bg-amber-50 border-l-4 border-amber-400 p-4 rounded mt-4 max-w-2xl mx-auto">
         <p class="text-sm text-amber-800">
-          <strong>⚠️ macOS Note:</strong> This app is independently distributed. On first launch, you may need to open System Settings > Privacy & Security and click "Open Anyway" to run the app.
-          <a href="https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unidentified-developer-mh40616/mac" class="underline hover:text-amber-900" target="_blank" rel="noopener noreferrer">Learn more</a>
+          <strong>⚠️ macOS用户注意：</strong>此应用程序在App Store外发布。首次启动时，您可能需要打开"系统设置" > "隐私与安全性"，然后点击"仍要打开"来运行该应用程序。
+          <a href="https://support.apple.com/zh-cn/guide/mac-help/mh40616/mac" class="underline hover:text-amber-900" target="_blank" rel="noopener noreferrer">了解更多</a>
         </p>
       </div>
       
       <p class="text-center text-slate-600 mt-4">
-        <a href="https://github.com/nukesaq88/Pngyu/releases" class="text-blue-600 hover:text-blue-700 font-medium underline">View previous versions</a>
+        <a href="https://github.com/nukesaq88/Pngyu/releases" class="text-blue-600 hover:text-blue-700 font-medium underline">查看历史版本</a>
       </p>
     </div>
   </section>
 
   <section id="HowToUse" class="py-16">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">How to Use</h2>
+      <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">使用方法</h2>
       
       <div class="bg-white rounded-xl shadow-md p-8 space-y-4">
-        <p class="text-slate-700 leading-relaxed">It's easy to use.</p>
+        <p class="text-slate-700 leading-relaxed">使用方法非常简单。</p>
         
         <ol class="list-decimal list-inside space-y-3 text-slate-700">
-          <li class="pl-2">Launch <strong>Pngyu</strong> and drag & drop PNG files you want to compress into the <strong>Drop here</strong> area in the center of the screen.</li>
-          <li class="pl-2">Click the <strong>Compress Start</strong> button at the bottom of the screen to start the compression process.</li>
-          <li class="pl-2">By default, the input files will be overwritten.</li>
+          <li class="pl-2">启动<strong>Pngyu</strong>，将要压缩的PNG文件拖放到屏幕中央的<strong>Drop here</strong>区域。</li>
+          <li class="pl-2">点击屏幕底部的<strong>Compress Start</strong>按钮开始压缩处理。</li>
+          <li class="pl-2">默认情况下，输入的文件将被覆盖保存。</li>
         </ol>
         
         <div class="bg-slate-50 rounded-lg p-6 mt-6 space-y-3">
-          <p class="font-semibold text-slate-900">Advanced Settings</p>
+          <p class="font-semibold text-slate-900">高级设置</p>
           <ul class="space-y-2 text-slate-700">
             <li class="flex items-start">
               <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
               </svg>
-              <span>If you want to change the output destination or file name after compression, change <strong>Output Option</strong> to <strong>Custom</strong>.</span>
+              <span>如果要更改压缩后的输出位置或文件名，请将<strong>Output Option</strong>更改为<strong>Custom</strong>。</span>
             </li>
             <li class="flex items-start">
               <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
               </svg>
-              <span>If you want to make detailed compression settings, change <strong>Compress Option</strong> to <strong>Custom</strong>.</span>
+              <span>如果要进行详细的压缩设置，请将<strong>Compress Option</strong>更改为<strong>Custom</strong>。</span>
             </li>
             <li class="flex items-start">
               <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
               </svg>
-              <span>Select a file from the list and click the <strong>Preview</strong> button to open a preview window where you can check the result of compression with current settings.</span>
+              <span>从列表中选择文件并点击<strong>Preview</strong>按钮，将打开预览窗口，您可以查看使用当前设置压缩后的结果。</span>
             </li>
           </ul>
         </div>
@@ -147,10 +147,10 @@
 
   <section id="Feedback" class="bg-white py-16">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Feedback</h2>
+      <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">反馈</h2>
       
       <div class="bg-slate-50 rounded-xl p-8">
-        <p class="text-slate-700 mb-6 text-center">Bug reports, feedback, and feature requests are welcome.<br>Please contact us through the following channels.</p>
+        <p class="text-slate-700 mb-6 text-center">欢迎错误报告、反馈和功能请求。<br>请通过以下渠道与我们联系。</p>
         
         <div class="space-y-4">
           <div class="flex items-center justify-center space-x-3">
@@ -183,8 +183,8 @@
 
   <footer class="bg-white border-t border-slate-200 py-8">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-slate-600 text-sm">
-      <p class="mb-2">Pngyu is Free Software released under the BSD License.</p>
-      <p>This project is hosted on <a href="https://github.com/nukesaq88/Pngyu" class="text-blue-600 hover:text-blue-700 underline">GitHub</a>.</p>
+      <p class="mb-2">Pngyu是根据BSD许可证发布的自由软件。</p>
+      <p>本项目托管在<a href="https://github.com/nukesaq88/Pngyu" class="text-blue-600 hover:text-blue-700 underline">GitHub</a>。</p>
     </div>
   </footer>
 </body>
