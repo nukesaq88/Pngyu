@@ -60,6 +60,7 @@ PngyuMainWindow::PngyuMainWindow(QWidget* parent)
   pngyu::util::failure_icon();
 
   ui->mainToolBar->setVisible(false);
+  ui->mainToolBar->setContextMenuPolicy(Qt::PreventContextMenu);
 
   // Enable drag and drop
   setAcceptDrops(true);
